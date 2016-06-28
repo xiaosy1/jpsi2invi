@@ -368,11 +368,12 @@ void Mumu::buildJpsiToMumu() {
   h_evtflw->Fill(2); // good photon
   Ncut2++;
   
-  if(selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood)!=2) return;
+  if(selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood)!=1) return;
+  
   h_evtflw->Fill(9);               //pipi
   Ncut9++;
 
-  if(selectMuPlusMuMinus(evtRecTrkCol, iPGood, iMGood)!=2) return;
+  if(selectMuPlusMuMinus(evtRecTrkCol, iPGood, iMGood)!=1) return;
   h_evtflw->Fill(12);              //mumu
   Ncut12++;
 
