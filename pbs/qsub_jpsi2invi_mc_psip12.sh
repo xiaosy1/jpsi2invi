@@ -6,8 +6,7 @@
 #PBS -N jmcpsip12
 #PBS -q "besq@torqsrv"
 #PBS -o $HOME/bes/jpsi2invi/v0.1/run/log/mc_psip12/jpsi2invi_mc_psip12.log 
-##PBS -t 1-394%200
-#PBS -t 256,235,237,239,241,243,245,247,250,252,254,255
+#PBS -t 1-394%200
 
 
 date
