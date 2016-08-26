@@ -62,11 +62,6 @@ def main():
     sys.stdout.write('Found %s files, with total size %s.\n' %(
         len(file_list), size(total_size)))
     
-    if len(file_list) < num:
-        jobs_missing = jobs_created.difference(file_list)
-        jobs_missing = [str(li) for li in jobs_missing]
-        sys.stdout.write('Missing jobs are: %s\n' % ','.join(jobs_missing))
-        
     sys.stdout.write('Checking log files...\n')
     jobs_not_terminated = []
     for root, dirs, files in os.walk(log):
@@ -85,9 +80,19 @@ def main():
             else:
                 sys.stdout.write('%s ... OK.\n' %f)
 
-    sys.stdout.write('Non-terminated jobs are (%s): %s\n' % (
-        len(jobs_not_terminated), ','.join(jobs_not_terminated)))
-    
+    if len(jobs_not_terminated) > 0: 
+        sys.stdout.write('Non-terminated jobs are (%s): %s\n' % (
+            len(jobs_not_terminated), ','.join(jobs_not_terminated)))
+    else:
+        sys.stdout.write('All finished jobs are terminated correctly. \n')
+
+    if len(file_list) < num:
+        jobs_missing = jobs_created.difference(file_list)
+        jobs_missing = [str(li) for li in jobs_missing]
+        sys.stdout.write('Missing jobs are: %s\n' % ','.join(jobs_missing))
+    else:
+        sys.stdout.write('No missing jobs.\n')
+        
                 
 if __name__ == '__main__':
     main()
