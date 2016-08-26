@@ -27,6 +27,7 @@ usage() {
     printf "\n\t%-5s  %-40s\n"  "0.2.4"    "Check PBS jobs on psi(2S) MC sample"     
     printf "\n\t%-5s  %-40s\n"  "0.2.5"    "Select events on psi(2S) MC sample"     
     printf "\n\t%-5s  %-40s\n"  "0.2.6"    "Submit PBS jobs to select events on psi(2S) MC sample"     
+    printf "\n\t%-5s  %-40s\n"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
     printf "\n\n" 
 }
 
@@ -110,13 +111,22 @@ case $option in
 
     0.2.5) echo  "Select events on psi(2S) MC sample..."
 	   mkdir run/events/mc_psip12  
-	   ./python/sel_events.py  run/mc_psip12/jpsi2invi_mc_psip_12mc-1.root  run/events/mc_psip12/jpsi2invi_mc_psip_12mc-1.root 
+	   #./python/sel_events.py  run/mc_psip12/jpsi2invi_mc_psip_12mc-1.root  run/events/mc_psip12/jpsi2invi_mc_psip_12mc-1.root
+	   for i in {1..394}  
+	   do  
+	       echo "processing run/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root ..."
+	       ./python/sel_events.py  run/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root  run/events/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root
+	   done   
 	   ;; 
 
     0.2.6) echo "Submit selection PBS jobs on psi(2S) sample..."
 	   mkdir run/events/mc_psip12
 	   mkdir run/log/events/mc_psip12  
 	   qsub pbs/qsub_jpsi2invi_events_mc_psip12.sh  
+	   ;;
+
+    0.2.7) echo "Check events selection jobs on psi(2s) MC sample..."
+	   ./python/chk_pbsjobs.py run/events/mc_psip12  394 
 	   ;;
 
 
