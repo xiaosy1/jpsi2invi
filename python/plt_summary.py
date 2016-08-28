@@ -21,6 +21,7 @@ def main():
     c = ROOT.TCanvas('c', 'c', 800, 800)    
 
     f1 = ROOT.TFile('run/hist/data/jpsi2invi_data_merged_1.root')
+    f2 = ROOT.TFile('run/hist/mc_psip12/jpsi2invi_mc_psip_12mc_merged_1.root')
 
     h1_mrecpipi = draw_mrecpipi(c, f1)
     h1_mpipi = draw_mpipi(c, f1)

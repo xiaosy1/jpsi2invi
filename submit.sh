@@ -28,6 +28,7 @@ usage() {
     printf "\n\t%-5s  %-40s\n"  "0.2.5"    "Select events on psi(2S) MC sample"     
     printf "\n\t%-5s  %-40s\n"  "0.2.6"    "Submit PBS jobs to select events on psi(2S) MC sample"     
     printf "\n\t%-5s  %-40s\n"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
+    printf "\n\t%-5s  %-40s\n"  "0.2.8"    "Merge events files on psi(2S) MC"
     printf "\n\n" 
 }
 
@@ -128,6 +129,15 @@ case $option in
     0.2.7) echo "Check events selection jobs on psi(2s) MC sample..."
 	   ./python/chk_pbsjobs.py run/events/mc_psip12  394 
 	   ;;
+
+    0.2.8) echo  "Merge events files..."
+	   mkdir run/hist/mc_psip12
+	   ./python/mrg_rootfiles.py  run/events/mc_psip12 run/hist/mc_psip12 
+	   ;; 
+
+    0.2.9) echo  "Plot summary with data and psip(2S) MC ..."
+	   ./python/plt_summary.py 
+	   ;; 
 
 
 esac
