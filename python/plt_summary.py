@@ -23,33 +23,23 @@ def main():
     f1 = ROOT.TFile('run/hist/data/jpsi2invi_data_merged_1.root')
     f2 = ROOT.TFile('run/hist/mc_psip12/jpsi2invi_mc_psip_12mc_merged_1.root')
 
-    h1_mrecpipi = draw_mrecpipi(c, f1)
-    h1_mpipi = draw_mpipi(c, f1)
-    h1_pip_p = draw_pip_p(c, f1) 
-    h1_pim_p = draw_pim_p(c, f1) 
-    h1_pip_costhe = draw_pip_costhe(c, f1) 
-    h1_pim_costhe = draw_pim_costhe(c, f1)
-    h1_cospipi = draw_cospipi(c, f1) 
-    h1_cos2pisys = draw_cos2pisys(c, f1)
-    h1_ngam = draw_ngam(c, f1) 
+    fs = [f1, f2]
     
-    outfile = 'run/summary/jpsi2invi_data.root'
-    check_outfile_path(outfile)
-    fout = ROOT.TFile(outfile, 'RECREATE')
-    h1_mrecpipi.Write()
-    h1_mpipi.Write()
-    h1_pip_p.Write()
-    h1_pim_p.Write()
-    h1_pip_costhe.Write()
-    h1_pim_costhe.Write()
-    h1_cospipi.Write()
-    h1_cos2pisys.Write()
-    h1_ngam.Write()
-    fout.Close()
+    draw_mrecpipi(c, fs)
+    draw_mpipi(c, fs)
+    draw_pip_p(c, fs) 
+    draw_pim_p(c, fs) 
+    draw_pip_costhe(c, fs) 
+    draw_pim_costhe(c, fs)
+    draw_cospipi(c, fs) 
+    draw_cos2pisys(c, fs)
+    draw_ngam(c, fs) 
+    
 
-
-def draw_mrecpipi(c, f1):
-    h1 = f1.Get('h_mrecpipi')
+def draw_mrecpipi(c, fs):
+    hname = 'h_mrecpipi'
+    
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
     h1.SetXTitle('M(recoil(#pi^{+}#pi^{-})) (GeV/c^{2})') 
     h1.SetYTitle('Events/(0.0012 GeV/c^{2})')
@@ -57,16 +47,32 @@ def draw_mrecpipi(c, f1):
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetTitleOffset(1.8) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.03)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+    
     figfile = 'doc/fig/jpsi2invi_data_mrecpipi.pdf'
     check_outfile_path(figfile)
     c.SaveAs(figfile)
-    return h1
 
 
-def draw_mpipi(c, f1):
-    h1 = f1.Get('h_mpipi')
+def draw_mpipi(c, fs):
+    hname = 'h_mpipi'
+    
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
     h1.SetXTitle('M(#pi^{+}#pi^{-}) (GeV/c^{2})') 
     h1.SetYTitle('Events/(0.0012 GeV/c^{2})')
@@ -74,15 +80,31 @@ def draw_mpipi(c, f1):
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.03)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+
     figfile = 'doc/fig/jpsi2invi_data_mpipi.pdf'
     c.SaveAs(figfile)
-    return h1
 
 
-def draw_pip_p(c, f1):
-    h1 = f1.Get('h_pip_p')
+def draw_pip_p(c, fs):
+    hname = 'h_pip_p' 
+    
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
     h1.SetXTitle('P(#pi^{+}) (GeV/c)')
     h1.SetYTitle('Events/(0.005 GeV/c)') 
@@ -90,14 +112,31 @@ def draw_pip_p(c, f1):
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.02)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+    
     figfile = 'doc/fig/jpsi2invi_data_pip_p.pdf'
     c.SaveAs(figfile)
-    return h1
 
-def draw_pim_p(c, f1):
-    h1 = f1.Get('h_pim_p')
+
+def draw_pim_p(c, fs):
+    hname = 'h_pim_p'
+    
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
     h1.SetXTitle('P(#pi^{-}) (GeV/c)')
     h1.SetYTitle('Events/(0.005 GeV/c)') 
@@ -105,30 +144,63 @@ def draw_pim_p(c, f1):
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.02)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+
     figfile = 'doc/fig/jpsi2invi_data_pim_p.pdf'
     c.SaveAs(figfile)
-    return h1
 
 
-def draw_pip_costhe(c, f1):
-    h1 = f1.Get('h_pip_costhe')
+def draw_pip_costhe(c, fs):
+    hname = 'h_pip_costhe'
+    
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
-    h1.SetXTitle('Cos#theta_{#pi^{+}}')
+    h1.SetXTitle('cos#theta_{#pi^{+}}')
     h1.SetYTitle('Events/0.02')
     h1.GetYaxis().SetTitleOffset(1.8) 
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.02)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+
     figfile = 'doc/fig/jpsi2invi_data_pip_costhe.pdf'
     c.SaveAs(figfile)
-    return h1
 
-def draw_pim_costhe(c, f1):
-    h1 = f1.Get('h_pim_costhe')
+
+def draw_pim_costhe(c, fs):
+    hname = 'h_pim_costhe'
+    
+    h1 = fs[0].Get(hname) 
     h1.Sumw2()
     h1.SetXTitle('Cos#theta_{#pi^{-}}')
     h1.SetYTitle('Events/0.02')
@@ -136,31 +208,63 @@ def draw_pim_costhe(c, f1):
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.02)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+
     figfile = 'doc/fig/jpsi2invi_data_pim_costhe.pdf'
     c.SaveAs(figfile)
-    return h1
 
 
-def draw_cospipi(c, f1):
-    h1 = f1.Get('h_cospipi')
+def draw_cospipi(c, fs):
+    hname = 'h_cospipi'
+    
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
-    h1.SetXTitle('Cos#theta_{#pi^{+}#pi^{-}}')
+    h1.SetXTitle('cos#theta_{#pi^{+}#pi^{-}}')
     h1.SetYTitle('Events/0.01')
     h1.GetYaxis().SetTitleOffset(1.8) 
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.02)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+
     figfile = 'doc/fig/jpsi2invi_data_cospipi.pdf'
     c.SaveAs(figfile)
-    return h1
 
 
-def draw_cos2pisys(c, f1):
-    h1 = f1.Get('h_cos2pisys')
+def draw_cos2pisys(c, fs):
+    hname = 'h_cos2pisys'
+
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
     h1.SetXTitle('Cos#theta_{#pi#pi sys.}')
     h1.SetYTitle('Events/0.02')
@@ -168,14 +272,30 @@ def draw_cos2pisys(c, f1):
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.02)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+
     figfile = 'doc/fig/jpsi2invi_data_cos2pisys.pdf'
     c.SaveAs(figfile)
-    return h1
 
-def draw_ngam(c, f1):
-    h1 = f1.Get('h_ngam')
+
+def draw_ngam(c, fs):
+    hname = 'h_ngam'
+    h1 = fs[0].Get(hname)
     h1.Sumw2()
     h1.SetXTitle('N_{#gamma}')
     h1.SetYTitle('Events')
@@ -183,11 +303,25 @@ def draw_ngam(c, f1):
     h1.GetXaxis().SetLabelSize(0.03) 
     h1.GetYaxis().SetLabelSize(0.03) 
     h1.SetMarkerStyle(ROOT.kFullDotLarge)
-
     h1.Draw()
+
+    h2 = fs[1].Get(hname)
+    h2.SetLineColor(29)
+    h2.SetFillColor(29)
+    h2.Draw('same') 
+
+    leg = ROOT.TLegend(0.2, 0.71, 0.32, 0.91)
+    leg.SetTextSize(0.02)
+    leg.SetFillColor(0)
+    leg.SetFillStyle(0)
+    leg.SetLineColor(0)
+    leg.SetShadowColor(0)
+    leg.AddEntry(h1, "Data","lp")
+    leg.AddEntry(h2, "#psi(2S) inclusive MC")
+    leg.Draw()
+    
     figfile = 'doc/fig/jpsi2invi_data_ngam.pdf'
     c.SaveAs(figfile)
-    return h1
 
     
 if __name__ == '__main__':
