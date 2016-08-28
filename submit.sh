@@ -29,6 +29,7 @@ usage() {
     printf "\n\t%-5s  %-40s\n"  "0.2.6"    "Submit PBS jobs to select events on psi(2S) MC sample"     
     printf "\n\t%-5s  %-40s\n"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
     printf "\n\t%-5s  %-40s\n"  "0.2.8"    "Merge events files on psi(2S) MC"
+    printf "\n\t%-5s  %-40s\n"  "0.2.9"    "Plot summary with data and psi(2S) MC"
     printf "\n\n" 
 }
 
