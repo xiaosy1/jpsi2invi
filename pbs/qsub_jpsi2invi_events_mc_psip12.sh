@@ -18,6 +18,7 @@ source setup.sh
 ./python/sel_events.py run/mc_psip12/jpsi2invi_mc_psip_12mc-$PBS_ARRAYID.root run/events/mc_psip12/jpsi2invi_mc_psip_12mc-$PBS_ARRAYID.root
 
 
+
 date
 
 
