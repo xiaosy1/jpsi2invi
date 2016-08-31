@@ -10,26 +10,28 @@ usage() {
     printf "\nSYNOPSIS\n"
     printf "\n\t%-5s\n" "./submit.sh [OPTION]" 
     printf "\nOPTIONS\n" 
-    printf "\n\t%-5s  %-40s\n"  "0.1"      "[run data sample]" 
-    printf "\n\t%-5s  %-40s\n"  "0.1.1"    "Run with a few samples" 
-    printf "\n\t%-5s  %-40s\n"  "0.1.2"    "Split data sample with each group 20G"
-    printf "\n\t%-5s  %-40s\n"  "0.1.3"    "Submit PBS jobs on data"
-    printf "\n\t%-5s  %-40s\n"  "0.1.4"    "Check PBS jobs on data."
-    printf "\n\t%-5s  %-40s\n"  "0.1.5"    "Select events."
-    printf "\n\t%-5s  %-40s\n"  "0.1.6"    "Submit events selection jobs on data."
-    printf "\n\t%-5s  %-40s\n"  "0.1.7"    "Check events jobs on data."
-    printf "\n\t%-5s  %-40s\n"  "0.1.8"    "Merge events files." 
-    printf "\n\t%-5s  %-40s\n"  "0.1.9"    "Plot summary with data."
-    printf "\n\t%-5s  %-40s\n"  "0.2"      "[run on MC sample]"
-    printf "\n\t%-5s  %-40s\n"  "0.2.1"    "Run with a few samples"
-    printf "\n\t%-5s  %-40s\n"  "0.2.2"    "Split psi(2S) MC sample with each group 20G"
-    printf "\n\t%-5s  %-40s\n"  "0.2.3"    "Submit PBS jobs on psi(2S) MC sample"     
-    printf "\n\t%-5s  %-40s\n"  "0.2.4"    "Check PBS jobs on psi(2S) MC sample"     
-    printf "\n\t%-5s  %-40s\n"  "0.2.5"    "Select events on psi(2S) MC sample"     
-    printf "\n\t%-5s  %-40s\n"  "0.2.6"    "Submit PBS jobs to select events on psi(2S) MC sample"     
-    printf "\n\t%-5s  %-40s\n"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
-    printf "\n\t%-5s  %-40s\n"  "0.2.8"    "Merge events files on psi(2S) MC"
-    printf "\n\t%-5s  %-40s\n"  "0.2.9"    "Plot summary with data and psi(2S) MC"
+    printf "\n\t%-9s  %-40s"  "0.1"      "[run data sample]" 
+    printf "\n\t%-9s  %-40s"  "0.1.1"    "Run with a few samples" 
+    printf "\n\t%-9s  %-40s"  "0.1.2"    "Split data sample with each group 20G"
+    printf "\n\t%-9s  %-40s"  "0.1.3"    "Submit PBS jobs on data"
+    printf "\n\t%-9s  %-40s"  "0.1.4"    "Check PBS jobs on data."
+    printf "\n\t%-9s  %-40s"  "0.1.5"    "Select events."
+    printf "\n\t%-9s  %-40s"  "0.1.6"    "Submit events selection jobs on data."
+    printf "\n\t%-9s  %-40s"  "0.1.7"    "Check events jobs on data."
+    printf "\n\t%-9s  %-40s"  "0.1.8"    "Merge events files." 
+    printf "\n\t%-9s  %-40s"  "0.1.9"    "Plot summary with data."
+    printf "\n\t%-9s  %-40s"  "0.1.10"   "Split con3650 data sample with each group 20G"
+    printf "\n\t%-9s  %-40s"  "0.1.11"   "Submit PBS jobs on con3650 data"
+    printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
+    printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
+    printf "\n\t%-9s  %-40s"  "0.2.2"    "Split psi(2S) MC sample with each group 20G"
+    printf "\n\t%-9s  %-40s"  "0.2.3"    "Submit PBS jobs on psi(2S) MC sample"     
+    printf "\n\t%-9s  %-40s"  "0.2.4"    "Check PBS jobs on psi(2S) MC sample"     
+    printf "\n\t%-9s  %-40s"  "0.2.5"    "Select events on psi(2S) MC sample"     
+    printf "\n\t%-9s  %-40s"  "0.2.6"    "Submit PBS jobs to select events on psi(2S) MC sample"     
+    printf "\n\t%-9s  %-40s"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
+    printf "\n\t%-9s  %-40s"  "0.2.8"    "Merge events files on psi(2S) MC"
+    printf "\n\t%-9s  %-40s"  "0.2.9"    "Plot summary with data and psi(2S) MC"
     printf "\n\n" 
 }
 
@@ -88,6 +90,16 @@ case $option in
 	   ./python/plt_summary.py 
 	   ;; 
 
+    0.1.10) echo "Split con3650 data sample with each group 20G ..."
+	    ./python/get_samples.py  /bes3fs/offline/data/663p01/3650/dst $HOME/bes/jpsi2invi/v0.1/run/samples/data_663p01_3650.txt 20G
+	    # made 11 groups 
+	    ;;
+
+    0.1.11) echo "Submit PBS jobs on con3650 data..."
+	    mkdir run/con3650
+	    mkdir run/log/con3650  
+	    qsub pbs/qsub_jpsi2invi_con3650.sh  
+	    ;;
 
     
     0.2) echo "Running on MC sample..."
