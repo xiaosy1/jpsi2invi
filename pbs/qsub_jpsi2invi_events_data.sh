@@ -5,8 +5,9 @@
 
 #PBS -N sel
 #PBS -q "besq@torqsrv"
-#PBS -o $HOME/bes/jpsi2invi/v0.1/run/log/jpsi2invi_events_data.log 
+#PBS -o $HOME/bes/jpsi2invi/v0.1/run/log/events/data/jpsi2invi_data.log 
 #PBS -t 1-633%200
+
 
 date
 
@@ -15,7 +16,7 @@ hostname
 cd $HOME/bes/jpsi2invi/v0.1/
 source setup.sh
 
-./python/sel_events.py run/data/jpsi2invi_data-$PBS_ARRAYID.root run/events/jpsi2invi_data-$PBS_ARRAYID.root
+./python/sel_events.py run/data/jpsi2invi_data-$PBS_ARRAYID.root run/events/data/jpsi2invi_data-$PBS_ARRAYID.root
 
 date
 

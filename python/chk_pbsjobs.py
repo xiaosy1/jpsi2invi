@@ -10,6 +10,8 @@ __created__ = "[2016-06-02 Thu 09:42]"
 import sys
 import os
 from hurry.filesize import size 
+from tools import BossLogFile, EventsLogFile 
+
 
 def usage():
     sys.stdout.write('''
@@ -37,6 +39,17 @@ def main():
     num = int(args[1])
     jobs_created = set(range(1, num+1))
 
+    log = src 
+    logdir = src.split('/')[-1]
+    if logdir in ['data', 'mc_psip12']:
+        logfiletype = 'BossLogFile'
+    elif logdir == 'events':
+        logfiletype = 'EventsLogFile'
+    else:
+        raise NameError(logdir)
+    
+    log = log.replace(logdir, 'log/%s' %logdir) 
+    
     sys.stdout.write('Scanning %s...\n' %src)
 
     file_list = []
@@ -48,12 +61,38 @@ def main():
 
     sys.stdout.write('Found %s files, with total size %s.\n' %(
         len(file_list), size(total_size)))
+    
+    sys.stdout.write('Checking log files...\n')
+    jobs_not_terminated = []
+    for root, dirs, files in os.walk(log):
+        for f in files:
+            if logfiletype == 'BossLogFile': 
+                l = BossLogFile( os.path.join(root, f) )
+            elif logfiletype == 'EventsLogFile':
+                l = EventsLogFile( os.path.join(root, f) )
+            else:
+                raise NameError(logfiletype) 
+
+            if not l.terminated:
+                sys.stdout.write('%s ... Not OK.\n' %f)
+                job = f.split('-')[-1]
+                jobs_not_terminated.append(job)
+            else:
+                sys.stdout.write('%s ... OK.\n' %f)
+
+    if len(jobs_not_terminated) > 0: 
+        sys.stdout.write('Non-terminated jobs are (%s): %s\n' % (
+            len(jobs_not_terminated), ','.join(jobs_not_terminated)))
+    else:
+        sys.stdout.write('All finished jobs are terminated correctly. \n')
 
     if len(file_list) < num:
         jobs_missing = jobs_created.difference(file_list)
         jobs_missing = [str(li) for li in jobs_missing]
         sys.stdout.write('Missing jobs are: %s\n' % ','.join(jobs_missing))
+    else:
+        sys.stdout.write('No missing jobs.\n')
         
-    
+                
 if __name__ == '__main__':
     main()
