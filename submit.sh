@@ -22,6 +22,11 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.9"    "Plot summary with data."
     printf "\n\t%-9s  %-40s"  "0.1.10"   "Split con3650 data sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.1.11"   "Submit PBS jobs on con3650 data"
+    printf "\n\t%-9s  %-40s"  "0.1.12"   "Check PBS jobs on con3650 data"
+    printf "\n\t%-9s  %-40s"  "0.1.13"   "Select events on con3650 data"
+    printf "\n\t%-9s  %-40s"  "0.1.14"   "Merge events on con3650 data"
+    printf "\n\t%-9s  %-40s"  "0.1.15"   "Plot summaary with data and con3650"
+    printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
     printf "\n\t%-9s  %-40s"  "0.2.2"    "Split psi(2S) MC sample with each group 20G"
@@ -38,12 +43,18 @@ usage() {
 
 if [[ $# -eq 0 ]]; then
     usage
+    echo "Please enter your option: "
+    read option
+else
+    option=$1    
 fi
 
+case $option in
+    
+    # --------------------------------------------------------------------------
+    #  0.1 Data  
+    # --------------------------------------------------------------------------
 
-option=$1
-
-case $option in 
     0.1) echo "Running on data sample..."
 	 ;;
 
@@ -81,7 +92,7 @@ case $option in
 	   ./python/chk_pbsjobs.py run/events/data  633
 	   ;;
 
-    0.1.8) echo  "Merge root files..."
+    0.1.8) echo  "Merge event root file on data..."
 	   mkdir run/hist/data 
 	   ./python/mrg_rootfiles.py  run/events/data run/hist/data 
 	   ;; 
@@ -101,6 +112,32 @@ case $option in
 	    qsub pbs/qsub_jpsi2invi_con3650.sh  
 	    ;;
 
+    0.1.12) echo "Check PBS jobs on con3650 data..."
+	   ./python/chk_pbsjobs.py run/con3650  11 
+	   ;;
+
+    0.1.13) echo  "Select events on con3650 data..."
+	   mkdir run/events/con3650
+	   for i in {1..11}  
+	   do  
+	       echo "processing run/con3650/jpsi2invi_con3650-$i.root ..."
+	       ./python/sel_events.py  run/con3650/jpsi2invi_con3650-$i.root  run/events/con3650/jpsi2invi_con3650-$i.root
+	   done   
+	   ;; 
+    
+    0.1.14) echo  "Merge event root file on con3650 data..."
+	   mkdir run/hist/con3650
+	   ./python/mrg_rootfiles.py  run/events/con3650 run/hist/con3650 
+	   ;; 
+
+    0.1.15) echo  "Plot summary with data and con3650..."
+	   ./python/plt_summary.py 
+	   ;; 
+
+
+    # --------------------------------------------------------------------------
+    #  0.2 MC Sample 
+    # --------------------------------------------------------------------------
     
     0.2) echo "Running on MC sample..."
 	 ;;
@@ -125,7 +162,6 @@ case $option in
 
     0.2.5) echo  "Select events on psi(2S) MC sample..."
 	   mkdir run/events/mc_psip12  
-	   #./python/sel_events.py  run/mc_psip12/jpsi2invi_mc_psip_12mc-1.root  run/events/mc_psip12/jpsi2invi_mc_psip_12mc-1.root
 	   for i in {1..394}  
 	   do  
 	       echo "processing run/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root ..."
