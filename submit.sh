@@ -42,10 +42,11 @@ usage() {
 
 if [[ $# -eq 0 ]]; then
     usage
+    echo "Please enter your option: "
+    read option
+else
+    option=$1    
 fi
-
-
-option=$1
 
 case $option in
     
