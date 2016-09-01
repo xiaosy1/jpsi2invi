@@ -41,7 +41,7 @@ def main():
 
     log = src 
     logdir = src.split('/')[-1]
-    if logdir in ['data', 'mc_psip12']:
+    if logdir in ['data', 'mc_psip12', 'con3650']:
         logfiletype = 'BossLogFile'
     elif logdir == 'events':
         logfiletype = 'EventsLogFile'
@@ -64,7 +64,12 @@ def main():
     
     sys.stdout.write('Checking log files...\n')
     jobs_not_terminated = []
+    num_logfiles = []
     for root, dirs, files in os.walk(log):
+        num_logfiles = files 
+        if len(files) == 0:
+            sys.stdout.write('No log files found!\n')
+            break 
         for f in files:
             if logfiletype == 'BossLogFile': 
                 l = BossLogFile( os.path.join(root, f) )
@@ -80,10 +85,11 @@ def main():
             else:
                 sys.stdout.write('%s ... OK.\n' %f)
 
+
     if len(jobs_not_terminated) > 0: 
         sys.stdout.write('Non-terminated jobs are (%s): %s\n' % (
             len(jobs_not_terminated), ','.join(jobs_not_terminated)))
-    else:
+    elif len(num_logfiles) > 0 :
         sys.stdout.write('All finished jobs are terminated correctly. \n')
 
     if len(file_list) < num:
