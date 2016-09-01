@@ -25,6 +25,7 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.12"   "Check PBS jobs on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.13"   "Select events on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.14"   "Merge events on con3650 data"
+    printf "\n\t%-9s  %-40s"  "0.1.15"   "Plot summaary with data and con3650"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
@@ -161,7 +162,6 @@ case $option in
 
     0.2.5) echo  "Select events on psi(2S) MC sample..."
 	   mkdir run/events/mc_psip12  
-	   #./python/sel_events.py  run/mc_psip12/jpsi2invi_mc_psip_12mc-1.root  run/events/mc_psip12/jpsi2invi_mc_psip_12mc-1.root
 	   for i in {1..394}  
 	   do  
 	       echo "processing run/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root ..."
