@@ -26,6 +26,8 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.13"   "Select events on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.14"   "Merge events on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.15"   "Plot summaary with data and con3650"
+    printf "\n\t%-9s  %-40s"  "0.1.16"   "Split data09 sample with each group 20G"
+    printf "\n\t%-9s  %-40s"  "0.1.17"   "Submit PBS jobs on 09 data sample"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
@@ -133,6 +135,16 @@ case $option in
     0.1.15) echo  "Plot summary with data and con3650..."
 	   ./python/plt_summary.py 
 	   ;; 
+
+    0.1.16) echo "Split data09 sample with each group 20G ..."
+	   ./python/get_samples.py /bes3fs/offline/data/664-1/psip/dst $HOME/bes/jpsi2invi/v0.1/run/samples/data_664-1_psip.txt 20G
+	   # made 314 groups 
+	   ;;
+    0.1.17) echo "Submit PBS jobs on 09 data..."
+	    mkdir run/data09
+	    mkdir -p run/log/data09  
+	    qsub pbs/qsub_jpsi2invi_data09.sh  
+	    ;;
 
 
     # --------------------------------------------------------------------------
