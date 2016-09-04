@@ -28,6 +28,7 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.15"   "Plot summaary with data and con3650"
     printf "\n\t%-9s  %-40s"  "0.1.16"   "Split data09 sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.1.17"   "Submit PBS jobs on 09 data sample"
+    printf "\n\t%-9s  %-40s"  "0.1.18"   "Check PBS PBS jobs on 09 data sample"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
@@ -39,6 +40,9 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
     printf "\n\t%-9s  %-40s"  "0.2.8"    "Merge events files on psi(2S) MC"
     printf "\n\t%-9s  %-40s"  "0.2.9"    "Plot summary with data and psi(2S) MC"
+    printf "\n\t%-9s  %-40s"  "0.2.10"   "Run a few events on 09 psi(2S) MC"
+    printf "\n\t%-9s  %-40s"  "0.2.11"   "Split 09 psi(2S) MC sample with each group 20G"
+    printf "\n\t%-9s  %-40s"  "0.2.12"   "Submit PBS jobs on 09 psi(2S) MC sample"         
     printf "\n\n" 
 }
 
@@ -146,6 +150,9 @@ case $option in
 	    qsub pbs/qsub_jpsi2invi_data09.sh  
 	    ;;
 
+    0.1.18) echo "Check PBS jobs on 09 data..."
+	   ./python/chk_pbsjobs.py run/data09  314 
+	   ;;
 
     # --------------------------------------------------------------------------
     #  0.2 MC Sample 
@@ -199,6 +206,21 @@ case $option in
     0.2.9) echo  "Plot summary with data and psip(2S) MC ..."
 	   ./python/plt_summary.py 
 	   ;; 
+
+    0.2.10) echo "Run with a few events on 09 MC ..." 
+	   boss.exe jobOptions_jpsi2invi.txt 
+	   ;;
+
+    0.2.11) echo "Split 09 psi(2S) MC sample with each group 20G ..."
+	   ./python/get_samples.py  /bes3fs/offline/data/664p01/psip/mc/09dst $HOME/bes/jpsi2invi/v0.1/run/samples/mc_664p01_psip_09mc.txt 20G
+	   # made 106 groups 
+	   ;;
+
+    0.2.12) echo "Submit PBS jobs on 09 psi(2S) MC sample..."
+	    mkdir run/mc_psip09
+	    mkdir run/log/mc_psip09
+	    qsub pbs/qsub_jpsi2invi_mc_psip09.sh  
+	    ;;
 
 
 esac
