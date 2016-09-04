@@ -8,7 +8,6 @@
 #PBS -o $HOME/bes/jpsi2invi/v0.1/run/log/data09/jpsi2invi_data09.log 
 #PBS -t 1-314%200
 
-
 date
 
 hostname

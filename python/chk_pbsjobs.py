@@ -41,7 +41,7 @@ def main():
 
     log = src 
     logdir = src.split('/')[-1]
-    if logdir in ['data', 'mc_psip12', 'con3650']:
+    if logdir in ['data', 'mc_psip12', 'con3650', 'data09']:
         logfiletype = 'BossLogFile'
     elif logdir == 'events':
         logfiletype = 'EventsLogFile'
@@ -59,9 +59,6 @@ def main():
             file_list.append(int(f.split('-')[-1].split('.')[0]))
             total_size = total_size + os.path.getsize(os.path.join(root,f))
 
-    sys.stdout.write('Found %s files, with total size %s.\n' %(
-        len(file_list), size(total_size)))
-    
     sys.stdout.write('Checking log files...\n')
     jobs_not_terminated = []
     num_logfiles = []
@@ -86,6 +83,9 @@ def main():
                 sys.stdout.write('%s ... OK.\n' %f)
 
 
+    sys.stdout.write('Found %s files, with total size %s.\n' %(
+        len(file_list), size(total_size)))
+    
     if len(jobs_not_terminated) > 0: 
         sys.stdout.write('Non-terminated jobs are (%s): %s\n' % (
             len(jobs_not_terminated), ','.join(jobs_not_terminated)))

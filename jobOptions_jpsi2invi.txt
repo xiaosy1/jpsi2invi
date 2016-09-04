@@ -12,7 +12,8 @@ EventCnvSvc.digiRootInputFile = {
 // "/bes3fs/offline/data/664p03/psip/09mc/dst/09psip_stream001_psip_run9025_file2.dst"
 // "/bes3fs/offline/data/664p03/psip/12mc/dst/12psip_stream001_psip_run26389_file1.dst" 
 // "/bes3fs/offline/data/663p01/3650/dst/130605/run_0033727_All_file001_SFO-1.dst"
-"/bes3fs/offline/data/664-1/psip/dst/090411/run_0008955_All_file003_SFO-2.dst"
+// "/bes3fs/offline/data/664-1/psip/dst/090411/run_0008955_All_file003_SFO-2.dst"
+"/bes3fs/offline/data/664p01/psip/mc/09dst/09psip_stream001_run8114_file1.dst"
 };
 
 // Set output level threshold (2=DEBUG, 3=INFO, 4=WARNING, 5=ERROR, 6=FATAL )
