@@ -29,6 +29,10 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.16"   "Split data09 sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.1.17"   "Submit PBS jobs on 09 data sample"
     printf "\n\t%-9s  %-40s"  "0.1.18"   "Check PBS PBS jobs on 09 data sample"
+    printf "\n\t%-9s  %-40s"  "0.1.19"   "Event selecion on 09 data"
+    printf "\n\t%-9s  %-40s"  "0.1.20"   "PBS jobs for event selecion on 09 data"
+    printf "\n\t%-9s  %-40s"  "0.1.21"   "Check PBS jobs for event selecion on 09 data"
+    printf "\n\t%-9s  %-40s"  "0.1.22"   "Merge event file on 09 data"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
@@ -43,6 +47,7 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.2.10"   "Run a few events on 09 psi(2S) MC"
     printf "\n\t%-9s  %-40s"  "0.2.11"   "Split 09 psi(2S) MC sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.2.12"   "Submit PBS jobs on 09 psi(2S) MC sample"         
+    printf "\n\t%-9s  %-40s"  "0.2.13"   "Check PBS jobs on 09 psi(2S) MC sample"         
     printf "\n\n" 
 }
 
@@ -154,6 +159,26 @@ case $option in
 	   ./python/chk_pbsjobs.py run/data09  314 
 	   ;;
 
+    0.1.19) echo  "Event selection on 09 data..."
+	   mkdir run/events/data09 
+	   ./python/sel_events.py  run/data09/jpsi2invi_data09-1.root  run/events/data09/jpsi2invi_data09-1.root 
+	   ;; 
+
+    0.1.20) echo "PBS jobs for event selection on 09 data..."
+	   mkdir run/events/data09
+	   mkdir run/log/events/data09   
+	   qsub pbs/qsub_jpsi2invi_events_data09.sh  
+	   ;;
+
+    0.1.21) echo "Check PBS jobs of event selection on 09 data..."
+	   ./python/chk_pbsjobs.py run/events/data09  314
+	   ;;
+
+    0.1.22) echo  "Merge event files on 09 data..."
+	   mkdir run/hist/data09
+	   ./python/mrg_rootfiles.py  run/events/data09 run/hist/data09 
+	   ;; 
+
     # --------------------------------------------------------------------------
     #  0.2 MC Sample 
     # --------------------------------------------------------------------------
@@ -194,7 +219,7 @@ case $option in
 	   qsub pbs/qsub_jpsi2invi_events_mc_psip12.sh  
 	   ;;
 
-    0.2.7) echo "Check events selection jobs on psi(2s) MC sample..."
+    0.2.7) echo "Check events selection jobs on psi(2S) MC sample..."
 	   ./python/chk_pbsjobs.py run/events/mc_psip12  394 
 	   ;;
 
@@ -222,6 +247,9 @@ case $option in
 	    qsub pbs/qsub_jpsi2invi_mc_psip09.sh  
 	    ;;
 
+    0.2.13) echo "Check PBS jobs on 09 psi(2S) MC sample..."
+	   ./python/chk_pbsjobs.py $HOME/bes/jpsi2invi/v0.1/run/mc_psip09  106
+	   ;;
 
 esac
 

@@ -41,7 +41,7 @@ def main():
 
     log = src 
     logdir = src.split('/')[-1]
-    if logdir in ['data', 'mc_psip12', 'con3650', 'data09']:
+    if logdir in ['data', 'mc_psip12', 'con3650', 'data09', 'mc_psip09']:
         logfiletype = 'BossLogFile'
     elif logdir == 'events':
         logfiletype = 'EventsLogFile'
@@ -83,7 +83,7 @@ def main():
                 sys.stdout.write('%s ... OK.\n' %f)
 
 
-    sys.stdout.write('Found %s files, with total size %s.\n' %(
+    sys.stdout.write('\nFound %s files, with total size %s.\n' %(
         len(file_list), size(total_size)))
     
     if len(jobs_not_terminated) > 0: 
@@ -95,7 +95,8 @@ def main():
     if len(file_list) < num:
         jobs_missing = jobs_created.difference(file_list)
         jobs_missing = [str(li) for li in jobs_missing]
-        sys.stdout.write('Missing jobs are: %s\n' % ','.join(jobs_missing))
+        sys.stdout.write('Missing jobs are (%s): %s\n' % (
+            len(jobs_missing), ','.join(jobs_missing)))
     else:
         sys.stdout.write('No missing jobs.\n')
         
