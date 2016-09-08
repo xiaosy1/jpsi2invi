@@ -48,6 +48,10 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.2.11"   "Split 09 psi(2S) MC sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.2.12"   "Submit PBS jobs on 09 psi(2S) MC sample"         
     printf "\n\t%-9s  %-40s"  "0.2.13"   "Check PBS jobs on 09 psi(2S) MC sample"         
+    printf "\n\t%-9s  %-40s"  "0.2.14"   "Select events on 09 psi(2S) MC sample"         
+    printf "\n\t%-9s  %-40s"  "0.2.15"   "Submit PBS jobs to select events on 09 psi(2S) MC sample"         
+    printf "\n\t%-9s  %-40s"  "0.2.16"   "Check PBS jobs to select events on 09 psi(2S) MC sample"         
+    printf "\n\t%-9s  %-40s"  "0.2.17"   "Merge events file on 09 psi(2S) MC sample"         
     printf "\n\n" 
 }
 
@@ -250,6 +254,24 @@ case $option in
     0.2.13) echo "Check PBS jobs on 09 psi(2S) MC sample..."
 	   ./python/chk_pbsjobs.py $HOME/bes/jpsi2invi/v0.1/run/mc_psip09  106
 	   ;;
+
+    0.2.14) echo  "Event selection on 09 psi(2S) MC sample..."
+	    mkdir run/events/mc_psip09 
+	    ./python/sel_events.py  run/mc_psip09/jpsi2invi_mc_psip_09mc-1.root  run/events/mc_psip09/jpsi2invi_mc_psip_09mc-1.root 
+	    ;; 
+
+    0.2.15) echo "Submit selection PBS jobs on 09 psi(2S) sample..."
+	   mkdir run/events/mc_psip09
+	   mkdir run/log/events/mc_psip09
+	   qsub pbs/qsub_jpsi2invi_events_mc_psip09.sh  
+	   ;;
+    0.2.16) echo "Check selection jobs on 09 psi(2S) MC sample..."
+	   ./python/chk_pbsjobs.py run/events/mc_psip09  106 
+	   ;;
+    0.2.17) echo  "Merge events files of 09 psi(2S) MC sample..."
+	   mkdir run/hist/mc_psip09
+	   ./python/mrg_rootfiles.py  run/events/mc_psip09 run/hist/mc_psip09 
+	   ;; 
 
 esac
 
