@@ -25,7 +25,7 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.12"   "Check PBS jobs on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.13"   "Select events on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.14"   "Merge events on con3650 data"
-    printf "\n\t%-9s  %-40s"  "0.1.15"   "Plot summaary with data and con3650"
+    printf "\n\t%-9s  %-40s"  "0.1.15"   "Plot summary with data and con3650"
     printf "\n\t%-9s  %-40s"  "0.1.16"   "Split data09 sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.1.17"   "Submit PBS jobs on 09 data sample"
     printf "\n\t%-9s  %-40s"  "0.1.18"   "Check PBS PBS jobs on 09 data sample"
@@ -33,6 +33,7 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.20"   "PBS jobs for event selecion on 09 data"
     printf "\n\t%-9s  %-40s"  "0.1.21"   "Check PBS jobs for event selecion on 09 data"
     printf "\n\t%-9s  %-40s"  "0.1.22"   "Merge event file on 09 data"
+    printf "\n\t%-9s  %-40s"  "0.1.23"   "Plot summary on 09 data"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
@@ -52,6 +53,7 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.2.15"   "Submit PBS jobs to select events on 09 psi(2S) MC sample"         
     printf "\n\t%-9s  %-40s"  "0.2.16"   "Check PBS jobs to select events on 09 psi(2S) MC sample"         
     printf "\n\t%-9s  %-40s"  "0.2.17"   "Merge events file on 09 psi(2S) MC sample"         
+    printf "\n\t%-9s  %-40s"  "0.2.18"   "Plot summary with 09 data and 09 psi(2S) MC sample"         
     printf "\n\n" 
 }
 
@@ -113,7 +115,7 @@ case $option in
 	   ;; 
 
     0.1.9) echo  "Plot summary with data..."
-	   ./python/plt_summary.py 
+	   ./python/plt_summary.py data 
 	   ;; 
 
     0.1.10) echo "Split con3650 data sample with each group 20G ..."
@@ -146,7 +148,7 @@ case $option in
 	   ;; 
 
     0.1.15) echo  "Plot summary with data and con3650..."
-	   ./python/plt_summary.py 
+	   ./python/plt_summary.py data con3650 
 	   ;; 
 
     0.1.16) echo "Split data09 sample with each group 20G ..."
@@ -182,6 +184,10 @@ case $option in
 	   mkdir run/hist/data09
 	   ./python/mrg_rootfiles.py  run/events/data09 run/hist/data09 
 	   ;; 
+
+    0.1.23) echo  "Plot summary with 09 data..."
+	    ./python/plt_summary.py data09  
+	    ;; 
 
     # --------------------------------------------------------------------------
     #  0.2 MC Sample 
@@ -233,7 +239,7 @@ case $option in
 	   ;; 
 
     0.2.9) echo  "Plot summary with data and psip(2S) MC ..."
-	   ./python/plt_summary.py 
+	   ./python/plt_summary.py data mc_psip12 
 	   ;; 
 
     0.2.10) echo "Run with a few events on 09 MC ..." 
@@ -271,6 +277,9 @@ case $option in
     0.2.17) echo  "Merge events files of 09 psi(2S) MC sample..."
 	   mkdir run/hist/mc_psip09
 	   ./python/mrg_rootfiles.py  run/events/mc_psip09 run/hist/mc_psip09 
+	   ;; 
+    0.2.18) echo  "Plot summary with 09 data and 09 psip(2S) MC ..."
+	   ./python/plt_summary.py data09 mc_psip09
 	   ;; 
 
 esac
