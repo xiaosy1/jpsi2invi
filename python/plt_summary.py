@@ -36,14 +36,20 @@ def get_files_from_sample(sample):
     fs = [] 
     if 'data' in sample:
         fs.append(ROOT.TFile('run/hist/data/jpsi2invi_data_merged_1.root'))
-        
-    #f1 = ROOT.TFile('run/hist/data/jpsi2invi_data_merged_1.root')
-    # f1 = ROOT.TFile('run/hist/data09/jpsi2invi_data09_merged_1.root')
-    # f2 = ROOT.TFile('run/hist/mc_psip12/jpsi2invi_mc_psip_12mc_merged_1.root')
-    # f3 = ROOT.TFile('run/hist/con3650/jpsi2invi_con3650_merged_1.root')
-    # fs = [f1, f2, f3]
-    return fs 
 
+    if 'con3650' in sample:
+        fs.append(ROOT.TFile('run/hist/con3650/jpsi2invi_con3650_merged_1.root'))
+
+    if 'data09' in sample:
+        fs.append(ROOT.TFile('run/hist/data09/jpsi2invi_data09_merged_1.root'))
+
+    if 'mc_psip09' in sample:
+        fs.append(ROOT.TFile('run/hist/mc_psip09/jpsi2invi_mc_psip_09mc_merged_1.root'))
+        
+    if 'mc_psip12' in sample:
+        fs.append(ROOT.TFile('run/hist/mc_psip12/jpsi2invi_mc_psip_12mc_merged_1.root'))
+        
+    return fs 
 
 def get_common_objects_to_draw(fs, hname, leg):
     hs = []
@@ -62,21 +68,37 @@ def get_common_objects_to_draw(fs, hname, leg):
             h.GetYaxis().SetLabelSize(0.03) 
             h.GetYaxis().SetTitleOffset(1.8) 
             h.SetMarkerStyle(ROOT.kFullDotLarge)
-            leg.AddEntry(h, "Data", "lp")
             
         elif fs.index(f) == 1:
             h.SetLineColor(29)
             h.SetFillColor(29)
-            leg.AddEntry(h, "#psi(2S) inclusive MC")
 
         elif fs.index(f) == 2:
             h.SetLineColor(ROOT.kOrange)
             h.SetFillColor(ROOT.kOrange)
-            leg.AddEntry(h3, "Cont.")
             
+        leg = leg_add_entry_hist(leg, f, h)    
         hs.append(h) 
             
     return  hs, leg 
+
+
+def leg_add_entry_hist(leg, f, h):
+    sample = f.GetName()
+    sample = sample.split('/')[2] 
+
+    if sample in ['data' or 'data09']:
+        leg.AddEntry(h, "Data", "lp")
+
+    elif sample in ['con3650']:
+        leg.AddEntry(h, "Cont.")
+
+    elif sample in ['mc_psip12', 'mc_psip09']:
+        leg.AddEntry(h, "#psi(2S) inclusive MC")
+    else:
+        raise NameError(sample)
+
+    return leg
 
 
 def draw_mrecpipi(sample, c, fs):
