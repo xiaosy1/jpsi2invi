@@ -5,19 +5,32 @@
 # Created [2016-03-28 Mon 08:19]
 
 
-if [[ $# -eq 0 ]]; then 
+usage() {
     printf "NAME\n\tbuild.sh - Main driver to build programs\n"
     printf "\nSYNOPSIS\n"
     printf "\n\t%-5s\n" "./build.sh [OPTION]" 
     printf "\nOPTIONS\n" 
     printf "\n\t%-5s  %-40s\n"  "1"  "build Jpsi2invi analyzer" 
+    printf "\n\t%-5s  %-40s\n"  "2"  "build Jpsi2incl analyzer"
+    printf "\n\n" 
+}
+
+if [[ $# -eq 0 ]]; then
+    usage
+    echo "Please enter your option: "
+    read option
+else
+    option=$1    
 fi
 
-option=$1
 
 case $option in 
     1) echo "Building Jpsi2invi module..."
        cd Analysis/Physics/PsiPrime/Jpsi2invi/Jpsi2invi-00-00-01/cmt 
+       gmake  
+       ;;
+    2) echo "Building Jpsi2incl module..."
+       cd Analysis/Physics/PsiPrime/Jpsi2incl/Jpsi2incl-00-00-01/cmt 
        gmake  
        ;;
 esac
