@@ -20,7 +20,7 @@ EventCnvSvc.digiRootInputFile = {
 MessageSvc.OutputLevel = 5;
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 5000;
+ApplicationMgr.EvtMax = 500;
 // ApplicationMgr.EvtMax = -1;
 
 Jpsi2incl.OutputFileName="jpsi2incl.root";
