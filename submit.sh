@@ -35,6 +35,7 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.22"   "Merge event file on 09 data"
     printf "\n\t%-9s  %-40s"  "0.1.23"   "Plot summary on 09 data"
     printf "\n\t%-9s  %-40s"  "0.1.24"   "Run with Jpsi2incl on a few 09 data events "
+    printf "\n\t%-9s  %-40s"  "0.1.25"   "Submit Jpsi2incl PBS jobs on data09"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
@@ -193,7 +194,13 @@ case $option in
     0.1.24) echo "Run with Jpsi2incl on a few data09 events ..."
 	   boss.exe pbs/jobOptions_jpsi2incl.txt
 	   ;;
-  
+
+    0.1.25) echo "Submit Jpsi2incl PBS jobs on data09..."
+	   mkdir -p run/jpsi2incl/data09
+	   mkdir -p run/jpsi2incl/log/data09
+	   qsub pbs/qsub_jpsi2incl_data09.sh  
+	   ;;
+
     # --------------------------------------------------------------------------
     #  0.2 MC Sample 
     # --------------------------------------------------------------------------
