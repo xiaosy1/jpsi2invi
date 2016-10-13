@@ -66,7 +66,6 @@ private:
   double m_costheta_endcap_max;
   double m_energy_barrel_min;
   double m_energy_endcap_min;
-  double m_photon_iso_angle_min;
   double m_pion_polar_angle_max;
   double m_pion_momentum_max;
   double m_prob_pion_min;
@@ -81,7 +80,7 @@ private:
   TFile* m_fout; 
   
   // define Histograms
-  TH1F* h_evtflw; 
+  TH1F* h_cutflw; 
   
   // define Trees
   TTree* m_tree;
@@ -110,14 +109,6 @@ private:
   double m_trkm_phi; 
   double m_trkm_eraw; 
 
-  // neutral tracks
-  int m_nshow;
-  int m_ngam;
-  std::vector<double> *m_raw_gpx; 
-  std::vector<double> *m_raw_gpy; 
-  std::vector<double> *m_raw_gpz; 
-  std::vector<double> *m_raw_ge; 
-  
   // vertex 
   double m_vr0;
   double m_vz0;
@@ -131,13 +122,14 @@ private:
   double m_prob_pb; 
 
   // pion info
-  double m_pip_px;
-  double m_pip_py;
-  double m_pip_pz;
+  int m_npipi; 
+  std::vector<double> *m_pip_px;
+  std::vector<double> *m_pip_py;
+  std::vector<double> *m_pip_pz;
 
-  double m_pim_px;
-  double m_pim_py;
-  double m_pim_pz;
+  std::vector<double> *m_pim_px;
+  std::vector<double> *m_pim_py;
+  std::vector<double> *m_pim_pz;
 
   // fitted info
   double m_vtx_pip_px; 
@@ -158,7 +150,7 @@ private:
   long m_pion_matched;
   long m_lep_matched;
 
-  // jpsi2invi
+  // jpsi2incl
   int m_ntrk; 
   int m_npho;
 
@@ -203,7 +195,7 @@ private:
   // functions
   void book_histogram();
   void book_tree(); 
-  bool buildJpsiToInvisible();
+  bool buildJpsiToInclusive();
   void saveGenInfo(); 
   void saveTrkInfo(EvtRecTrackIterator,
 		   EvtRecTrackIterator);
@@ -211,8 +203,6 @@ private:
 		    RecMdcKalTrack *);
   void saveVtxInfo(HepLorentzVector,
 		   HepLorentzVector);  
-  void saveGamInfo(std::vector<int>,
-		   SmartDataPtr<EvtRecTrackCol>);
   int selectChargedTracks(SmartDataPtr<EvtRecEvent>,
 			  SmartDataPtr<EvtRecTrackCol>,
 			  std::vector<int> &,
@@ -226,9 +216,9 @@ private:
 		    double&);
   bool hasGoodPiPiVertex(RecMdcKalTrack *,
 			 RecMdcKalTrack *,
-			 bool);
-  int selectNeutralTracks(SmartDataPtr<EvtRecEvent>,
-			  SmartDataPtr<EvtRecTrackCol>);
+			 bool&,
+			 bool&,
+			 bool&);
   bool passVertexSelection(CLHEP::Hep3Vector,
 			   RecMdcKalTrack* ); 
   CLHEP::Hep3Vector getOrigin();
@@ -261,6 +251,18 @@ const int PSI2S_PDG_ID = 100443;
 const int PROTON_PDG_ID = 2212; 
 const int NEUTRON_PDG_ID = 2112; 
 
+enum {
+  CUT_RAW,  
+  CUT_NPM, 
+  CUT_COSTHETA, 
+  CUT_PION, 
+  CUT_PID, 
+  CUT_COSTHETA_PIPI, 
+  CUT_COSTHETA_PIPISYS, 
+  CUT_MPIPI,
+  CUT_TOTAL
+}; 
+
 //
 // member functions
 //
@@ -268,10 +270,12 @@ const int NEUTRON_PDG_ID = 2112;
 Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),
   m_tree(0),
-  m_raw_gpx(0), 
-  m_raw_gpy(0), 
-  m_raw_gpz(0), 
-  m_raw_ge(0)
+  m_pip_px(0),
+  m_pip_py(0),
+  m_pip_pz(0),
+  m_pim_px(0),
+  m_pim_py(0),
+  m_pim_pz(0)
 {
   declareProperty("OutputFileName", m_output_filename);
   declareProperty("IsMonteCarlo", m_isMonteCarlo);
@@ -288,10 +292,9 @@ Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("CosthetaEndcapMax", m_costheta_endcap_max=0.92);
   declareProperty("EnergyBarrelMin", m_energy_barrel_min=0.025); 
   declareProperty("EnergyEndcapMin", m_energy_endcap_min=0.050); 
-  declareProperty("PhotonIsoAngleMin", m_photon_iso_angle_min=10);
   declareProperty("PionPolarAngleMax", m_pion_polar_angle_max=0.99);
   declareProperty("PionMomentumMax", m_pion_momentum_max=1.9); 
-  declareProperty("ProbPionMin", m_prob_pion_min=0.001);
+  declareProperty("ProbPionMin", m_prob_pion_min=0.0008);
   declareProperty("DipionMassMin", m_dipion_mass_min=3.0); 
   declareProperty("DipionMassMax", m_dipion_mass_max=3.2); 
   declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=0.99);
@@ -301,7 +304,6 @@ Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
 
 StatusCode Jpsi2incl::initialize(){
   MsgStream log(msgSvc(), name());
-  log << MSG::INFO << ">>>>>>> in initialize()" << endmsg;
 
   m_fout = new TFile(m_output_filename.c_str(), "RECREATE");
   m_fout->cd(); 
@@ -318,20 +320,14 @@ StatusCode Jpsi2incl::execute() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "in execute()" << endreq;
   
-  // clear vectors 
-  m_raw_gpx->clear();
-  m_raw_gpy->clear();
-  m_raw_gpz->clear();
-  m_raw_ge->clear();
-  
-  h_evtflw->Fill(0); // raw 
+  h_cutflw->Fill(CUT_RAW); // raw 
   SmartDataPtr<Event::EventHeader>eventHeader(eventSvc(),"/Event/EventHeader");
   if(!eventHeader) return StatusCode::FAILURE;
 
   m_run = eventHeader->runNumber();
   m_event = eventHeader->eventNumber();
   
-  if (buildJpsiToInvisible()) {
+  if (buildJpsiToInclusive()) {
     m_tree->Fill(); // only fill tree for the selected events 
   }
 
@@ -344,7 +340,7 @@ StatusCode Jpsi2incl::finalize() {
 
   m_fout->cd();
   m_tree->Write();
-  h_evtflw->Write();
+  h_cutflw->Write();
   m_fout->Close();
   
   return StatusCode::SUCCESS;
@@ -357,17 +353,16 @@ Jpsi2incl::~Jpsi2incl() {
 
 void Jpsi2incl::book_histogram() {
 
-  h_evtflw = new TH1F("hevtflw", "eventflow", 10, 0, 10);
-  if (!h_evtflw) return;
-  h_evtflw->GetXaxis()->SetBinLabel(1, "raw");
-  h_evtflw->GetXaxis()->SetBinLabel(2, "N_{Good}=2");
-  h_evtflw->GetXaxis()->SetBinLabel(3, "N_{#gamma}<20");
-  h_evtflw->GetXaxis()->SetBinLabel(4, "|cos#theta|<0.99");
-  h_evtflw->GetXaxis()->SetBinLabel(5, "|p|<1.9");
-  h_evtflw->GetXaxis()->SetBinLabel(6, "PID"); 
-  h_evtflw->GetXaxis()->SetBinLabel(7, "cos#theta_{#pi^{+}#pi^{-}}<0.99");
-  h_evtflw->GetXaxis()->SetBinLabel(8, "cos#theta_{#pi#pi sys}<0.99");
-  h_evtflw->GetXaxis()->SetBinLabel(9, "3<M_{#pi#pi}^{rec}<3.2");
+  h_cutflw = new TH1F("hcutflw", "cutflow", CUT_TOTAL, 0, CUT_TOTAL);
+  if (!h_cutflw) return;
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_RAW+1, "raw");
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_NPM+1, "N^{+}>=1 N^{-}>=1");
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_COSTHETA+1, "|cos#theta|<0.99");
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_PION+1, "|p|<1.9");
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_PID+1, "PID"); 
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_COSTHETA_PIPI+1, "cos#theta_{#pi^{+}#pi^{-}}<0.99");
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_COSTHETA_PIPISYS+1, "cos#theta_{#pi#pi sys}<0.99");
+  h_cutflw->GetXaxis()->SetBinLabel(CUT_MPIPI+1, "3<M_{#pi#pi}^{rec}<3.2");
 }
 
 
@@ -404,15 +399,6 @@ void Jpsi2incl::book_tree() {
   m_tree->Branch("vr0", &m_vr0, "vr0/D");
   m_tree->Branch("vz0", &m_vz0, "vz0/D");
 
-	  
-  //netual tracks
-  m_tree->Branch("nshow", &m_nshow, "nshow/I");
-  m_tree->Branch("ngam", &m_ngam, "ngam/I");
-  m_tree->Branch("raw_gpx", &m_raw_gpx);
-  m_tree->Branch("raw_gpy", &m_raw_gpy);
-  m_tree->Branch("raw_gpz", &m_raw_gpz);
-  m_tree->Branch("raw_ge", &m_raw_ge);
-
   // PID info
   m_tree->Branch("prob_pip", &m_prob_pip, "prob_pip/D"); 
   m_tree->Branch("prob_pim", &m_prob_pim, "prob_pim/D"); 
@@ -422,13 +408,14 @@ void Jpsi2incl::book_tree() {
   m_tree->Branch("prob_pb", &m_prob_pb, "prob_pb/D"); 
 
   // save pion info
-  m_tree->Branch("pip_px", &m_pip_px, "pip_px/D");
-  m_tree->Branch("pip_py", &m_pip_py, "pip_py/D");
-  m_tree->Branch("pip_pz", &m_pip_pz, "pip_pz/D");
+  m_tree->Branch("npipi", &m_npipi, "npipi/I");
+  m_tree->Branch("pip_px", &m_pip_px);
+  m_tree->Branch("pip_py", &m_pip_py);
+  m_tree->Branch("pip_pz", &m_pip_pz);
 
-  m_tree->Branch("pim_px", &m_pim_px, "pim_px/D");
-  m_tree->Branch("pim_py", &m_pim_py, "pim_py/D");
-  m_tree->Branch("pim_pz", &m_pim_pz, "pim_pz/D");
+  m_tree->Branch("pim_px", &m_pim_px);
+  m_tree->Branch("pim_py", &m_pim_py);
+  m_tree->Branch("pim_pz", &m_pim_pz);
 
   // fitted info
   m_tree->Branch("vtx_pip_px", &m_vtx_pip_px, "vtx_pip_px/D");
@@ -485,7 +472,7 @@ void Jpsi2incl::book_tree() {
 }
 
 
-bool Jpsi2incl::buildJpsiToInvisible() {
+bool Jpsi2incl::buildJpsiToInclusive() {
 
   if (m_isMonteCarlo) saveGenInfo(); 
   
@@ -498,15 +485,11 @@ bool Jpsi2incl::buildJpsiToInvisible() {
   std::vector<int> iPGood, iMGood; 
   selectChargedTracks(evtRecEvent, evtRecTrkCol, iPGood, iMGood);
 
-  if (m_ncharged != 2) return false;
-  h_evtflw->Fill(1); // N_{Good} = 2 
+  if (m_nptrk < 1 || m_nmtrk < 1) return false;
+  h_cutflw->Fill(CUT_NPM); // N^{+} >= 1 and N^{-} >= 1  
 
-  selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
+  m_npipi = selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
 
-  selectNeutralTracks(evtRecEvent, evtRecTrkCol);
-  if (m_ngam >= 20) return false;
-  h_evtflw->Fill(2); // N_{#gamma} < 20 
-    
   return true; 
 }
 
@@ -678,7 +661,12 @@ int Jpsi2incl::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
 				       std::vector<int> iPGood,
 				       std::vector<int> iMGood) {
   int npipi = 0;
-  bool evtflw_filled = false;
+  bool cutflw_costheta_filled = false;
+  bool cutflw_pion_filled = false;
+  bool cutflw_pid_filled = false;
+  bool cutflw_costheta_pipi_filled = false;
+  bool cutflw_costheta_pipisys_filled = false;
+  bool cutflw_mpipi_filled = false;
   
   for(unsigned int i1 = 0; i1 < iPGood.size(); i1++) {
     EvtRecTrackIterator itTrk_p = evtRecTrkCol->begin() + iPGood[i1];
@@ -693,19 +681,20 @@ int Jpsi2incl::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
       // polar angle for both pions
       if ( ! ( fabs(cos(mdcTrk_p->theta())) < m_pion_polar_angle_max &&
       	       fabs(cos(mdcTrk_m->theta())) < m_pion_polar_angle_max )) continue;
-      if ( !evtflw_filled ) h_evtflw->Fill(3); // |cos#theta| cut 
-
+      if ( !cutflw_costheta_filled ) h_cutflw->Fill(CUT_COSTHETA); 
+      cutflw_costheta_filled = true;
+      
       // pion momentum
       if ( ! ( fabs(mdcTrk_p->p()) < m_pion_momentum_max  &&
       	       fabs(mdcTrk_m->p()) < m_pion_momentum_max )) continue;
 
-      if ( !evtflw_filled ) h_evtflw->Fill(4); //|p| cut 
+      if ( !cutflw_pion_filled ) h_cutflw->Fill(CUT_PION); 
+      cutflw_pion_filled = true;
       
       // track PID
       double prob_pip, prob_kp, prob_pim, prob_km, prob_p, prob_pb; 
       calcTrackPID(itTrk_p, prob_pip, prob_kp, prob_p);  
       calcTrackPID(itTrk_m, prob_pim, prob_km, prob_pb);
-      // printf(">>> %f, %f, %f, %f \n", prob_pip, prob_kp, prob_pim, prob_km);
 
       m_prob_pip = prob_pip;
       m_prob_kp = prob_kp;
@@ -714,23 +703,23 @@ int Jpsi2incl::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
       m_prob_km = prob_km;
       m_prob_pb = prob_pb;
       
-      // if(! (prob_pip > prob_kp &&
-      // 	    prob_pip > m_prob_pion_min &&
-      // 	    prob_pim > prob_km &&
-      // 	    prob_pim > m_prob_pion_min) ) continue;
+      if(! (prob_pip > prob_kp &&
+      	    prob_pip > m_prob_pion_min &&
+      	    prob_pim > prob_km &&
+      	    prob_pim > m_prob_pion_min) ) continue;
 
-      if ( !evtflw_filled ) h_evtflw->Fill(5); //PID
- 
+      if ( !cutflw_pid_filled ) h_cutflw->Fill(CUT_PID); 
+      cutflw_pid_filled = true;
+   
       // apply vertex fit
       RecMdcKalTrack *pipTrk = (*(evtRecTrkCol->begin()+iPGood[i1]))->mdcKalTrack();
       RecMdcKalTrack *pimTrk = (*(evtRecTrkCol->begin()+iMGood[i2]))->mdcKalTrack();
 
+      if (! hasGoodPiPiVertex(pipTrk, pimTrk, cutflw_costheta_pipi_filled,
+			      cutflw_costheta_pipisys_filled, cutflw_mpipi_filled) ) continue; 
       savePionInfo(pipTrk, pimTrk);
       
-      if (! hasGoodPiPiVertex(pipTrk, pimTrk, evtflw_filled) ) continue; 
-      
       npipi++;
-      evtflw_filled = true;
     }
   } 
 
@@ -763,7 +752,9 @@ void Jpsi2incl::calcTrackPID(EvtRecTrackIterator itTrk_p,
 
 bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
 				  RecMdcKalTrack *pimTrk,
-				  bool evtflw_filled) {
+				  bool &cutflw_costheta_pipi_filled, 
+				  bool &cutflw_costheta_pipisys_filled, 
+				  bool &cutflw_mpipi_filled) {
 
   HepLorentzVector pcms(0.011*m_ecms, 0., 0., m_ecms);
 
@@ -810,15 +801,18 @@ bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
   double cos2pisys = (p4_vtx_pip + p4_vtx_pim).cosTheta();
 
   if( ! (cospipi < m_pipi_costheta_max) ) return false;
-  if( !evtflw_filled ) h_evtflw->Fill(6); // "cos#theta_{#pi^{+}#pi^{-}}<0.99"
+  if( !cutflw_costheta_pipi_filled ) h_cutflw->Fill(CUT_COSTHETA_PIPI); 
+  cutflw_costheta_pipi_filled = true; 
 
   if( ! (fabs(cos2pisys) < m_pipisys_costheta_max ) ) return false;
-  if( !evtflw_filled ) h_evtflw->Fill(7); // cos#theta_{#pi#pi sys}<0.99 
+  if( !cutflw_costheta_pipisys_filled ) h_cutflw->Fill(CUT_COSTHETA_PIPISYS); 
+  cutflw_costheta_pipisys_filled = true; 
 
   if( ! ( p4_vtx_recpipi.m() >= m_dipion_mass_min &&
 	  p4_vtx_recpipi.m() <= m_dipion_mass_max) ) return false;
-  if( !evtflw_filled ) h_evtflw->Fill(8); // 3<M_{#pi#pi}^{rec}<3.2
-
+  if( !cutflw_mpipi_filled ) h_cutflw->Fill(CUT_MPIPI); 
+  cutflw_mpipi_filled = true; 
+  
   saveVtxInfo(p4_vtx_pip, p4_vtx_pim); 
   m_vtx_mrecpipi = p4_vtx_recpipi.m();
   m_vtx_mpipi = p4_vtx_pipi.m();
@@ -826,84 +820,6 @@ bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
   m_vtx_cos2pisys = cos2pisys; 
   
   return true;
-}
-
-
-int Jpsi2incl::selectNeutralTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
-				   SmartDataPtr<EvtRecTrackCol> evtRecTrkCol) {
-
-  std::vector<int> iGam;
-  iGam.clear();
-  std::vector<int> iShow;
-  iShow.clear();
-
-  // loop through neutral tracks
-  for(int i=evtRecEvent->totalCharged(); i< evtRecEvent->totalTracks(); i++) {
-    if (i > m_total_number_of_charged_max) break;
-
-    EvtRecTrackIterator itTrk = evtRecTrkCol->begin() + i ;
-    if(!(*itTrk)->isEmcShowerValid()) continue;
-    RecEmcShower *emcTrk = (*itTrk)->emcShower();
-    iShow.push_back((*itTrk)->trackId());
-    
-    // TDC window
-    if ( !(emcTrk->time() >= m_min_emctime && emcTrk->time() <= m_max_emctime) )
-      continue; 
-
-    // Energy threshold
-    double abs_costheta(fabs(cos(emcTrk->theta())));
-    bool barrel = (abs_costheta < m_costheta_barrel_max); 
-    bool endcap = (abs_costheta > m_costheta_endcap_min
-		   && abs_costheta < m_costheta_barrel_max);
-    double eraw = emcTrk->energy();
-    
-    if ( !( (barrel && eraw > m_energy_barrel_min)
-	    || (endcap && eraw > m_energy_endcap_min)))  continue; 
-
-    // photon isolation: the opening angle between a candidate shower
-    // and the closest charged track should be larger than 10 degree 
-    CLHEP::Hep3Vector emcpos(emcTrk->x(), emcTrk->y(), emcTrk->z());
-
-    // EMC costheta cut 
-    double costhe = cos(emcpos.theta());
-    if ( fabs(costhe) >= m_gammaCosCut) continue;
-    
-    // find the nearest charged track
-    double dthe = 200.;
-    double dphi = 200.;
-    double dang = 200.; 
-    for(int j = 0; j < evtRecEvent->totalCharged(); j++) {
-      EvtRecTrackIterator jtTrk = evtRecTrkCol->begin() + j;
-      if(!(*jtTrk)->isExtTrackValid()) continue;
-      RecExtTrack *extTrk = (*jtTrk)->extTrack();
-      if(extTrk->emcVolumeNumber() == -1) continue;
-      CLHEP::Hep3Vector extpos = extTrk->emcPosition();
-      double angd = extpos.angle(emcpos);
-      double thed = extpos.theta() - emcpos.theta();
-      double phid = extpos.deltaPhi(emcpos);
-      thed = fmod(thed+CLHEP::twopi+CLHEP::twopi+pi, CLHEP::twopi) - CLHEP::pi;
-      phid = fmod(phid+CLHEP::twopi+CLHEP::twopi+pi, CLHEP::twopi) - CLHEP::pi;
-
-      if(fabs(thed) < fabs(dthe)) dthe = thed;
-      if(fabs(phid) < fabs(dphi)) dphi = phid;
-      if(angd < dang) dang = angd;	    
-    }
-
-    if(dang>=200) continue;
-    dthe = dthe * 180 / (CLHEP::pi);
-    dphi = dphi * 180 / (CLHEP::pi);
-    dang = dang * 180 / (CLHEP::pi);
-    if (dang < m_photon_iso_angle_min ) continue; 
-
-    iGam.push_back((*itTrk)->trackId());
-  } // end loop neutral tracks     
-
-  m_ngam = iGam.size();
-  m_nshow = iShow.size();
-
-  saveGamInfo(iGam, evtRecTrkCol);   
-  
-  return iGam.size(); 
 }
 
 
@@ -935,40 +851,19 @@ void Jpsi2incl::saveTrkInfo(EvtRecTrackIterator itTrk_p,
     RecEmcShower *emcTrk_m = (*itTrk_m)->emcShower();
     m_trkm_eraw = emcTrk_m->energy();
   }
-
 }
 
-void Jpsi2incl::saveGamInfo(std::vector<int> iGam,
-			    SmartDataPtr<EvtRecTrackCol> evtRecTrkCol){
-
-  for(vector<int>::size_type i=0; i<iGam.size(); i++)  {
-    
-    EvtRecTrackIterator itTrk = evtRecTrkCol->begin() + iGam[i];
-    RecEmcShower* emcTrk = (*itTrk)->emcShower();
-    double eraw = emcTrk->energy();
-    double phi = emcTrk->phi();
-    double theta = emcTrk->theta(); 
-    HepLorentzVector p4 = HepLorentzVector(eraw * sin(theta) * cos(phi),
-					   eraw * sin(theta) * sin(phi),
-					   eraw * cos(theta),
-					   eraw );
-    m_raw_gpx->push_back(p4.px());
-    m_raw_gpy->push_back(p4.py());
-    m_raw_gpz->push_back(p4.pz());
-    m_raw_ge->push_back(p4.e());
-  }
-}
 
 void Jpsi2incl::savePionInfo(RecMdcKalTrack *pipTrk,
 			     RecMdcKalTrack *pimTrk){
 
-  m_pip_px = pipTrk->px();
-  m_pip_py = pipTrk->py();
-  m_pip_pz = pipTrk->pz();
+  m_pip_px->push_back(pipTrk->px());
+  m_pip_py->push_back(pipTrk->py());
+  m_pip_pz->push_back(pipTrk->pz());
 
-  m_pim_px = pimTrk->px();
-  m_pim_py = pimTrk->py();
-  m_pim_pz = pimTrk->pz();
+  m_pim_px->push_back(pimTrk->px());
+  m_pim_py->push_back(pimTrk->py());
+  m_pim_pz->push_back(pimTrk->pz());
   
 }
 
