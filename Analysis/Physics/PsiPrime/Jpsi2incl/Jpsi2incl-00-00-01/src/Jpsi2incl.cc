@@ -132,19 +132,19 @@ private:
   std::vector<double> *m_pim_pz;
 
   // fitted info
-  double m_vtx_pip_px; 
-  double m_vtx_pip_py; 
-  double m_vtx_pip_pz; 
-  double m_vtx_pip_e;
-  double m_vtx_pim_px; 
-  double m_vtx_pim_py; 
-  double m_vtx_pim_pz; 
-  double m_vtx_pim_e;
+  std::vector<double> *m_vtx_pip_px; 
+  std::vector<double> *m_vtx_pip_py; 
+  std::vector<double> *m_vtx_pip_pz; 
+  std::vector<double> *m_vtx_pip_e;
+  std::vector<double> *m_vtx_pim_px; 
+  std::vector<double> *m_vtx_pim_py; 
+  std::vector<double> *m_vtx_pim_pz; 
+  std::vector<double> *m_vtx_pim_e;
 
-  double m_vtx_mpipi;
-  double m_vtx_mrecpipi;
-  double m_vtx_cospipi;
-  double m_vtx_cos2pisys; 
+  std::vector<double> *m_vtx_mpipi;
+  std::vector<double> *m_vtx_mrecpipi;
+  std::vector<double> *m_vtx_cospipi;
+  std::vector<double> *m_vtx_cos2pisys; 
     
   // check MDC and EMC match
   long m_pion_matched;
@@ -194,7 +194,8 @@ private:
 
   // functions
   void book_histogram();
-  void book_tree(); 
+  void book_tree();
+  void clearVariables(); 
   bool buildJpsiToInclusive();
   void saveGenInfo(); 
   void saveTrkInfo(EvtRecTrackIterator,
@@ -202,7 +203,11 @@ private:
   void savePionInfo(RecMdcKalTrack *,
 		    RecMdcKalTrack *);
   void saveVtxInfo(HepLorentzVector,
-		   HepLorentzVector);  
+		   HepLorentzVector,
+		   HepLorentzVector,
+		   HepLorentzVector,
+		   double,
+		   double);  
   int selectChargedTracks(SmartDataPtr<EvtRecEvent>,
 			  SmartDataPtr<EvtRecTrackCol>,
 			  std::vector<int> &,
@@ -216,6 +221,12 @@ private:
 		    double&);
   bool hasGoodPiPiVertex(RecMdcKalTrack *,
 			 RecMdcKalTrack *,
+			 HepLorentzVector &, 
+			 HepLorentzVector &, 
+			 HepLorentzVector &, 
+			 HepLorentzVector &,
+			 double &,
+			 double &, 
 			 bool&,
 			 bool&,
 			 bool&);
@@ -275,7 +286,19 @@ Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
   m_pip_pz(0),
   m_pim_px(0),
   m_pim_py(0),
-  m_pim_pz(0)
+  m_pim_pz(0),
+  m_vtx_pip_px(0), 
+  m_vtx_pip_py(0), 
+  m_vtx_pip_pz(0), 
+  m_vtx_pip_e(0), 
+  m_vtx_pim_px(0), 
+  m_vtx_pim_py(0), 
+  m_vtx_pim_pz(0), 
+  m_vtx_pim_e(0),
+  m_vtx_mpipi(0), 
+  m_vtx_mrecpipi(0),
+  m_vtx_cospipi(0), 
+  m_vtx_cos2pisys(0) 
 {
   declareProperty("OutputFileName", m_output_filename);
   declareProperty("IsMonteCarlo", m_isMonteCarlo);
@@ -319,6 +342,8 @@ StatusCode Jpsi2incl::initialize(){
 StatusCode Jpsi2incl::execute() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "in execute()" << endreq;
+
+  clearVariables(); 
   
   h_cutflw->Fill(CUT_RAW); // raw 
   SmartDataPtr<Event::EventHeader>eventHeader(eventSvc(),"/Event/EventHeader");
@@ -418,18 +443,19 @@ void Jpsi2incl::book_tree() {
   m_tree->Branch("pim_pz", &m_pim_pz);
 
   // fitted info
-  m_tree->Branch("vtx_pip_px", &m_vtx_pip_px, "vtx_pip_px/D");
-  m_tree->Branch("vtx_pip_py", &m_vtx_pip_py, "vtx_pip_py/D");
-  m_tree->Branch("vtx_pip_pz", &m_vtx_pip_pz, "vtx_pip_pz/D");
-  m_tree->Branch("vtx_pip_e", &m_vtx_pip_e, "vtx_pip_e/D");
-  m_tree->Branch("vtx_pim_px", &m_vtx_pim_px, "vtx_pim_px/D");
-  m_tree->Branch("vtx_pim_py", &m_vtx_pim_py, "vtx_pim_py/D");
-  m_tree->Branch("vtx_pim_e", &m_vtx_pim_e, "vtx_pim_e/D");
+  m_tree->Branch("vtx_pip_px", &m_vtx_pip_px);
+  m_tree->Branch("vtx_pip_py", &m_vtx_pip_py);
+  m_tree->Branch("vtx_pip_pz", &m_vtx_pip_pz);
+  m_tree->Branch("vtx_pip_e", &m_vtx_pip_e);
+  m_tree->Branch("vtx_pim_px", &m_vtx_pim_px);
+  m_tree->Branch("vtx_pim_py", &m_vtx_pim_py);
+  m_tree->Branch("vtx_pim_pz", &m_vtx_pim_pz);
+  m_tree->Branch("vtx_pim_e", &m_vtx_pim_e);
 
-  m_tree->Branch("vtx_mpipi", &m_vtx_mpipi, "vtx_mpipi/D");
-  m_tree->Branch("vtx_mrecpipi", &m_vtx_mrecpipi, "vtx_mrecpipi/D");
-  m_tree->Branch("vtx_cospipi", &m_vtx_cospipi, "vtx_cospipi/D");
-  m_tree->Branch("vtx_cos2pisys", &m_vtx_cos2pisys, "vtx_cos2pisys/D");
+  m_tree->Branch("vtx_mpipi", &m_vtx_mpipi);
+  m_tree->Branch("vtx_mrecpipi", &m_vtx_mrecpipi);
+  m_tree->Branch("vtx_cospipi", &m_vtx_cospipi);
+  m_tree->Branch("vtx_cos2pisys", &m_vtx_cos2pisys);
   
   // MC truth info
   if (!m_isMonteCarlo) return; 
@@ -469,6 +495,32 @@ void Jpsi2incl::book_tree() {
   m_tree->Branch("mc_cospipi", &m_mc_cospipi, "mc_cospipi/D");
   m_tree->Branch("mc_cos2pisys", &m_mc_cos2pisys, "mc_cos2pisys/D");
   
+}
+
+void Jpsi2incl::clearVariables() {
+  m_run = 0;
+  m_event = 0;
+  m_pip_px->clear();
+  m_pip_py->clear();
+  m_pip_pz->clear();
+
+  m_pim_px->clear();
+  m_pim_py->clear();
+  m_pim_pz->clear();
+
+  m_vtx_pip_px->clear();
+  m_vtx_pip_py->clear();
+  m_vtx_pip_pz->clear();
+  m_vtx_pip_e->clear();
+  m_vtx_pim_px->clear();
+  m_vtx_pim_py->clear();
+  m_vtx_pim_pz->clear();
+  m_vtx_pim_e->clear();
+  
+  m_vtx_mpipi->clear(); 
+  m_vtx_mrecpipi->clear();
+  m_vtx_cospipi->clear(); 
+  m_vtx_cos2pisys->clear(); 
 }
 
 
@@ -715,8 +767,14 @@ int Jpsi2incl::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
       RecMdcKalTrack *pipTrk = (*(evtRecTrkCol->begin()+iPGood[i1]))->mdcKalTrack();
       RecMdcKalTrack *pimTrk = (*(evtRecTrkCol->begin()+iMGood[i2]))->mdcKalTrack();
 
-      if (! hasGoodPiPiVertex(pipTrk, pimTrk, cutflw_costheta_pipi_filled,
-			      cutflw_costheta_pipisys_filled, cutflw_mpipi_filled) ) continue; 
+      HepLorentzVector p4_vtx_pip, p4_vtx_pim, p4_vtx_pipi, p4_vtx_recpipi;
+      double cospipi, cos2pisys; 
+      if (! hasGoodPiPiVertex(pipTrk, pimTrk,
+			      p4_vtx_pip, p4_vtx_pim, p4_vtx_pipi, p4_vtx_recpipi,
+			      cospipi, cos2pisys, cutflw_costheta_pipi_filled,
+			      cutflw_costheta_pipisys_filled, cutflw_mpipi_filled) ) continue;
+
+      saveVtxInfo(p4_vtx_pip, p4_vtx_pim, p4_vtx_pipi, p4_vtx_recpipi, cospipi, cos2pisys); 
       savePionInfo(pipTrk, pimTrk);
       
       npipi++;
@@ -752,13 +810,18 @@ void Jpsi2incl::calcTrackPID(EvtRecTrackIterator itTrk_p,
 
 bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
 				  RecMdcKalTrack *pimTrk,
+				  HepLorentzVector &p4_vtx_pip, 
+				  HepLorentzVector &p4_vtx_pim, 
+				  HepLorentzVector &p4_vtx_pipi, 
+				  HepLorentzVector &p4_vtx_recpipi,
+				  double &cospipi,
+				  double &cos2pisys, 
 				  bool &cutflw_costheta_pipi_filled, 
 				  bool &cutflw_costheta_pipisys_filled, 
 				  bool &cutflw_mpipi_filled) {
 
   HepLorentzVector pcms(0.011*m_ecms, 0., 0., m_ecms);
 
-  HepLorentzVector p4_vtx_pip, p4_vtx_pim, p4_vtx_pipi, p4_vtx_recpipi;
   WTrackParameter wvpipTrk, wvpimTrk;
   pipTrk->setPidType(RecMdcKalTrack::pion);
   wvpipTrk = WTrackParameter(PION_MASS, pipTrk->getZHelix(), pipTrk->getZError());
@@ -797,8 +860,8 @@ bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
   p4_vtx_recpipi = pcms - p4_vtx_pip - p4_vtx_pim;
   p4_vtx_pipi = p4_vtx_pip + p4_vtx_pim;
 
-  double cospipi = cos(p4_vtx_pip.vect().angle(p4_vtx_pim.vect()));
-  double cos2pisys = (p4_vtx_pip + p4_vtx_pim).cosTheta();
+  cospipi = cos(p4_vtx_pip.vect().angle(p4_vtx_pim.vect()));
+  cos2pisys = (p4_vtx_pip + p4_vtx_pim).cosTheta();
 
   if( ! (cospipi < m_pipi_costheta_max) ) return false;
   if( !cutflw_costheta_pipi_filled ) h_cutflw->Fill(CUT_COSTHETA_PIPI); 
@@ -812,12 +875,6 @@ bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
 	  p4_vtx_recpipi.m() <= m_dipion_mass_max) ) return false;
   if( !cutflw_mpipi_filled ) h_cutflw->Fill(CUT_MPIPI); 
   cutflw_mpipi_filled = true; 
-  
-  saveVtxInfo(p4_vtx_pip, p4_vtx_pim); 
-  m_vtx_mrecpipi = p4_vtx_recpipi.m();
-  m_vtx_mpipi = p4_vtx_pipi.m();
-  m_vtx_cospipi = cospipi;
-  m_vtx_cos2pisys = cos2pisys; 
   
   return true;
 }
@@ -868,17 +925,26 @@ void Jpsi2incl::savePionInfo(RecMdcKalTrack *pipTrk,
 }
 
 void Jpsi2incl::saveVtxInfo(HepLorentzVector p4_vtx_pip,
-			    HepLorentzVector p4_vtx_pim){
+			    HepLorentzVector p4_vtx_pim,
+			    HepLorentzVector p4_vtx_pipi,
+			    HepLorentzVector p4_vtx_recpipi,
+			    double cospipi,
+			    double cos2pisys){
 
-  m_vtx_pip_px = p4_vtx_pip.px();
-  m_vtx_pip_py = p4_vtx_pip.py();
-  m_vtx_pip_pz = p4_vtx_pip.pz();
-  m_vtx_pip_e = p4_vtx_pip.e();
+  m_vtx_pip_px->push_back(p4_vtx_pip.px());
+  m_vtx_pip_py->push_back(p4_vtx_pip.py());
+  m_vtx_pip_pz->push_back(p4_vtx_pip.pz());
+  m_vtx_pip_e->push_back(p4_vtx_pip.e());
 
-  m_vtx_pim_px = p4_vtx_pim.px();
-  m_vtx_pim_py = p4_vtx_pim.py();
-  m_vtx_pim_pz = p4_vtx_pim.pz();
-  m_vtx_pim_e = p4_vtx_pim.e();
+  m_vtx_pim_px->push_back(p4_vtx_pim.px());
+  m_vtx_pim_py->push_back(p4_vtx_pim.py());
+  m_vtx_pim_pz->push_back(p4_vtx_pim.pz());
+  m_vtx_pim_e->push_back(p4_vtx_pim.e());
+
+  m_vtx_mrecpipi->push_back(p4_vtx_recpipi.m());
+  m_vtx_mpipi->push_back(p4_vtx_pipi.m());
+  m_vtx_cospipi->push_back(cospipi);
+  m_vtx_cos2pisys->push_back(cos2pisys); 
 
 }
 
