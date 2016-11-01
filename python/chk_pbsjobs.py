@@ -22,11 +22,6 @@ SYNOPSIS
 
     ./chk_pbsjobs.py  input_dir num_of_files
 
-AUTHOR 
-    SHI Xin <shixin@ihep.ac.cn> 
-
-DATE
-    July 2016 
 \n''')
 
     
@@ -39,21 +34,23 @@ def main():
     num = int(args[1])
     jobs_created = set(range(1, num+1))
 
-    log = src 
+    log = src
     logdir = src.split('/')[-1]
+    
     if logdir in ['data', 'mc_psip12', 'con3650', 'data09', 'mc_psip09']:
         logfiletype = 'BossLogFile'
     elif logdir == 'events':
         logfiletype = 'EventsLogFile'
     else:
         raise NameError(logdir)
-    
-    log = log.replace(logdir, 'log/%s' %logdir) 
+
+    log = log.replace(logdir, 'log/%s' %logdir)
     
     sys.stdout.write('Scanning %s...\n' %src)
 
     file_list = []
-    total_size = 0 
+    total_size = 0
+
     for root, dirs, files in os.walk(src):
         for f in files:
             file_list.append(int(f.split('-')[-1].split('.')[0]))
