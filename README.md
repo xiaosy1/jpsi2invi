@@ -17,7 +17,9 @@ BOSS verion 6.6.4.p03
 The follwing lines needs to be done for the first time only:
 
 > cd $HOME/bes/jpsi2invi/v0.1/TestRelease/TestRelease-00-00-84/cmt
+
 > cmt br cmt config
+
 > cmt br gmake 
 
 
