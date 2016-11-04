@@ -8,6 +8,6 @@ set tempfile=`${CMTROOT}/mgr/cmt -quiet build temporary_name`
 if $status != 0 then
   set tempfile=/tmp/cmt.$$
 endif
-${CMTROOT}/mgr/cmt setup -csh -pack=cmt_standalone -path=/afs/ihep.ac.cn/users/s/shixin/bes/jpsi2invi/v0.1/besenv  -no_cleanup $* >${tempfile}; source ${tempfile}
+${CMTROOT}/mgr/cmt setup -csh -pack=cmt_standalone -path=/afs/ihep.ac.cn/users/k/kiuchi/bes/jpsi2invi/v0.1/besenv  -no_cleanup $* >${tempfile}; source ${tempfile}
 /bin/rm -f ${tempfile}
 

@@ -99,7 +99,7 @@ case $option in
 	   ;;
     
     0.1.5) echo  "Select events on data..."
-	   mkdir run/events/data 
+	   mkdir -p  run/events/data 
 	   ./python/sel_events.py  run/data/jpsi2invi_data-1.root  run/events/data/jpsi2invi_data-1.root 
 	   ;; 
 

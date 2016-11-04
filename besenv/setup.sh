@@ -7,6 +7,6 @@ fi
 
 tempfile=`${CMTROOT}/mgr/cmt -quiet build temporary_name`
 if test ! $? = 0 ; then tempfile=/tmp/cmt.$$; fi
-${CMTROOT}/mgr/cmt setup -sh -pack=cmt_standalone -path=/afs/ihep.ac.cn/users/s/shixin/bes/jpsi2invi/v0.1/besenv  -no_cleanup $* >${tempfile}; . ${tempfile}
+${CMTROOT}/mgr/cmt setup -sh -pack=cmt_standalone -path=/afs/ihep.ac.cn/users/k/kiuchi/bes/jpsi2invi/v0.1/besenv  -no_cleanup $* >${tempfile}; . ${tempfile}
 /bin/rm -f ${tempfile}
 

@@ -4,6 +4,6 @@ fi
 . ${CMTROOT}/mgr/setup.sh
 tempfile=`${CMTROOT}/mgr/cmt -quiet build temporary_name`
 if test ! $? = 0 ; then tempfile=/tmp/cmt.$$; fi
-${CMTROOT}/mgr/cmt cleanup -sh -pack=TestRelease -version=TestRelease-00-00-84 -path=/afs/ihep.ac.cn/users/s/shixin/bes/jpsi2invi/v0.1 $* >${tempfile}; . ${tempfile}
+${CMTROOT}/mgr/cmt cleanup -sh -pack=TestRelease -version=TestRelease-00-00-84 -path=/afs/ihep.ac.cn/users/k/kiuchi/bes/jpsi2invi/v0.1 $* >${tempfile}; . ${tempfile}
 /bin/rm -f ${tempfile}
 
