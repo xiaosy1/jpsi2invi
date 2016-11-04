@@ -8,24 +8,15 @@
 
 > git clone https://github.com/besiii/jpsi2invi.git v0.1 
 
-## Setup BOSS verion 6.6.4.p03
+## Initialize BOSS
 
+BOSS verion 6.6.4.p03
 
-The follwing lines needs to be done for the first time only:
+This only need to be done for the first time after clone the code: 
 
-> cd besenv
+> source init-boss.sh
 
-> source setupCMT.sh
-
-> cmt config
-
-> cd $HOME/bes/jpsi2invi/v0.1/TestRelease/TestRelease-00-00-84/cmt
-
-> cmt br cmt config
-
-> cmt br gmake 
-
-## Setup
+## Setup 
 
 > source setup.sh
 
