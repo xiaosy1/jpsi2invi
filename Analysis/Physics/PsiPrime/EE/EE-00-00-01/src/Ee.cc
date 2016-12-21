@@ -1,7 +1,7 @@
 // -*- C++ -*-
 //
 //
-// Description: Psi' -> pi+pi-Jpsi,J/psi -> mu+mu- 
+// Description: Psi' -> pi+pi-Jpsi,J/psi -> e+e- 
 //
 // Original Author:  Chen Qian <chenq@pku.edu.cn>
 //         Created:  [2016-05-23 Mon 14:40] 
@@ -51,11 +51,11 @@
 // class declaration
 //
 
-class Mumu : public Algorithm {
+class Ee : public Algorithm {
   
 public:
-  Mumu(const std::string&, ISvcLocator*);
-  ~Mumu(); 
+  Ee(const std::string&, ISvcLocator*);
+  ~Ee(); 
   StatusCode initialize();
   StatusCode execute();
   StatusCode finalize();
@@ -77,23 +77,23 @@ private:
   double m_photon_iso_angle_min;
   double m_pion_polar_angle_max;
   double m_pion_momentum_max;
-  double m_muon_momentum_min;
-  double m_muon_momentum_max;
+  double m_eon_momentum_min;
+  double m_eon_momentum_max;
   double m_prob_pion_min;
   double m_dipion_mass_min; 
   double m_dipion_mass_max;
   double m_pipi_costheta_max;
   double m_pipisys_costheta_max; 
-  double m_mumu_mass_min; 
-  double m_mumu_mass_max;
+  double m_ee_mass_min; 
+  double m_ee_mass_max;
   double m_ep_ratio;
   
   
   //setting cut criteria
   bool cut_pip_costhe;
   bool cut_pim_costhe;
-  bool cut_mup_costhe;
-  bool cut_mum_costhe;  
+  bool cut_ep_costhe;
+  bool cut_em_costhe;  
   bool cut_pi_costhe;
   bool cut_PID;
   bool cut_cospipi;
@@ -101,7 +101,7 @@ private:
   bool cut_mjpsi;
   bool cut_mjpsi_signal;
   bool cut_epratio;
-  bool cut_mmumu;  
+  bool cut_mee;  
 
   // output file
   std::string m_output_filename;
@@ -114,9 +114,9 @@ private:
   TH1F* h_cospipi;
   TH1F* h_pim_costhe;
   TH1F* h_pip_costhe;
-  TH1F* h_mum_costhe;
-  TH1F* h_mup_costhe;  
-  TH1F* h_mmumu;
+  TH1F* h_em_costhe;
+  TH1F* h_ep_costhe;  
+  TH1F* h_mee;
   TH1F* h_mrecpipi;
   TH2D* h_epratio;
   
@@ -163,8 +163,8 @@ private:
   
   double m_pip_costhe;
   double m_pim_costhe;
-  double m_mup_costhe;
-  double m_mum_costhe;  
+  double m_ep_costhe;
+  double m_em_costhe;  
   
   // pion info
   double m_pip_px;
@@ -180,19 +180,19 @@ private:
   double m_cos_theta_pi_p;
   double m_cos_theta_pi_m;
   
-  // muon info
-  double m_mup_px;
-  double m_mup_py;
-  double m_mup_pz;
-  double m_mup_p;
+  // eon info
+  double m_ep_px;
+  double m_ep_py;
+  double m_ep_pz;
+  double m_ep_p;
 
-  double m_mum_px;
-  double m_mum_py;
-  double m_mum_pz;
-  double m_mum_p;
+  double m_em_px;
+  double m_em_py;
+  double m_em_pz;
+  double m_em_p;
   
-  double m_cos_theta_mu_p;
-  double m_cos_theta_mu_m;
+  double m_cos_theta_e_p;
+  double m_cos_theta_e_m;
 
   // fitted info
   //pipi
@@ -214,22 +214,22 @@ private:
   double m_vtx_cospip;
   double m_vtx_cospim;
   
-  //mumu
-  double m_vtx_mup_px; 
-  double m_vtx_mup_py; 
-  double m_vtx_mup_pz; 
-  double m_vtx_mup_p;   
-  double m_vtx_mup_e;
-  double m_vtx_mum_px; 
-  double m_vtx_mum_py; 
-  double m_vtx_mum_pz;
-  double m_vtx_mum_p;   
-  double m_vtx_mum_e;
+  //Ee
+  double m_vtx_ep_px; 
+  double m_vtx_ep_py; 
+  double m_vtx_ep_pz; 
+  double m_vtx_ep_p;   
+  double m_vtx_ep_e;
+  double m_vtx_em_px; 
+  double m_vtx_em_py; 
+  double m_vtx_em_pz;
+  double m_vtx_em_p;   
+  double m_vtx_em_e;
 
-  double m_vtx_mmumu;
-  double m_vtx_cosmumu;
-  double m_vtx_cosmup;
-  double m_vtx_cosmum;
+  double m_vtx_mee;
+  double m_vtx_cosee;
+  double m_vtx_cosep;
+  double m_vtx_cosem;
   
   double epratio_p;
   double epratio_m;
@@ -257,7 +257,7 @@ private:
   
   //4C
   double m_chi4C;
-  double m_mmu0;
+  double m_me0;
   
   int ncounter[10];
 
@@ -267,18 +267,18 @@ private:
   // functions
   void book_histogram();
   void book_tree(); 
-  bool buildJpsiToMumu();
+  bool buildJpsiToEe();
   
   //void saveGenInfo(); 
   void saveTrkInfo(EvtRecTrackIterator,
 		   EvtRecTrackIterator);
   void savePionInfo(RecMdcKalTrack *,
 		    RecMdcKalTrack *);
-  void saveMuonInfo(RecMdcKalTrack *,
+  void saveeonInfo(RecMdcKalTrack *,
 		    RecMdcKalTrack *);
   void savepipiVtxInfo(HepLorentzVector,
 		   HepLorentzVector);
-  void savemumuVtxInfo(HepLorentzVector,
+  void saveEeVtxInfo(HepLorentzVector,
 		   HepLorentzVector);
   
   int selectChargedTracks(SmartDataPtr<EvtRecEvent>,
@@ -288,7 +288,7 @@ private:
   int selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol>,
 			      std::vector<int>,
 			      std::vector<int>);
-  int selectMuPlusMuMinus(SmartDataPtr<EvtRecTrackCol>,
+  int selectePluseMinus(SmartDataPtr<EvtRecTrackCol>,
 			      std::vector<int>,
 			      std::vector<int>);
   void calcTrackPID(EvtRecTrackIterator,
@@ -296,7 +296,7 @@ private:
 		    double&);
   bool hasGoodPiPiVertex(RecMdcKalTrack *,
 			 RecMdcKalTrack *);
-  bool hasGoodMuMuVertex(RecMdcKalTrack *,
+  bool hasGoodEeVertex(RecMdcKalTrack *,
 			 RecMdcKalTrack *);
   bool passVertexSelection(CLHEP::Hep3Vector,
 			   RecMdcTrack* ); 
@@ -308,26 +308,26 @@ private:
 // module declare 组件和加载声明
 //
 
-DECLARE_ALGORITHM_FACTORY( Mumu )
-DECLARE_FACTORY_ENTRIES( Mumu ) {
-  DECLARE_ALGORITHM(Mumu);
+DECLARE_ALGORITHM_FACTORY( Ee )
+DECLARE_FACTORY_ENTRIES( Ee ) {
+  DECLARE_ALGORITHM(Ee);
 }
 
-LOAD_FACTORY_ENTRIES( Mumu )
+LOAD_FACTORY_ENTRIES( Ee )
 
 //
 // constants
 //
 
 const double PION_MASS = 0.139570;
-const double MU_MASS = 0.105658;
+const double ELECTRON_MASS = 0.000511;
 
 
 //
 // member functions
 //
   
-Mumu::Mumu(const std::string& name, ISvcLocator* pSvcLocator) :
+Ee::Ee(const std::string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator) {
   declareProperty("OutputFileName", m_output_filename);
   declareProperty("Ecms", m_ecms = 3.686);
@@ -346,22 +346,22 @@ Mumu::Mumu(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("PhotonIsoAngleMin", m_photon_iso_angle_min=10);
   declareProperty("PionPolarAngleMax", m_pion_polar_angle_max=0.8);
   declareProperty("PionMomentumMax", m_pion_momentum_max=0.45); 
-  declareProperty("MuonMomentumMin", m_muon_momentum_min=0.45); 
-  declareProperty("MuonMomentumMax", m_muon_momentum_max=2.0); 
+  declareProperty("eonMomentumMin", m_eon_momentum_min=0.45); 
+  declareProperty("eonMomentumMax", m_eon_momentum_max=2.0); 
   declareProperty("ProbPionMin", m_prob_pion_min=0.001);
   declareProperty("DipionMassMin", m_dipion_mass_min=3.0); 
   declareProperty("DipionMassMax", m_dipion_mass_max=3.2); 
   declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=0.95);
   declareProperty("PiPiSysCosthetaMax", m_pipisys_costheta_max=0.90);
-  declareProperty("DipionMassMin", m_mumu_mass_min=3.0); 
-  declareProperty("DipionMassMax", m_mumu_mass_max=3.2); 
-  declareProperty("epratio", m_ep_ratio=0.26);
+  declareProperty("DipionMassMin", m_ee_mass_min=2.7); 
+  declareProperty("DipionMassMax", m_ee_mass_max=3.2); 
+  declareProperty("epratio", m_ep_ratio=0.8);
   declareProperty("savetopo", m_savetopo = 1);
   declareProperty("data09",m_09data = 0); 
   }
 
 
-StatusCode Mumu::initialize(){
+StatusCode Ee::initialize(){
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << ">>>>>>> in initialize()" << endmsg;
   
@@ -382,7 +382,7 @@ StatusCode Mumu::initialize(){
 }
 
 
-StatusCode Mumu::execute() {
+StatusCode Ee::execute() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "in execute()" << endreq;
  
@@ -398,52 +398,52 @@ StatusCode Mumu::execute() {
   
   //saveTopoInfo();
   
-  if(buildJpsiToMumu())
+  if(buildJpsiToEe())
   {
 	 cut_pip_costhe = (fabs(m_pip_costhe) < m_pion_polar_angle_max);
      cut_pim_costhe = (fabs(m_pim_costhe) < m_pion_polar_angle_max);
-	 cut_mup_costhe = (fabs(m_mup_costhe) < m_pion_polar_angle_max);
-     cut_mum_costhe = (fabs(m_mum_costhe) < m_pion_polar_angle_max);	 
+	 cut_ep_costhe = (fabs(m_ep_costhe) < m_pion_polar_angle_max);
+     cut_em_costhe = (fabs(m_em_costhe) < m_pion_polar_angle_max);	 
      cut_pi_costhe = cut_pip_costhe && cut_pim_costhe;
      cut_PID = (m_prob_pip > m_prob_kp && m_prob_pip > m_prob_pion_min && m_prob_pim > m_prob_km && m_prob_pim > m_prob_pion_min);
      cut_cospipi = (m_vtx_cospipi < m_pipi_costheta_max);
      cut_cos2pisys = (fabs(m_vtx_cos2pisys) < m_pipisys_costheta_max);
      cut_mjpsi = (m_vtx_mrecpipi >= m_dipion_mass_min && m_vtx_mrecpipi <= m_dipion_mass_max);
 	 cut_mjpsi_signal = (m_vtx_mrecpipi > 3.081916 && m_vtx_mrecpipi < 3.111916);
-     cut_epratio = (epratio_p < m_ep_ratio && epratio_m < m_ep_ratio);
-	 cut_mmumu = (m_vtx_mmumu > m_mumu_mass_min && m_vtx_mmumu < m_mumu_mass_max);
+	 cut_epratio = (epratio_p > m_ep_ratio || epratio_m > m_ep_ratio || sqrt((epratio_p-1)*(epratio_p-1)+(epratio_m-1)*(epratio_m-1))<0.4);
+	 cut_mee = (m_vtx_mee > m_ee_mass_min && m_vtx_mee < m_ee_mass_max);
 	 
 //fill hist
-  if(cut_pim_costhe && cut_mup_costhe && cut_mum_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mmumu)
+  if(cut_pim_costhe && cut_ep_costhe && cut_em_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mee)
 	  h_pip_costhe->Fill(m_pip_costhe);
   
-  if(cut_pip_costhe && cut_mup_costhe && cut_mum_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mmumu)
+  if(cut_pip_costhe && cut_ep_costhe && cut_em_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mee)
 	  h_pim_costhe->Fill(m_pim_costhe);  
 
-  if(cut_pip_costhe && cut_pim_costhe && cut_mum_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mmumu)
-	  h_mup_costhe->Fill(m_mup_costhe);
+  if(cut_pip_costhe && cut_pim_costhe && cut_em_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mee)
+	  h_ep_costhe->Fill(m_ep_costhe);
   
-  if(cut_pip_costhe && cut_pim_costhe && cut_mup_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mmumu)
-	  h_mum_costhe->Fill(m_mum_costhe); 
+  if(cut_pip_costhe && cut_pim_costhe && cut_ep_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mee)
+	  h_em_costhe->Fill(m_em_costhe); 
   
-  if(cut_pip_costhe && cut_pim_costhe && cut_mup_costhe && cut_mum_costhe  && cut_PID && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mmumu)
+  if(cut_pip_costhe && cut_pim_costhe && cut_ep_costhe && cut_em_costhe  && cut_PID && cut_cos2pisys && cut_mjpsi_signal && cut_epratio && cut_mee)
 	  h_cospipi->Fill(m_vtx_cospipi);
 
-  if(cut_pip_costhe && cut_pim_costhe && cut_mup_costhe && cut_mum_costhe && cut_PID && cut_cospipi && cut_mjpsi_signal && cut_epratio && cut_mmumu)
+  if(cut_pip_costhe && cut_pim_costhe && cut_ep_costhe && cut_em_costhe && cut_PID && cut_cospipi && cut_mjpsi_signal && cut_epratio && cut_mee)
 	  h_cos2pisys->Fill(m_vtx_cos2pisys);
   
-  if(cut_pip_costhe && cut_pim_costhe && cut_mup_costhe && cut_mum_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_epratio && cut_mjpsi_signal)
-	  h_mmumu->Fill(m_vtx_mmumu); 
+  if(cut_pip_costhe && cut_pim_costhe && cut_ep_costhe && cut_em_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_epratio && cut_mjpsi_signal)
+	  h_mee->Fill(m_vtx_mee); 
   
-  if(cut_pip_costhe && cut_pim_costhe && cut_mup_costhe && cut_mum_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi && cut_epratio && cut_mmumu)
+  if(cut_pip_costhe && cut_pim_costhe && cut_ep_costhe && cut_em_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi && cut_epratio && cut_mee)
 	  h_mrecpipi->Fill(m_vtx_mrecpipi);   
   
-  if(cut_pip_costhe && cut_pim_costhe && cut_mup_costhe && cut_mum_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_mmumu)
+  if(cut_pip_costhe && cut_pim_costhe && cut_ep_costhe && cut_em_costhe && cut_PID && cut_cospipi && cut_cos2pisys && cut_mjpsi_signal && cut_mee)
       h_epratio->Fill(epratio_p,epratio_m);
   
 
   //fill tree
-  if(cut_pi_costhe && cut_mup_costhe && cut_mum_costhe)
+  if(cut_pi_costhe && cut_ep_costhe && cut_em_costhe)
     {
       ncounter[1]++;
 	  h_evtflw->Fill(1);
@@ -467,7 +467,7 @@ StatusCode Mumu::execute() {
 					{
 						ncounter[6]++;
 						h_evtflw->Fill(6);
-						if(cut_mmumu)
+						if(cut_mee)
 						{
 							ncounter[7]++;
 							h_evtflw->Fill(7);
@@ -555,7 +555,7 @@ StatusCode Mumu::execute() {
   return StatusCode::SUCCESS; 
 }
 
-StatusCode Mumu::finalize() {
+StatusCode Ee::finalize() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "in finalize()" << endmsg;
 
@@ -565,41 +565,41 @@ StatusCode Mumu::finalize() {
   h_evtflw->Write();
   h_pip_costhe->Write();
   h_pim_costhe->Write();
-  h_mup_costhe->Write();
-  h_mum_costhe->Write();  
+  h_ep_costhe->Write();
+  h_em_costhe->Write();  
   h_cospipi->Write();
   h_cos2pisys->Write();
   h_epratio->Write();
-  h_mmumu->Write();
+  h_mee->Write();
   h_mrecpipi->Write();
   m_fout->Close();
   
   cout<<"total number:            "<<ncounter[0]<<endl;
-  cout<<"pi(mu)_costhe<0.8:           "<<ncounter[1]<<endl;
+  cout<<"pi(e)_costhe<0.8:           "<<ncounter[1]<<endl;
   cout<<"Pass PID:                "<<ncounter[2]<<endl;
   cout<<"cut_cospipi:             "<<ncounter[3]<<endl;
   cout<<"cut_cos2pisys:           "<<ncounter[4]<<endl;
   cout<<"3.0<mrecpipi<3.2:        "<<ncounter[5]<<endl;
   cout<<"cut_epratio:             "<<ncounter[6]<<endl;
-  cout<<"3.0<mmumu<3.2:           "<<ncounter[7]<<endl;
+  cout<<"2.8<mee<3.2:           "<<ncounter[7]<<endl;
 
   
   return StatusCode::SUCCESS;
 }
 
 
-Mumu::~Mumu() {
+Ee::~Ee() {
 }
 
 
-void Mumu::book_histogram() {
+void Ee::book_histogram() {
   h_cos2pisys = new TH1F("h_cos2pisys","h_cos2pisys",100,-1,1); 
   h_cospipi = new TH1F("h_cospipi","h_cospipi",100,-1,1);
   h_pim_costhe = new TH1F("h_pim_costhe","h_pim_costhe",100,-1,1);
   h_pip_costhe = new TH1F("h_pip_costhe","h_pip_costhe",100,-1,1);
-  h_mum_costhe = new TH1F("h_mum_costhe","h_mum_costhe",100,-1,1);
-  h_mup_costhe = new TH1F("h_mup_costhe","h_mup_costhe",100,-1,1);
-  h_mmumu = new TH1F("h_mmumu","h_mmumu",100,2.8,3.4);
+  h_em_costhe = new TH1F("h_em_costhe","h_em_costhe",100,-1,1);
+  h_ep_costhe = new TH1F("h_ep_costhe","h_ep_costhe",100,-1,1);
+  h_mee = new TH1F("h_mee","h_mee",100,2.6,3.4);
   h_mrecpipi = new TH1F("h_mrecpipi","h_mrecpipi",100,3,3.2);
   h_epratio = new TH2D("h_epratio","h_epratio",1000,0,1.5,1000,0,1.5);
 	
@@ -612,11 +612,11 @@ void Mumu::book_histogram() {
   h_evtflw->GetXaxis()->SetBinLabel(5, "cut_cos2pisys"); 
   h_evtflw->GetXaxis()->SetBinLabel(6, "3.0<mrecpipi<3.2");
   h_evtflw->GetXaxis()->SetBinLabel(7, "cut_epratio");
-  h_evtflw->GetXaxis()->SetBinLabel(8, "3.0<mmumu<3.2");
+  h_evtflw->GetXaxis()->SetBinLabel(8, "3.0<mee<3.2");
 }
 
 
-void Mumu::book_tree() {
+void Ee::book_tree() {
   m_tree=new TTree("signal", "signal");
   TopoTree = new TTree("topoall","topoall");
   if (!m_tree) return; 
@@ -685,19 +685,19 @@ void Mumu::book_tree() {
   m_tree->Branch("cos#theta_pi_p", &m_cos_theta_pi_p, "cos#theta_pi_p/D");
   m_tree->Branch("cos#theta_pi_m", &m_cos_theta_pi_m, "cos#theta_pi_m/D");
 
-  // save muon info
-  m_tree->Branch("mup_px", &m_mup_px, "mup_px/D");
-  m_tree->Branch("mup_py", &m_mup_py, "mup_py/D");
-  m_tree->Branch("mup_pz", &m_mup_pz, "mup_pz/D");
-  m_tree->Branch("mup_p", &m_mup_p, "mup_p/D");
+  // save eon info
+  m_tree->Branch("ep_px", &m_ep_px, "ep_px/D");
+  m_tree->Branch("ep_py", &m_ep_py, "ep_py/D");
+  m_tree->Branch("ep_pz", &m_ep_pz, "ep_pz/D");
+  m_tree->Branch("ep_p", &m_ep_p, "ep_p/D");
 
-  m_tree->Branch("mum_px", &m_mum_px, "mum_px/D");
-  m_tree->Branch("mum_py", &m_mum_py, "mum_py/D");
-  m_tree->Branch("mum_pz", &m_mum_pz, "mum_pz/D");
-  m_tree->Branch("mum_p", &m_mum_p, "mum_p/D");
+  m_tree->Branch("em_px", &m_em_px, "em_px/D");
+  m_tree->Branch("em_py", &m_em_py, "em_py/D");
+  m_tree->Branch("em_pz", &m_em_pz, "em_pz/D");
+  m_tree->Branch("em_p", &m_em_p, "em_p/D");
   
-  m_tree->Branch("cos#theta_mu_p", &m_cos_theta_mu_p, "cos#theta_mu_p/D");
-  m_tree->Branch("cos#theta_mu_m", &m_cos_theta_mu_m, "cos#theta_mu_m/D");
+  m_tree->Branch("cos#theta_e_p", &m_cos_theta_e_p, "cos#theta_e_p/D");
+  m_tree->Branch("cos#theta_e_m", &m_cos_theta_e_m, "cos#theta_e_m/D");
 
 
   // fitted info
@@ -719,30 +719,30 @@ void Mumu::book_tree() {
   m_tree->Branch("vtx_cospip", &m_vtx_cospip, "vtx_cospip/D");
   m_tree->Branch("vtx_cospim", &m_vtx_cospim, "vtx_cospim/D");
 
-  //mumu
-  m_tree->Branch("vtx_mup_px", &m_vtx_mup_px, "vtx_mup_px/D");
-  m_tree->Branch("vtx_mup_py", &m_vtx_mup_py, "vtx_mup_py/D");
-  m_tree->Branch("vtx_mup_pz", &m_vtx_mup_pz, "vtx_mup_pz/D");
-  m_tree->Branch("vtx_mup_p", &m_vtx_mup_p, "vtx_mup_p/D");
-  m_tree->Branch("vtx_mup_e", &m_vtx_mup_e, "vtx_mup_e/D");
-  m_tree->Branch("vtx_mum_px", &m_vtx_mum_px, "vtx_mum_px/D");
-  m_tree->Branch("vtx_mum_py", &m_vtx_mum_py, "vtx_mum_py/D");
-  m_tree->Branch("vtx_mum_p", &m_vtx_mum_p, "vtx_mum_p/D");  
-  m_tree->Branch("vtx_mum_e", &m_vtx_mum_e, "vtx_mum_e/D");
+  //Ee
+  m_tree->Branch("vtx_ep_px", &m_vtx_ep_px, "vtx_ep_px/D");
+  m_tree->Branch("vtx_ep_py", &m_vtx_ep_py, "vtx_ep_py/D");
+  m_tree->Branch("vtx_ep_pz", &m_vtx_ep_pz, "vtx_ep_pz/D");
+  m_tree->Branch("vtx_ep_p", &m_vtx_ep_p, "vtx_ep_p/D");
+  m_tree->Branch("vtx_ep_e", &m_vtx_ep_e, "vtx_ep_e/D");
+  m_tree->Branch("vtx_em_px", &m_vtx_em_px, "vtx_em_px/D");
+  m_tree->Branch("vtx_em_py", &m_vtx_em_py, "vtx_em_py/D");
+  m_tree->Branch("vtx_em_p", &m_vtx_em_p, "vtx_em_p/D");  
+  m_tree->Branch("vtx_em_e", &m_vtx_em_e, "vtx_em_e/D");
 
-  m_tree->Branch("vtx_mmumu", &m_vtx_mmumu, "vtx_mmumu/D");
-  m_tree->Branch("vtx_cosmumu", &m_vtx_cosmumu, "vtx_cosmumu/D");
-  m_tree->Branch("vtx_cosmup", &m_vtx_cosmup, "vtx_cosmup/D");
-  m_tree->Branch("vtx_cosmum", &m_vtx_cosmum, "vtx_cosmum/D");  
+  m_tree->Branch("vtx_mee", &m_vtx_mee, "vtx_mee/D");
+  m_tree->Branch("vtx_cosee", &m_vtx_cosee, "vtx_cosee/D");
+  m_tree->Branch("vtx_cosep", &m_vtx_cosep, "vtx_cosep/D");
+  m_tree->Branch("vtx_cosem", &m_vtx_cosem, "vtx_cosem/D");  
  
   //for 4C
   m_tree->Branch("chi4C", &m_chi4C, "chi4C/D");
-  m_tree->Branch("mmu0", &m_mmu0, "mmu0/D");
+  m_tree->Branch("me0", &m_me0, "me0/D");
 
 }
 
 
-bool Mumu::buildJpsiToMumu() {
+bool Ee::buildJpsiToEe() {
 
   SmartDataPtr<EvtRecEvent> evtRecEvent(eventSvc(),"/Event/EvtRec/EvtRecEvent");    //重建后的事例
   if(!evtRecEvent) return false;
@@ -759,12 +759,12 @@ bool Mumu::buildJpsiToMumu() {
 
   if(selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood)!=1) return false;
     
-  if(selectMuPlusMuMinus(evtRecTrkCol, iPGood, iMGood)!=1) return false;
+  if(selectePluseMinus(evtRecTrkCol, iPGood, iMGood)!=1) return false;
   return true;
 }
 
 
-CLHEP::Hep3Vector Mumu::getOrigin() {
+CLHEP::Hep3Vector Ee::getOrigin() {
   CLHEP::Hep3Vector xorigin(0,0,0);
   IVertexDbSvc*  vtxsvc;
   Gaudi::svcLocator()->service("VertexDbSvc", vtxsvc);
@@ -778,7 +778,7 @@ CLHEP::Hep3Vector Mumu::getOrigin() {
 }
 
 
-bool Mumu::passVertexSelection(CLHEP::Hep3Vector xorigin,
+bool Ee::passVertexSelection(CLHEP::Hep3Vector xorigin,
 				    RecMdcTrack* mdcTrk ) {
   HepVector a = mdcTrk->helix();
   HepSymMatrix Ea = mdcTrk->err();
@@ -798,7 +798,7 @@ bool Mumu::passVertexSelection(CLHEP::Hep3Vector xorigin,
 }
 
 
-int Mumu::selectChargedTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
+int Ee::selectChargedTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
 				   SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
 				   std::vector<int> & iPGood,
 				   std::vector<int> & iMGood) {
@@ -847,7 +847,7 @@ int Mumu::selectChargedTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
   return iGood.size(); 
 }
 
-int Mumu::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
+int Ee::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
 				       std::vector<int> iPGood,
 				       std::vector<int> iMGood) {
   int npipi = 0;
@@ -907,10 +907,10 @@ int Mumu::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
 }
 
 
-int Mumu::selectMuPlusMuMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
+int Ee::selectePluseMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
 				       std::vector<int> iPGood,
 				       std::vector<int> iMGood) {
-  int nmumu = 0;
+  int nEe = 0;
   RecMdcTrack* m_mdcTrk_p;
   RecMdcTrack* m_mdcTrk_m;
   RecEmcShower *m_emcTrk_p;
@@ -935,8 +935,8 @@ int Mumu::selectMuPlusMuMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
     if (mdcTrk_m->charge() > 0) continue; // only negative charged tracks
 	  
 	  
-	if ( mdcTrk_p->p() > m_muon_momentum_min  &&    mdcTrk_p->p() < m_muon_momentum_max  &&
-      	       mdcTrk_m->p() > m_muon_momentum_min && mdcTrk_m->p() < m_muon_momentum_max )
+	if ( mdcTrk_p->p() > m_eon_momentum_min  &&    mdcTrk_p->p() < m_eon_momentum_max  &&
+      	       mdcTrk_m->p() > m_eon_momentum_min && mdcTrk_m->p() < m_eon_momentum_max )
 	{
 	m_mdcTrk_m = (*itTrk_m)->mdcTrack();
 	m_mdcTrk_p = (*itTrk_p)->mdcTrack();
@@ -946,8 +946,8 @@ int Mumu::selectMuPlusMuMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
 	  m_itTrk_m = itTrk_m;
 	  
       // polar angle for both pions
-      m_mup_costhe = cos(mdcTrk_p->theta());
-	  m_mum_costhe = cos(mdcTrk_m->theta());	  
+      m_ep_costhe = cos(mdcTrk_p->theta());
+	  m_em_costhe = cos(mdcTrk_m->theta());	  
 
 	  // ratio cut
 	  double emcenergy_p = emcTrk_p->energy(); 	  
@@ -958,19 +958,19 @@ int Mumu::selectMuPlusMuMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
 	  epratio_m = emcenergy_m/pemc_m;
 
       // apply vertex fit
-      RecMdcKalTrack *mupTrk = (*(evtRecTrkCol->begin()+iPGood[i1]))->mdcKalTrack();
-      RecMdcKalTrack *mumTrk = (*(evtRecTrkCol->begin()+iMGood[i2]))->mdcKalTrack();
+      RecMdcKalTrack *epTrk = (*(evtRecTrkCol->begin()+iPGood[i1]))->mdcKalTrack();
+      RecMdcKalTrack *emTrk = (*(evtRecTrkCol->begin()+iMGood[i2]))->mdcKalTrack();
 	    
-	  saveMuonInfo(mupTrk,mumTrk);
+	  saveeonInfo(epTrk,emTrk);
 		
-      if (! hasGoodMuMuVertex(mupTrk, mumTrk) ) continue;	
-	  	  nmumu++;
+      if (! hasGoodEeVertex(epTrk, emTrk) ) continue;	
+	  	  nEe++;
 	}}
   }
-  return nmumu; 
+  return nEe; 
 }
 
-void Mumu::calcTrackPID(EvtRecTrackIterator itTrk_p,
+void Ee::calcTrackPID(EvtRecTrackIterator itTrk_p,
 			     double& prob_pip,
 			     double& prob_kp) {
   prob_pip = 999.; 
@@ -990,7 +990,7 @@ void Mumu::calcTrackPID(EvtRecTrackIterator itTrk_p,
   }
 }
 
-bool Mumu::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
+bool Ee::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
 				  RecMdcKalTrack *pimTrk) {
 
   HepLorentzVector pcms;
@@ -1061,17 +1061,17 @@ bool Mumu::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
   return true;
 }
 
-bool Mumu::hasGoodMuMuVertex(RecMdcKalTrack *mupTrk,
-				  RecMdcKalTrack *mumTrk) {
+bool Ee::hasGoodEeVertex(RecMdcKalTrack *epTrk,
+				  RecMdcKalTrack *emTrk) {
 
-  HepLorentzVector p4_vtx_mup, p4_vtx_mum,p4_vtx_mumu;
-  WTrackParameter wvmupTrk, wvmumTrk;
-  mupTrk->setPidType(RecMdcKalTrack::muon);
+  HepLorentzVector p4_vtx_ep, p4_vtx_em,p4_vtx_Ee;
+  WTrackParameter wvepTrk, wvemTrk;
+  epTrk->setPidType(RecMdcKalTrack::electron);
 
-  wvmupTrk = WTrackParameter(MU_MASS, mupTrk->getZHelixMu(), mupTrk->getZErrorMu());
+  wvepTrk = WTrackParameter(ELECTRON_MASS, epTrk->getZHelixE(), epTrk->getZErrorE());
 
-  mumTrk->setPidType(RecMdcKalTrack::muon);
-  wvmumTrk = WTrackParameter(MU_MASS, mumTrk->getZHelixMu(), mumTrk->getZErrorMu());
+  emTrk->setPidType(RecMdcKalTrack::electron);
+  wvemTrk = WTrackParameter(ELECTRON_MASS, emTrk->getZHelixE(), emTrk->getZErrorE());
   
   HepPoint3D vx(0., 0., 0.);
   HepSymMatrix Evx(3, 0);
@@ -1089,32 +1089,32 @@ bool Mumu::hasGoodMuMuVertex(RecMdcKalTrack *mupTrk,
   
   VertexFit* vtxfit = VertexFit::instance();
   vtxfit->init();
-  vtxfit->AddTrack(0,  wvmupTrk);
-  vtxfit->AddTrack(1,  wvmumTrk);
+  vtxfit->AddTrack(0,  wvepTrk);
+  vtxfit->AddTrack(1,  wvemTrk);
   vtxfit->AddVertex(0, vxpar,0,1);
 
   if(!vtxfit->Fit(0)) return false;
 
   vtxfit->Swim(0);
 
-  p4_vtx_mup = vtxfit->pfit(0) ;
-  p4_vtx_mum = vtxfit->pfit(1) ;
-  p4_vtx_mumu = p4_vtx_mup + p4_vtx_mum;
+  p4_vtx_ep = vtxfit->pfit(0) ;
+  p4_vtx_em = vtxfit->pfit(1) ;
+  p4_vtx_Ee = p4_vtx_ep + p4_vtx_em;
   
-  double cosmumu = cos(p4_vtx_mup.vect().angle(p4_vtx_mum.vect()));
-  double cosmup = p4_vtx_mup.cosTheta();
-  double cosmum = p4_vtx_mum.cosTheta();  
+  double cosee = cos(p4_vtx_ep.vect().angle(p4_vtx_em.vect()));
+  double cosep = p4_vtx_ep.cosTheta();
+  double cosem = p4_vtx_em.cosTheta();  
   
-  savemumuVtxInfo(p4_vtx_mup, p4_vtx_mum); 
-  m_vtx_mmumu = p4_vtx_mumu.m();
-  m_vtx_cosmumu = cosmumu;
-  m_vtx_cosmup = cosmup;
-  m_vtx_cosmum = cosmum;
+  saveEeVtxInfo(p4_vtx_ep, p4_vtx_em); 
+  m_vtx_mee = p4_vtx_Ee.m();
+  m_vtx_cosee = cosee;
+  m_vtx_cosep = cosep;
+  m_vtx_cosem = cosem;
   return true;
 }
 
 
-void Mumu::saveTrkInfo(EvtRecTrackIterator itTrk_p,
+void Ee::saveTrkInfo(EvtRecTrackIterator itTrk_p,
 			    EvtRecTrackIterator itTrk_m) {
 
   RecMdcTrack* mdcTrk_p = (*itTrk_p)->mdcTrack(); 
@@ -1146,7 +1146,7 @@ void Mumu::saveTrkInfo(EvtRecTrackIterator itTrk_p,
 }
 
 
-void Mumu::savePionInfo(RecMdcKalTrack *pipTrk,
+void Ee::savePionInfo(RecMdcKalTrack *pipTrk,
 			     RecMdcKalTrack *pimTrk){
 
   m_pip_px = pipTrk->px();
@@ -1163,24 +1163,24 @@ void Mumu::savePionInfo(RecMdcKalTrack *pipTrk,
   m_cos_theta_pi_m=cos(pimTrk->theta());
 }
 
-void Mumu::saveMuonInfo(RecMdcKalTrack *mupTrk,
-			     RecMdcKalTrack *mumTrk){
+void Ee::saveeonInfo(RecMdcKalTrack *epTrk,
+			     RecMdcKalTrack *emTrk){
 
-  m_mup_px = mupTrk->px();
-  m_mup_py = mupTrk->py();
-  m_mup_pz = mupTrk->pz();
-  m_mup_p = mupTrk->p();
+  m_ep_px = epTrk->px();
+  m_ep_py = epTrk->py();
+  m_ep_pz = epTrk->pz();
+  m_ep_p = epTrk->p();
   
-  m_mum_px = mumTrk->px();
-  m_mum_py = mumTrk->py();
-  m_mum_pz = mumTrk->pz();
-  m_mum_p = mumTrk->p(); 
+  m_em_px = emTrk->px();
+  m_em_py = emTrk->py();
+  m_em_pz = emTrk->pz();
+  m_em_p = emTrk->p(); 
   
-  m_cos_theta_mu_p=cos(mupTrk->theta());
-  m_cos_theta_mu_m=cos(mumTrk->theta());
+  m_cos_theta_e_p=cos(epTrk->theta());
+  m_cos_theta_e_m=cos(emTrk->theta());
 }
 
-void Mumu::savepipiVtxInfo(HepLorentzVector p4_vtx_pip,
+void Ee::savepipiVtxInfo(HepLorentzVector p4_vtx_pip,
 			    HepLorentzVector p4_vtx_pim){
 
   m_vtx_pip_px = p4_vtx_pip.px();
@@ -1197,19 +1197,19 @@ void Mumu::savepipiVtxInfo(HepLorentzVector p4_vtx_pip,
 
 }
 
-void Mumu::savemumuVtxInfo(HepLorentzVector p4_vtx_mup,
-			    HepLorentzVector p4_vtx_mum){
+void Ee::saveEeVtxInfo(HepLorentzVector p4_vtx_ep,
+			    HepLorentzVector p4_vtx_em){
 
-  m_vtx_mup_px = p4_vtx_mup.px();
-  m_vtx_mup_py = p4_vtx_mup.py();
-  m_vtx_mup_pz = p4_vtx_mup.pz();
-  m_vtx_mup_p = sqrt(p4_vtx_mup.px()*p4_vtx_mup.px()+p4_vtx_mup.py()*p4_vtx_mup.py()+p4_vtx_mup.pz()*p4_vtx_mup.pz());
-  m_vtx_mup_e = p4_vtx_mup.e();
+  m_vtx_ep_px = p4_vtx_ep.px();
+  m_vtx_ep_py = p4_vtx_ep.py();
+  m_vtx_ep_pz = p4_vtx_ep.pz();
+  m_vtx_ep_p = sqrt(p4_vtx_ep.px()*p4_vtx_ep.px()+p4_vtx_ep.py()*p4_vtx_ep.py()+p4_vtx_ep.pz()*p4_vtx_ep.pz());
+  m_vtx_ep_e = p4_vtx_ep.e();
 
-  m_vtx_mum_px = p4_vtx_mum.px();
-  m_vtx_mum_py = p4_vtx_mum.py();
-  m_vtx_mum_pz = p4_vtx_mum.pz();
-  m_vtx_mum_p = sqrt(p4_vtx_mum.px()*p4_vtx_mum.px()+p4_vtx_mum.py()*p4_vtx_mum.py()+p4_vtx_mum.pz()*p4_vtx_mum.pz());
-  m_vtx_mum_e = p4_vtx_mum.e();
+  m_vtx_em_px = p4_vtx_em.px();
+  m_vtx_em_py = p4_vtx_em.py();
+  m_vtx_em_pz = p4_vtx_em.pz();
+  m_vtx_em_p = sqrt(p4_vtx_em.px()*p4_vtx_em.px()+p4_vtx_em.py()*p4_vtx_em.py()+p4_vtx_em.pz()*p4_vtx_em.pz());
+  m_vtx_em_e = p4_vtx_em.e();
 
 }
