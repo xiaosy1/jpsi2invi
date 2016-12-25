@@ -97,10 +97,11 @@ def main():
         if nb<=0:
             continue
 
-        fill_histograms(t)
+        # fill_histograms(t)
+        fill_histograms_all_combination(t)
         
-        if select_jpsi_to_invisible(t): 
-            h_mrecpipi.Fill(t.vtx_mrecpipi)
+        # if select_jpsi_to_invisible(t): 
+        #    h_mrecpipi.Fill(t.vtx_mrecpipi)
  
     fout = ROOT.TFile(outfile, "RECREATE")
     write_histograms() 
@@ -109,6 +110,60 @@ def main():
     
     dur = duration(time()-time_start)
     sys.stdout.write(' \nDone in %s. \n' % dur) 
+
+
+def fill_histograms_all_combination(t):
+    
+    nentry = t.npipi
+    for loop in range(nentry):
+
+        cut_ngam = 1
+        cut_pip_costhe = (abs(math.cos(t.pip_theta[loop])) < 0.8)
+        cut_pim_costhe = (abs(math.cos(t.pim_theta[loop])) < 0.8)
+        cut_pip_p = (abs(t.pip_p[loop]) < 0.45) 
+        cut_pim_p = (abs(t.pim_p[loop]) < 0.45)
+        cut_cospipi =  (t.vtx_cospipi[loop] < 0.95)
+        cut_cos2pisys = (abs(t.vtx_cos2pisys[loop]) < 0.9)
+        cut_pi_PID = (t.pip_prob_pip[loop] > t.pip_prob_kp[loop] and t.pip_prob_pip[loop] > 0.001 and
+                      t.pim_prob_pim[loop] > t.pim_prob_km[loop] and t.pim_prob_pim[loop] > 0.001)
+        cut_mjpsi_win = (t.vtx_mrecpipi[loop] > 3.0 and t.vtx_mrecpipi[loop] < 3.2)
+        cut_mjpsi_sig = (abs(t.vtx_mrecpipi[loop] - JPSI_MASS)<0.015)
+
+        if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
+            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+            h_mpipi.Fill(t.vtx_mpipi[loop])
+
+        if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
+            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):            
+            h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
+
+        if (cut_ngam and cut_pip_costhe and cut_pim_costhe                and cut_pim_p and
+            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+            h_pip_p.Fill(t.pip_p[loop])
+
+        if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p                and 
+            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+            h_pim_p.Fill(t.pim_p[loop])
+                    
+        if (cut_ngam                                        and cut_pip_p and cut_pim_p and
+            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+            h_pip_costhe.Fill(math.cos(t.pip_theta[loop]))
+                        
+        if (cut_ngam                                        and cut_pip_p and cut_pim_p and
+            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+            h_pim_costhe.Fill(math.cos(t.pim_theta[loop]))
+
+        if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
+            cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+            h_cospipi.Fill(t.vtx_cospipi[loop])
+
+        if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
+            cut_cospipi                   and cut_pi_PID and cut_mjpsi_sig):
+            h_cos2pisys.Fill(t.vtx_cos2pisys[loop])
+
+    # if (             cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
+    #     cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+    #     h_ngam.Fill(t.ngam)
 
 
 def fill_histograms(t):

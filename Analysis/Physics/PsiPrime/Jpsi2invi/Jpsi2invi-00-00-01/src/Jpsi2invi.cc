@@ -502,7 +502,10 @@ bool Jpsi2invi::buildJpsiToInvisible() {
   if (m_ncharged != 2) return false;
   h_evtflw->Fill(1); // N_{Good} = 2 
 
-  selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
+  //selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
+  int npipi = selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
+  //std::cout << "npipi = " << npipi << std::endl;
+  if(npipi != 1) return false;
 
   selectNeutralTracks(evtRecEvent, evtRecTrkCol);
   if (m_ngam >= 20) return false;
