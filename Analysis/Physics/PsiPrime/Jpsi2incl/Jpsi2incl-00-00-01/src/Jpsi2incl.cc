@@ -123,14 +123,27 @@ private:
 
   // pion info
   int m_npipi; 
+  std::vector<double> *m_pip_p;
   std::vector<double> *m_pip_px;
   std::vector<double> *m_pip_py;
   std::vector<double> *m_pip_pz;
+  std::vector<double> *m_pip_theta;
 
+  std::vector<double> *m_pim_p;
   std::vector<double> *m_pim_px;
   std::vector<double> *m_pim_py;
   std::vector<double> *m_pim_pz;
+  std::vector<double> *m_pim_theta;
 
+  // pion PID info
+  std::vector<double> *m_pip_prob_pip;
+  std::vector<double> *m_pip_prob_kp;
+  std::vector<double> *m_pip_prob_p;
+
+  std::vector<double> *m_pim_prob_pim;
+  std::vector<double> *m_pim_prob_km;
+  std::vector<double> *m_pim_prob_pb;
+  
   // fitted info
   std::vector<double> *m_vtx_pip_px; 
   std::vector<double> *m_vtx_pip_py; 
@@ -208,6 +221,8 @@ private:
 		   HepLorentzVector,
 		   double,
 		   double);  
+  void savePidInfo(double, double, double, double, double, double);
+
   int selectChargedTracks(SmartDataPtr<EvtRecEvent>,
 			  SmartDataPtr<EvtRecTrackCol>,
 			  std::vector<int> &,
@@ -281,12 +296,22 @@ enum {
 Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),
   m_tree(0),
+  m_pip_p(0),
   m_pip_px(0),
   m_pip_py(0),
   m_pip_pz(0),
+  m_pip_theta(0),
+  m_pim_p(0),
   m_pim_px(0),
   m_pim_py(0),
   m_pim_pz(0),
+  m_pim_theta(0),
+  m_pip_prob_pip(0),
+  m_pip_prob_kp(0),
+  m_pip_prob_p(0),
+  m_pim_prob_pim(0),
+  m_pim_prob_km(0),
+  m_pim_prob_pb(0),
   m_vtx_pip_px(0), 
   m_vtx_pip_py(0), 
   m_vtx_pip_pz(0), 
@@ -320,8 +345,10 @@ Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("ProbPionMin", m_prob_pion_min=0.0008);
   declareProperty("DipionMassMin", m_dipion_mass_min=3.0); 
   declareProperty("DipionMassMax", m_dipion_mass_max=3.2); 
-  declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=0.99);
-  declareProperty("PiPiSysCosthetaMax", m_pipisys_costheta_max=0.99);
+  //declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=0.99);
+  declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=1.01);
+  //declareProperty("PiPiSysCosthetaMax", m_pipisys_costheta_max=0.99);
+  declareProperty("PiPiSysCosthetaMax", m_pipisys_costheta_max=1.01);
 }
 
 
@@ -434,13 +461,26 @@ void Jpsi2incl::book_tree() {
 
   // save pion info
   m_tree->Branch("npipi", &m_npipi, "npipi/I");
+  m_tree->Branch("pip_p", &m_pip_p);
   m_tree->Branch("pip_px", &m_pip_px);
   m_tree->Branch("pip_py", &m_pip_py);
   m_tree->Branch("pip_pz", &m_pip_pz);
+  m_tree->Branch("pip_theta", &m_pip_theta);
 
+  m_tree->Branch("pim_p", &m_pim_p);
   m_tree->Branch("pim_px", &m_pim_px);
   m_tree->Branch("pim_py", &m_pim_py);
   m_tree->Branch("pim_pz", &m_pim_pz);
+  m_tree->Branch("pim_theta", &m_pim_theta);
+
+  // save pion pid info
+  m_tree->Branch("pip_prob_pip", &m_pip_prob_pip);
+  m_tree->Branch("pip_prob_kp", &m_pip_prob_kp);
+  m_tree->Branch("pip_prob_p", &m_pip_prob_p);
+
+  m_tree->Branch("pim_prob_pim", &m_pim_prob_pim);
+  m_tree->Branch("pim_prob_km", &m_pim_prob_km);
+  m_tree->Branch("pim_prob_pb", &m_pim_prob_pb);
 
   // fitted info
   m_tree->Branch("vtx_pip_px", &m_vtx_pip_px);
@@ -500,13 +540,26 @@ void Jpsi2incl::book_tree() {
 void Jpsi2incl::clearVariables() {
   m_run = 0;
   m_event = 0;
+
+  m_pip_p->clear();
   m_pip_px->clear();
   m_pip_py->clear();
   m_pip_pz->clear();
+  m_pip_theta->clear();
 
+  m_pim_p->clear();
   m_pim_px->clear();
   m_pim_py->clear();
   m_pim_pz->clear();
+  m_pim_theta->clear();
+
+  m_pip_prob_pip->clear();
+  m_pip_prob_kp->clear();
+  m_pip_prob_p->clear();
+
+  m_pim_prob_pim->clear();
+  m_pim_prob_km->clear();
+  m_pim_prob_pb->clear();
 
   m_vtx_pip_px->clear();
   m_vtx_pip_py->clear();
@@ -541,6 +594,7 @@ bool Jpsi2incl::buildJpsiToInclusive() {
   h_cutflw->Fill(CUT_NPM); // N^{+} >= 1 and N^{-} >= 1  
 
   m_npipi = selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
+  if(m_npipi==0)return false;
 
   return true; 
 }
@@ -777,6 +831,8 @@ int Jpsi2incl::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
       saveVtxInfo(p4_vtx_pip, p4_vtx_pim, p4_vtx_pipi, p4_vtx_recpipi, cospipi, cos2pisys); 
       savePionInfo(pipTrk, pimTrk);
       
+      savePidInfo(prob_pip, prob_kp, prob_p,  prob_pim, prob_km, prob_pb);
+
       npipi++;
     }
   } 
@@ -914,13 +970,17 @@ void Jpsi2incl::saveTrkInfo(EvtRecTrackIterator itTrk_p,
 void Jpsi2incl::savePionInfo(RecMdcKalTrack *pipTrk,
 			     RecMdcKalTrack *pimTrk){
 
+  m_pip_p->push_back(pipTrk->p());
   m_pip_px->push_back(pipTrk->px());
   m_pip_py->push_back(pipTrk->py());
   m_pip_pz->push_back(pipTrk->pz());
+  m_pip_theta->push_back(pipTrk->theta());
 
+  m_pim_p->push_back(pimTrk->p());
   m_pim_px->push_back(pimTrk->px());
   m_pim_py->push_back(pimTrk->py());
   m_pim_pz->push_back(pimTrk->pz());
+  m_pim_theta->push_back(pimTrk->theta());
   
 }
 
@@ -948,4 +1008,20 @@ void Jpsi2incl::saveVtxInfo(HepLorentzVector p4_vtx_pip,
 
 }
 
+void Jpsi2incl::savePidInfo(double prob_pip,
+			    double prob_kp,
+			    double prob_p,
+			    double prob_pim,
+			    double prob_km,
+			    double prob_pb){
 
+
+  m_pip_prob_pip->push_back(prob_pip);
+  m_pip_prob_kp->push_back(prob_kp);
+  m_pip_prob_p->push_back(prob_p);
+
+  m_pim_prob_pim->push_back(prob_pim);
+  m_pim_prob_km->push_back(prob_km);
+  m_pim_prob_pb->push_back(prob_pb);
+
+}
