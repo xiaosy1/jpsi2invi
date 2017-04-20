@@ -858,7 +858,7 @@ int Jpsi2invi::selectNeutralTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
     double abs_costheta(fabs(cos(emcTrk->theta())));
     bool barrel = (abs_costheta < m_costheta_barrel_max); 
     bool endcap = (abs_costheta > m_costheta_endcap_min
-		   && abs_costheta < m_costheta_barrel_max);
+		   && abs_costheta < m_costheta_endcap_max);
     double eraw = emcTrk->energy();
     
     if ( !( (barrel && eraw > m_energy_barrel_min)
