@@ -861,7 +861,7 @@ bool Jpsi2pnpi::hasGoodProtonPiVertex(RecMdcKalTrack *pTrk,
   WTrackParameter wvpTrk, wvpiTrk;
 
   pTrk->setPidType(RecMdcKalTrack::proton);
-  wvpTrk = WTrackParameter(PROTON_MASS, pTrk->getZHelix(), pTrk->getZError());
+  wvpTrk = WTrackParameter(PROTON_MASS, pTrk->getZHelixP(), pTrk->getZErrorP());
   
   piTrk->setPidType(RecMdcKalTrack::pion);
   wvpiTrk = WTrackParameter(PION_MASS, piTrk->getZHelix(), piTrk->getZError());
