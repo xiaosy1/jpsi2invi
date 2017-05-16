@@ -82,8 +82,7 @@ SYNOPSIS
     ./sel_events_lplm.py infile outfile 
 
 AUTHOR 
-    SHI Xin <shixin@ihep.ac.cn> 
-
+    R. Kiuchi <kiuchi@ihep.ac.cn>
 DATE
     May 2017 
 \n''')
