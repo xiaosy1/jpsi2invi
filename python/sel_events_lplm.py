@@ -25,7 +25,7 @@ JPSI_MASS = 3.096916;
 
 # Global histograms
 
-h_evtflw = ROOT.TH1F('hevtflw', 'eventflow', 10, 0, 10) 
+h_evtflw = ROOT.TH1F('hevtflw', 'eventflow', 13, 0, 13) 
 h_evtflw.GetXaxis().SetBinLabel(1, 'raw')
 h_evtflw.GetXaxis().SetBinLabel(2, '|cos#theta|<0.8')
 h_evtflw.GetXaxis().SetBinLabel(3, '|p|<0.45') 
@@ -34,6 +34,8 @@ h_evtflw.GetXaxis().SetBinLabel(5, 'cos#theta_{#pi^{+}#pi^{-}}<0.95')
 h_evtflw.GetXaxis().SetBinLabel(6, 'cos#theta_{#pi#pi sys}<0.9') 
 h_evtflw.GetXaxis().SetBinLabel(7, '3<M_{#pi#pi}^{rec}<3.2') 
 h_evtflw.GetXaxis().SetBinLabel(8, '|cos#theta|<0.8')
+h_evtflw.GetXaxis().SetBinLabel(9, '0.45<|p_{lp}|<2.0')
+h_evtflw.GetXaxis().SetBinLabel(10, '0.45<|p_{lm}|<2.0')
 
 
 h_mrecpipi_el = ROOT.TH1D('h_mrecpipi_el', 'mrecpipi_el', 100, 3.04, 3.16)
@@ -139,7 +141,10 @@ def main():
             eop2 = abs(t.trklm_eraw/t.trklm_p)
             h_EOP.Fill(eop1, eop2)
 
-            if (t.jpsi2elel_flag == 1 and (cut_el_eop_p or cut_el_eop_m or cut_el_eop_pm)):
+            cut_invMass_el = (t.vtx_melel > 2.7 and t.vtx_melel < 3.2)
+            cut_invMass_mu = (t.vtx_mmumu > 3.0 and t.vtx_mmumu < 3.2)
+
+            if (t.jpsi2elel_flag == 1 and (cut_el_eop_p or cut_el_eop_m or cut_el_eop_pm) and cut_invMass_el):
                 h_mrecpipi_el.Fill(t.vtx_mrecpipi)
                 h_melel.Fill(t.vtx_melel)
                 h_elp_p.Fill(t.vtx_elp_p)
@@ -148,7 +153,7 @@ def main():
                 h_elm_costhe.Fill(t.vtx_elm_costheta)
                 h_coselel.Fill(t.vtx_coselel)
 
-            if (t.jpsi2mumu_flag == 1 and (cut_mu_eop_p and cut_mu_eop_m)):
+            if (t.jpsi2mumu_flag == 1 and (cut_mu_eop_p and cut_mu_eop_m) and cut_invMass_mu):
                 h_mrecpipi_mu.Fill(t.vtx_mrecpipi)
                 h_mmumu.Fill(t.vtx_mmumu)
                 h_mup_p.Fill(t.vtx_mup_p)
@@ -175,7 +180,7 @@ def fill_histograms(t):
     cut_trkpip_p = (abs(t.trkpip_p) < 0.45) 
     cut_trkpim_p = (abs(t.trkpim_p) < 0.45)
     cut_cospipi =  (t.vtx_cospipi < 0.95)
-    cut_cos2pisys = (t.vtx_cos2pisys < 0.9)
+    cut_cos2pisys = (abs(t.vtx_cos2pisys) < 0.9)
     cut_pi_PID = (t.prob_pip > t.prob_kp and t.prob_pip > 0.001 and
                   t.prob_pim > t.prob_km and t.prob_pim > 0.001)
     cut_mjpsi_win = (t.vtx_mrecpipi > 3.0 and t.vtx_mrecpipi < 3.2)
@@ -289,6 +294,7 @@ def write_histograms():
 def select_jpsi_to_ll(t):
     h_evtflw.Fill(0) 
 
+    # Cut for Pion side
     if not ( abs(math.cos(t.trkpip_theta)) < 0.8 and abs(math.cos(t.trkpim_theta)) < 0.8):
         return False
     h_evtflw.Fill(1) 
@@ -306,7 +312,7 @@ def select_jpsi_to_ll(t):
         return False
     h_evtflw.Fill(4)
 
-    if not (t.vtx_cos2pisys < 0.9):
+    if not (abs(t.vtx_cos2pisys) < 0.9):
         return False
     h_evtflw.Fill(5)
 
@@ -314,9 +320,18 @@ def select_jpsi_to_ll(t):
         return False
     h_evtflw.Fill(6)
     
+    # Cut for Lepton side
     if not ( abs(math.cos(t.trklp_theta)) < 0.8 and abs(math.cos(t.trklm_theta)) < 0.8):
         return False
     h_evtflw.Fill(7)
+
+    if not (abs(t.trklp_p) > 0.45 and abs(t.trklp_p) < 2.0):
+        return False
+    h_evtflw.Fill(8)
+
+    if not (abs(t.trklm_p) > 0.45 and abs(t.trklm_p) < 2.0):
+        return False
+    h_evtflw.Fill(9)
 
     return True
     

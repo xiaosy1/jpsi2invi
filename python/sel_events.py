@@ -118,7 +118,7 @@ def fill_histograms(t):
     cut_trkp_p = (abs(t.trkp_p) < 0.45) 
     cut_trkm_p = (abs(t.trkm_p) < 0.45)
     cut_cospipi =  (t.vtx_cospipi < 0.95)
-    cut_cos2pisys = (t.vtx_cos2pisys < 0.9)
+    cut_cos2pisys = (abs(t.vtx_cos2pisys) < 0.9)
     cut_pi_PID = (t.prob_pip > t.prob_kp and t.prob_pip > 0.001 and
                   t.prob_pim > t.prob_km and t.prob_pim > 0.001)
     cut_mjpsi_win = (t.vtx_mrecpipi > 3.0 and t.vtx_mrecpipi < 3.2)
@@ -195,7 +195,7 @@ def select_jpsi_to_invisible(t):
         return False
     h_evtflw.Fill(5)
 
-    if not (t.vtx_cos2pisys < 0.9):
+    if not (abs(t.vtx_cos2pisys) < 0.9):
         return False
     h_evtflw.Fill(6)
 
