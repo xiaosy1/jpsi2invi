@@ -77,6 +77,7 @@ private:
   // output file
   std::string m_output_filename;
   bool m_isMonteCarlo; 
+  bool m_isZCcondition;
   TFile* m_fout; 
   
   // define Histograms
@@ -93,20 +94,21 @@ private:
   int m_ncharged;
   int m_nptrk;
   int m_nmtrk;
-  double m_trkp_p; 
-  double m_trkp_px; 
-  double m_trkp_py; 
-  double m_trkp_pz; 
-  double m_trkp_theta; 
-  double m_trkp_phi; 
+
+  std::vector<double> *m_trkp_p; 
+  std::vector<double> *m_trkp_px; 
+  std::vector<double> *m_trkp_py; 
+  std::vector<double> *m_trkp_pz; 
+  std::vector<double> *m_trkp_theta; 
+  std::vector<double> *m_trkp_phi; 
   double m_trkp_eraw; 
   
-  double m_trkm_p; 
-  double m_trkm_px; 
-  double m_trkm_py; 
-  double m_trkm_pz; 
-  double m_trkm_theta; 
-  double m_trkm_phi; 
+  std::vector<double> *m_trkm_p; 
+  std::vector<double> *m_trkm_px; 
+  std::vector<double> *m_trkm_py; 
+  std::vector<double> *m_trkm_pz; 
+  std::vector<double> *m_trkm_theta; 
+  std::vector<double> *m_trkm_phi; 
   double m_trkm_eraw; 
 
   // vertex 
@@ -168,6 +170,12 @@ private:
   int m_npho;
 
   //  MC truth info
+  int m_indexmc;
+  int m_pdgid[100];
+  int m_trkidx[100];
+  int m_motheridx[100];
+  int m_motherpid[100];
+
   double m_mc_mom_pip;
   double m_mc_mom_pim;
   double m_mc_mom_mup;
@@ -296,6 +304,18 @@ enum {
 Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
   Algorithm(name, pSvcLocator),
   m_tree(0),
+  m_trkp_p(0),
+  m_trkp_px(0),
+  m_trkp_py(0),
+  m_trkp_pz(0),
+  m_trkp_theta(0),
+  m_trkp_phi(0),
+  m_trkm_p(0),
+  m_trkm_px(0),
+  m_trkm_py(0),
+  m_trkm_pz(0),
+  m_trkm_theta(0),
+  m_trkm_phi(0),
   m_pip_p(0),
   m_pip_px(0),
   m_pip_py(0),
@@ -327,6 +347,8 @@ Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
 {
   declareProperty("OutputFileName", m_output_filename);
   declareProperty("IsMonteCarlo", m_isMonteCarlo);
+  declareProperty("ZChi_AnaCondition", m_isZCcondition=false);
+  //declareProperty("ZChi_AnaCondition", m_isZCcondition=true);
   declareProperty("Ecms", m_ecms = 3.686);
   declareProperty("Vr0cut", m_vr0cut=1.0);
   declareProperty("Vz0cut", m_vz0cut=10.0);
@@ -342,13 +364,11 @@ Jpsi2incl::Jpsi2incl(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("EnergyEndcapMin", m_energy_endcap_min=0.050); 
   declareProperty("PionPolarAngleMax", m_pion_polar_angle_max=0.99);
   declareProperty("PionMomentumMax", m_pion_momentum_max=1.9); 
-  declareProperty("ProbPionMin", m_prob_pion_min=0.0008);
+  declareProperty("ProbPionMin", m_prob_pion_min=0.001);
   declareProperty("DipionMassMin", m_dipion_mass_min=3.0); 
   declareProperty("DipionMassMax", m_dipion_mass_max=3.2); 
-  //declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=0.99);
-  declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=1.01);
-  //declareProperty("PiPiSysCosthetaMax", m_pipisys_costheta_max=0.99);
-  declareProperty("PiPiSysCosthetaMax", m_pipisys_costheta_max=1.01);
+  declareProperty("PiPiCosthetaMax", m_pipi_costheta_max=0.99);
+  declareProperty("PiPiSysCosthetaMax", m_pipisys_costheta_max=0.99);
 }
 
 
@@ -420,7 +440,7 @@ void Jpsi2incl::book_histogram() {
 
 void Jpsi2incl::book_tree() {
 
-  m_tree=new TTree("tree", "jpsi2invi");
+  m_tree=new TTree("tree", "jpsi2incl");
   if (!m_tree) return; 
 
   //commom info
@@ -431,20 +451,21 @@ void Jpsi2incl::book_tree() {
   m_tree->Branch("ncharged", &m_ncharged, "ncharged/I");
   m_tree->Branch("nptrk", &m_nptrk, "nptrk/I");
   m_tree->Branch("nmtrk", &m_nmtrk, "nmtrk/I");
-  m_tree->Branch("trkp_p", &m_trkp_p, "trkp_p/D"); 
-  m_tree->Branch("trkp_px", &m_trkp_px, "trkp_px/D"); 
-  m_tree->Branch("trkp_py", &m_trkp_py, "trkp_py/D"); 
-  m_tree->Branch("trkp_pz", &m_trkp_pz, "trkp_pz/D"); 
-  m_tree->Branch("trkp_theta", &m_trkp_theta, "trkp_theta/D"); 
-  m_tree->Branch("trkp_phi", &m_trkp_phi, "trkp_phi/D"); 
+
+  m_tree->Branch("trkp_p", &m_trkp_p); 
+  m_tree->Branch("trkp_px", &m_trkp_px); 
+  m_tree->Branch("trkp_py", &m_trkp_py); 
+  m_tree->Branch("trkp_pz", &m_trkp_pz); 
+  m_tree->Branch("trkp_theta", &m_trkp_theta); 
+  m_tree->Branch("trkp_phi", &m_trkp_phi); 
   m_tree->Branch("trkp_eraw", &m_trkp_eraw, "trkp_eraw/D"); 
 
-  m_tree->Branch("trkm_p", &m_trkm_p, "trkm_p/D"); 
-  m_tree->Branch("trkm_px", &m_trkm_px, "trkm_px/D"); 
-  m_tree->Branch("trkm_py", &m_trkm_py, "trkm_py/D"); 
-  m_tree->Branch("trkm_pz", &m_trkm_pz, "trkm_pz/D"); 
-  m_tree->Branch("trkm_theta", &m_trkm_theta, "trkm_theta/D"); 
-  m_tree->Branch("trkm_phi", &m_trkm_phi, "trkm_phi/D"); 
+  m_tree->Branch("trkm_p", &m_trkm_p); 
+  m_tree->Branch("trkm_px", &m_trkm_px); 
+  m_tree->Branch("trkm_py", &m_trkm_py); 
+  m_tree->Branch("trkm_pz", &m_trkm_pz); 
+  m_tree->Branch("trkm_theta", &m_trkm_theta); 
+  m_tree->Branch("trkm_phi", &m_trkm_phi); 
   m_tree->Branch("trkm_eraw", &m_trkm_eraw, "trkm_eraw/D"); 
 	  
   //vertex
@@ -499,6 +520,12 @@ void Jpsi2incl::book_tree() {
   
   // MC truth info
   if (!m_isMonteCarlo) return; 
+  m_tree->Branch("indexmc", &m_indexmc, "indexmc/I");
+  m_tree->Branch("pdgid", m_pdgid, "m_pdgid[100]/I");
+  m_tree->Branch("trkidx", m_trkidx, "m_trkidx[100]/I");
+  m_tree->Branch("motherpid", m_motherpid, "m_motherpid[100]/I");
+  m_tree->Branch("motheridx", m_motheridx, "m_motheridx[100]/I");
+
   m_tree->Branch("mc_mom_pip", &m_mc_mom_pip, "mc_mom_pip/D");
   m_tree->Branch("mc_mom_pim", &m_mc_mom_pim, "mc_mom_pim/D");
   m_tree->Branch("mc_mom_mup", &m_mc_mom_mup, "mc_mom_mup/D");
@@ -540,6 +567,30 @@ void Jpsi2incl::book_tree() {
 void Jpsi2incl::clearVariables() {
   m_run = 0;
   m_event = 0;
+
+  // MC Topology
+  m_indexmc = 0;
+  for(int i=0;i<100;i++)
+    {
+      m_pdgid[i] = 0;
+      m_trkidx[i] = 0;
+      m_motheridx[i] = 0;
+      m_motherpid[i] = 0;
+    }
+
+  m_trkp_p->clear();
+  m_trkp_px->clear();
+  m_trkp_py->clear();
+  m_trkp_pz->clear();
+  m_trkp_theta->clear();
+  m_trkp_phi->clear();
+
+  m_trkm_p->clear();
+  m_trkm_px->clear();
+  m_trkm_py->clear();
+  m_trkm_pz->clear();
+  m_trkm_theta->clear();
+  m_trkm_phi->clear();
 
   m_pip_p->clear();
   m_pip_px->clear();
@@ -603,6 +654,36 @@ bool Jpsi2incl::buildJpsiToInclusive() {
 void Jpsi2incl::saveGenInfo() {
   SmartDataPtr<Event::McParticleCol> mcParticleCol(eventSvc(), "/Event/MC/McParticleCol");
   HepLorentzVector mc_psip,mc_pip,mc_pim,mc_ep,mc_em,mc_mup,mc_mum,mc_p,mc_pb,mc_n,mc_nb,mc_jpsi;
+
+  // MC Topology 
+  {
+    int m_numParticle = 0;
+    bool Decay = false;
+    int rootIndex = -1;
+    Event::McParticleCol::iterator iter_mc_topo = mcParticleCol->begin();
+    for (; iter_mc_topo != mcParticleCol->end(); iter_mc_topo++) {
+      if ((*iter_mc_topo)->primaryParticle() && Decay) { rootIndex++; continue; }
+      if ((*iter_mc_topo)->primaryParticle()) continue;
+      if (!(*iter_mc_topo)->decayFromGenerator()) continue;
+      if ((*iter_mc_topo)->particleProperty() == PSI2S_PDG_ID) {
+        Decay = true;
+        rootIndex = (*iter_mc_topo)->trackIndex();
+      }
+      if (!Decay) continue;
+      int mpdgid = ((*iter_mc_topo)->mother()).particleProperty();
+      int mcidx = (((*iter_mc_topo)->mother()).particleProperty() == PSI2S_PDG_ID) ? 0 : ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
+      //int mcidx = ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
+      int pdgid = (*iter_mc_topo)->particleProperty();
+      int trkidx = (*iter_mc_topo)->trackIndex() - rootIndex;
+      m_pdgid[m_numParticle] = pdgid;
+      m_trkidx[m_numParticle] = trkidx;
+      m_motheridx[m_numParticle] = mcidx;
+      m_motherpid[m_numParticle] = mpdgid;
+      m_numParticle++;
+    }
+    m_indexmc = m_numParticle;
+  }
+
 
   Event::McParticleCol::iterator iter_mc = mcParticleCol->begin();
   for (; iter_mc != mcParticleCol->end(); iter_mc++){
@@ -758,7 +839,7 @@ int Jpsi2incl::selectChargedTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
   if (m_nptrk > 0 && m_nmtrk > 0) {
     EvtRecTrackIterator itTrk_p = evtRecTrkCol->begin() + iPGood[0];
     EvtRecTrackIterator itTrk_m = evtRecTrkCol->begin() + iMGood[0];
-    saveTrkInfo(itTrk_p, itTrk_m);
+    //saveTrkInfo(itTrk_p, itTrk_m);
   }
   return iGood.size(); 
 }
@@ -833,6 +914,9 @@ int Jpsi2incl::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
       
       savePidInfo(prob_pip, prob_kp, prob_p,  prob_pim, prob_km, prob_pb);
 
+      //  Save track info (RecMdcTrack) 
+      saveTrkInfo(itTrk_p, itTrk_m);
+
       npipi++;
     }
   } 
@@ -876,7 +960,12 @@ bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
 				  bool &cutflw_costheta_pipisys_filled, 
 				  bool &cutflw_mpipi_filled) {
 
-  HepLorentzVector pcms(0.011*m_ecms, 0., 0., m_ecms);
+  HepLorentzVector pcms;
+  if (!m_isZCcondition){
+    pcms = HepLorentzVector(0.011*m_ecms, 0., 0., m_ecms);
+  }
+  else{ pcms = HepLorentzVector(0.011*m_ecms, -0.001, 0.005, m_ecms); }
+  //HepLorentzVector pcms(0.011*m_ecms, 0., 0., m_ecms);
 
   WTrackParameter wvpipTrk, wvpimTrk;
   pipTrk->setPidType(RecMdcKalTrack::pion);
@@ -919,17 +1008,17 @@ bool Jpsi2incl::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
   cospipi = cos(p4_vtx_pip.vect().angle(p4_vtx_pim.vect()));
   cos2pisys = (p4_vtx_pip + p4_vtx_pim).cosTheta();
 
-  if( ! (cospipi < m_pipi_costheta_max) ) return false;
+  //if( ! (cospipi < m_pipi_costheta_max) ) return false;
   if( !cutflw_costheta_pipi_filled ) h_cutflw->Fill(CUT_COSTHETA_PIPI); 
   cutflw_costheta_pipi_filled = true; 
 
-  if( ! (fabs(cos2pisys) < m_pipisys_costheta_max ) ) return false;
+  //if( ! (fabs(cos2pisys) < m_pipisys_costheta_max ) ) return false;
   if( !cutflw_costheta_pipisys_filled ) h_cutflw->Fill(CUT_COSTHETA_PIPISYS); 
   cutflw_costheta_pipisys_filled = true; 
 
   if( ! ( p4_vtx_recpipi.m() >= m_dipion_mass_min &&
 	  p4_vtx_recpipi.m() <= m_dipion_mass_max) ) return false;
-  if( !cutflw_mpipi_filled ) h_cutflw->Fill(CUT_MPIPI); 
+  if( !cutflw_mpipi_filled ) h_cutflw->Fill(CUT_MPIPI); // 3<M_{#pi#pi}^{rec}<3.2
   cutflw_mpipi_filled = true; 
   
   return true;
@@ -940,12 +1029,12 @@ void Jpsi2incl::saveTrkInfo(EvtRecTrackIterator itTrk_p,
 			    EvtRecTrackIterator itTrk_m) {
 
   RecMdcTrack* mdcTrk_p = (*itTrk_p)->mdcTrack(); 
-  m_trkp_p = mdcTrk_p->p();
-  m_trkp_px = mdcTrk_p->px();
-  m_trkp_py = mdcTrk_p->py();
-  m_trkp_pz = mdcTrk_p->pz();
-  m_trkp_theta = mdcTrk_p->theta();
-  m_trkp_phi = mdcTrk_p->phi();
+  m_trkp_p->push_back(mdcTrk_p->p());
+  m_trkp_px->push_back(mdcTrk_p->px());
+  m_trkp_py->push_back(mdcTrk_p->py());
+  m_trkp_pz->push_back(mdcTrk_p->pz());
+  m_trkp_theta->push_back(mdcTrk_p->theta());
+  m_trkp_phi->push_back(mdcTrk_p->phi());
   
   if((*itTrk_p)->isEmcShowerValid()){
     RecEmcShower *emcTrk_p = (*itTrk_p)->emcShower();
@@ -953,12 +1042,12 @@ void Jpsi2incl::saveTrkInfo(EvtRecTrackIterator itTrk_p,
   }
 
   RecMdcTrack* mdcTrk_m = (*itTrk_m)->mdcTrack();
-  m_trkm_p = mdcTrk_m->p();
-  m_trkm_px = mdcTrk_m->px();
-  m_trkm_py = mdcTrk_m->py();
-  m_trkm_pz = mdcTrk_m->pz();
-  m_trkm_theta = mdcTrk_m->theta();
-  m_trkm_phi = mdcTrk_m->phi();
+  m_trkm_p->push_back(mdcTrk_m->p());
+  m_trkm_px->push_back(mdcTrk_m->px());
+  m_trkm_py->push_back(mdcTrk_m->py());
+  m_trkm_pz->push_back(mdcTrk_m->pz());
+  m_trkm_theta->push_back(mdcTrk_m->theta());
+  m_trkm_phi->push_back(mdcTrk_m->phi());
   
   if((*itTrk_m)->isEmcShowerValid()){
     RecEmcShower *emcTrk_m = (*itTrk_m)->emcShower();
