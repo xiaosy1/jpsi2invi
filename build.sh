@@ -25,7 +25,6 @@ else
     option=$1    
 fi
 
-### Test
 
 case $option in 
     1) echo "Building Jpsi2invi module..."
