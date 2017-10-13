@@ -33,7 +33,7 @@ h_evtflw.GetXaxis().SetBinLabel(6, 'cos#theta_{#pi^{+}#pi^{-}}<0.95')
 h_evtflw.GetXaxis().SetBinLabel(7, 'cos#theta_{#pi#pi sys}<0.9') 
 h_evtflw.GetXaxis().SetBinLabel(8, '3<M_{#pi#pi}^{rec}<3.2') 
 
-h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 100, 3.04, 3.16)
+h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 100, 3.03, 3.17)
 h_mpipi = ROOT.TH1D('h_mpipi', 'mpipi', 100, 0.2, 0.7) 
 h_pip_p = ROOT.TH1D('h_pip_p', 'pip_p', 100, 0.0, 0.5) 
 h_pim_p = ROOT.TH1D('h_pim_p', 'pim_p', 100, 0.0, 0.5) 
