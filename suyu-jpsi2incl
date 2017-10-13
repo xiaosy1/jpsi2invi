@@ -1,0 +1,44 @@
+#!/usr/bin/env python
+"""
+Event Selection 
+"""
+
+__author__ = "Xiao Suyu <shixin@ihep.ac.cn>"
+__copyright__ = "Copyright (a) Xiao Suyu"
+__created__ = "[2016-11-05 Sat 09:55]" 
+
+import sys
+import os
+import math 
+import ROOT 
+from progressbar import Bar, Percentage, ProgressBar
+from time import time 
+from tools import duration, check_outfile_path
+
+#TEST=True 
+TEST=False
+
+# Global constants 
+JPSI_MASS = 3.096916; 
+
+h_= ROOT.TH1F('hcutflw', 'cutflow', 10, 0, 10) 
+h_cutflw.GetXaxis().SetBinLabel(1, 'raw')
+h_cutflw.GetXaxis().SetBinLabel(2, 'N^{+}>=1 N^{-}>=1')
+h_cutflw.GetXaxis().SetBinLabel(3, '|cos#theta|<0.99')
+h_cutflw.GetXaxis().SetBinLabel(4, '|p|<1.9') 
+h_cutflw.GetXaxis().SetBinLabel(5, 'PID') 
+h_cutflw.GetXaxis().SetBinLabel(6, 'cos#theta_{#pi^{+}#pi^{-}}<0.99') 
+h_cutflw.GetXaxis().SetBinLabel(7, 'cos#theta_{#pi#pi sys}<0.99') 
+h_cutflw.GetXaxis().SetBinLabel(8, '3<M_{#pi#pi}^{rec}<3.2') 
+
+
+def write_histograms():
+    h_cutflw.Write()
+ 
+ 
+def select_jpsi_to_invisible(t):
+    h_cutflw.Fill(0) 
+    
+    
+if __name__ == '__main__':
+main()
