@@ -79,6 +79,7 @@ private:
   // output file
   std::string m_output_filename;
   bool m_isMonteCarlo; 
+  bool m_isZCcondition;
   TFile* m_fout; 
   
   // define Histograms
@@ -118,6 +119,15 @@ private:
   std::vector<double> *m_raw_gpy; 
   std::vector<double> *m_raw_gpz; 
   std::vector<double> *m_raw_ge; 
+
+  std::vector<double> *m_raw_phi;
+  std::vector<double> *m_raw_theta;
+  std::vector<double> *m_raw_costheta;
+  std::vector<int> *m_raw_cstat;
+  std::vector<int> *m_raw_nhit;       
+  std::vector<int> *m_raw_module;
+  std::vector<double> *m_raw_secmom;
+  std::vector<double> *m_raw_time;       
   
   // vertex 
   double m_vr0;
@@ -144,11 +154,18 @@ private:
   double m_vtx_pip_px; 
   double m_vtx_pip_py; 
   double m_vtx_pip_pz; 
+  double m_vtx_pip_p; 
   double m_vtx_pip_e;
+  double m_vtx_pip_costheta;
+  double m_vtx_pip_phi;
+
   double m_vtx_pim_px; 
   double m_vtx_pim_py; 
   double m_vtx_pim_pz; 
+  double m_vtx_pim_p; 
   double m_vtx_pim_e;
+  double m_vtx_pim_costheta;
+  double m_vtx_pim_phi;
 
   double m_vtx_mpipi;
   double m_vtx_mrecpipi;
@@ -164,6 +181,12 @@ private:
   int m_npho;
 
   //  MC truth info
+  int m_indexmc;
+  int m_pdgid[100];
+  int m_trkidx[100];
+  int m_motheridx[100];
+  int m_motherpid[100];
+
   double m_mc_mom_pip;
   double m_mc_mom_pim;
   double m_mc_mom_mup;
@@ -204,6 +227,7 @@ private:
   // functions
   void book_histogram();
   void book_tree(); 
+  void clearVariables();
   bool buildJpsiToInvisible();
   void saveGenInfo(); 
   void saveTrkInfo(EvtRecTrackIterator,
@@ -272,10 +296,20 @@ Jpsi2invi::Jpsi2invi(const std::string& name, ISvcLocator* pSvcLocator) :
   m_raw_gpx(0), 
   m_raw_gpy(0), 
   m_raw_gpz(0), 
-  m_raw_ge(0)
+  m_raw_ge(0),  
+  m_raw_phi(0),
+  m_raw_theta(0),
+  m_raw_costheta(0),
+  m_raw_cstat(0),
+  m_raw_nhit(0),
+  m_raw_module(0),
+  m_raw_secmom(0),
+  m_raw_time(0)
 {
   declareProperty("OutputFileName", m_output_filename);
   declareProperty("IsMonteCarlo", m_isMonteCarlo);
+  declareProperty("ZChi_AnaCondition", m_isZCcondition=false);
+  //declareProperty("ZChi_AnaCondition", m_isZCcondition=true);
   declareProperty("Ecms", m_ecms = 3.686);
   declareProperty("Vr0cut", m_vr0cut=1.0);
   declareProperty("Vz0cut", m_vz0cut=10.0);
@@ -319,11 +353,8 @@ StatusCode Jpsi2invi::execute() {
   MsgStream log(msgSvc(), name());
   log << MSG::INFO << "in execute()" << endreq;
   
-  // clear vectors 
-  m_raw_gpx->clear();
-  m_raw_gpy->clear();
-  m_raw_gpz->clear();
-  m_raw_ge->clear();
+  // clear variables 
+  clearVariables();
   
   h_evtflw->Fill(0); // raw 
   SmartDataPtr<Event::EventHeader>eventHeader(eventSvc(),"/Event/EventHeader");
@@ -358,17 +389,18 @@ Jpsi2invi::~Jpsi2invi() {
 
 void Jpsi2invi::book_histogram() {
 
-  h_evtflw = new TH1F("hevtflw", "eventflow", 10, 0, 10);
+  h_evtflw = new TH1F("hevtflw", "eventflow", 13, 0, 13);
   if (!h_evtflw) return;
   h_evtflw->GetXaxis()->SetBinLabel(1, "raw");
   h_evtflw->GetXaxis()->SetBinLabel(2, "N_{Good}=2");
-  h_evtflw->GetXaxis()->SetBinLabel(3, "N_{#gamma}<20");
-  h_evtflw->GetXaxis()->SetBinLabel(4, "|cos#theta|<0.99");
-  h_evtflw->GetXaxis()->SetBinLabel(5, "|p|<1.9");
-  h_evtflw->GetXaxis()->SetBinLabel(6, "PID"); 
-  h_evtflw->GetXaxis()->SetBinLabel(7, "cos#theta_{#pi^{+}#pi^{-}}<0.99");
-  h_evtflw->GetXaxis()->SetBinLabel(8, "cos#theta_{#pi#pi sys}<0.99");
-  h_evtflw->GetXaxis()->SetBinLabel(9, "3<M_{#pi#pi}^{rec}<3.2");
+  h_evtflw->GetXaxis()->SetBinLabel(3, "|cos#theta|<0.99");
+  h_evtflw->GetXaxis()->SetBinLabel(4, "|p|<1.9");
+  h_evtflw->GetXaxis()->SetBinLabel(5, "PID"); 
+  h_evtflw->GetXaxis()->SetBinLabel(6, "cos#theta_{#pi^{+}#pi^{-}}<0.99");
+  h_evtflw->GetXaxis()->SetBinLabel(7, "cos#theta_{#pi#pi sys}<0.99");
+  h_evtflw->GetXaxis()->SetBinLabel(8, "3<M_{#pi#pi}^{rec}<3.2");
+  h_evtflw->GetXaxis()->SetBinLabel(9, "N_{#gamma}<20");
+  h_evtflw->GetXaxis()->SetBinLabel(10, "test");
 }
 
 
@@ -413,6 +445,15 @@ void Jpsi2invi::book_tree() {
   m_tree->Branch("raw_gpy", &m_raw_gpy);
   m_tree->Branch("raw_gpz", &m_raw_gpz);
   m_tree->Branch("raw_ge", &m_raw_ge);
+  
+  m_tree->Branch("raw_phi", &m_raw_phi);
+  m_tree->Branch("raw_theta", &m_raw_theta);
+  m_tree->Branch("raw_costheta", &m_raw_costheta);
+  m_tree->Branch("raw_cstat", &m_raw_cstat);
+  m_tree->Branch("raw_nhit", &m_raw_nhit);
+  m_tree->Branch("raw_module", &m_raw_module);
+  m_tree->Branch("raw_secmom", &m_raw_secmom);
+  m_tree->Branch("raw_time", &m_raw_time);
 
   // PID info
   m_tree->Branch("prob_pip", &m_prob_pip, "prob_pip/D"); 
@@ -435,10 +476,18 @@ void Jpsi2invi::book_tree() {
   m_tree->Branch("vtx_pip_px", &m_vtx_pip_px, "vtx_pip_px/D");
   m_tree->Branch("vtx_pip_py", &m_vtx_pip_py, "vtx_pip_py/D");
   m_tree->Branch("vtx_pip_pz", &m_vtx_pip_pz, "vtx_pip_pz/D");
+  m_tree->Branch("vtx_pip_p", &m_vtx_pip_p, "vtx_pip_p/D");
   m_tree->Branch("vtx_pip_e", &m_vtx_pip_e, "vtx_pip_e/D");
+  m_tree->Branch("vtx_pip_costheta", &m_vtx_pip_costheta, "vtx_pip_costheta/D");
+  m_tree->Branch("vtx_pip_phi", &m_vtx_pip_phi, "vtx_pip_phi/D");
+
   m_tree->Branch("vtx_pim_px", &m_vtx_pim_px, "vtx_pim_px/D");
   m_tree->Branch("vtx_pim_py", &m_vtx_pim_py, "vtx_pim_py/D");
+  m_tree->Branch("vtx_pim_pz", &m_vtx_pim_pz, "vtx_pim_pz/D");
+  m_tree->Branch("vtx_pim_p", &m_vtx_pim_p, "vtx_pim_p/D");
   m_tree->Branch("vtx_pim_e", &m_vtx_pim_e, "vtx_pim_e/D");
+  m_tree->Branch("vtx_pim_costheta", &m_vtx_pim_costheta, "vtx_pim_costheta/D");
+  m_tree->Branch("vtx_pim_phi", &m_vtx_pim_phi, "vtx_pim_phi/D");
 
   m_tree->Branch("vtx_mpipi", &m_vtx_mpipi, "vtx_mpipi/D");
   m_tree->Branch("vtx_mrecpipi", &m_vtx_mrecpipi, "vtx_mrecpipi/D");
@@ -447,6 +496,12 @@ void Jpsi2invi::book_tree() {
   
   // MC truth info
   if (!m_isMonteCarlo) return; 
+  m_tree->Branch("indexmc", &m_indexmc, "indexmc/I");
+  m_tree->Branch("pdgid", m_pdgid, "m_pdgid[100]/I");
+  m_tree->Branch("trkidx", m_trkidx, "m_trkidx[100]/I");
+  m_tree->Branch("motherpid", m_motherpid, "m_motherpid[100]/I");
+  m_tree->Branch("motheridx", m_motheridx, "m_motheridx[100]/I");
+
   m_tree->Branch("mc_mom_pip", &m_mc_mom_pip, "mc_mom_pip/D");
   m_tree->Branch("mc_mom_pim", &m_mc_mom_pim, "mc_mom_pim/D");
   m_tree->Branch("mc_mom_mup", &m_mc_mom_mup, "mc_mom_mup/D");
@@ -485,6 +540,36 @@ void Jpsi2invi::book_tree() {
   
 }
 
+void Jpsi2invi::clearVariables() {
+
+  // EMC Info
+  m_raw_gpx->clear();
+  m_raw_gpy->clear();
+  m_raw_gpz->clear();
+  m_raw_ge->clear();
+
+  m_raw_phi->clear();
+  m_raw_theta->clear();
+  m_raw_costheta->clear();
+  m_raw_cstat->clear();
+  m_raw_nhit->clear();
+  m_raw_module->clear();
+  m_raw_secmom->clear();
+  m_raw_time->clear();
+
+  // MC Topology
+  m_indexmc = 0;
+  for(int i=0;i<100;i++)
+    {
+      m_pdgid[i] = 0;
+      m_trkidx[i] = 0;
+      m_motheridx[i] = 0;
+      m_motherpid[i] = 0;
+    }
+
+  m_run = 0;
+  m_event = 0;
+}
 
 bool Jpsi2invi::buildJpsiToInvisible() {
 
@@ -496,20 +581,19 @@ bool Jpsi2invi::buildJpsiToInvisible() {
   SmartDataPtr<EvtRecTrackCol> evtRecTrkCol(eventSvc(), "/Event/EvtRec/EvtRecTrackCol");
   if(!evtRecTrkCol) return false;
 
+  h_evtflw->Fill(9);
+
   std::vector<int> iPGood, iMGood; 
   selectChargedTracks(evtRecEvent, evtRecTrkCol, iPGood, iMGood);
 
   if (m_ncharged != 2) return false;
   h_evtflw->Fill(1); // N_{Good} = 2 
 
-  //selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
-  int npipi = selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood);  
-  //std::cout << "npipi = " << npipi << std::endl;
-  if(npipi != 1) return false;
+  if( selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood)!=1 ) return false;  
 
   selectNeutralTracks(evtRecEvent, evtRecTrkCol);
   if (m_ngam >= 20) return false;
-  h_evtflw->Fill(2); // N_{#gamma} < 20 
+  h_evtflw->Fill(8); // N_{#gamma} < 20 
     
   return true; 
 }
@@ -518,6 +602,36 @@ bool Jpsi2invi::buildJpsiToInvisible() {
 void Jpsi2invi::saveGenInfo() {
   SmartDataPtr<Event::McParticleCol> mcParticleCol(eventSvc(), "/Event/MC/McParticleCol");
   HepLorentzVector mc_psip,mc_pip,mc_pim,mc_ep,mc_em,mc_mup,mc_mum,mc_p,mc_pb,mc_n,mc_nb,mc_jpsi;
+
+  // MC Topology 
+  {
+    int m_numParticle = 0;
+    bool Decay = false;
+    int rootIndex = -1;
+    Event::McParticleCol::iterator iter_mc_topo = mcParticleCol->begin();
+    for (; iter_mc_topo != mcParticleCol->end(); iter_mc_topo++) {
+      if ((*iter_mc_topo)->primaryParticle() && Decay) { rootIndex++; continue; }
+      if ((*iter_mc_topo)->primaryParticle()) continue;
+      if (!(*iter_mc_topo)->decayFromGenerator()) continue;
+      if ((*iter_mc_topo)->particleProperty() == PSI2S_PDG_ID) {
+        Decay = true;
+        rootIndex = (*iter_mc_topo)->trackIndex();
+      }
+      if (!Decay) continue;
+      int mpdgid = ((*iter_mc_topo)->mother()).particleProperty();
+      int mcidx = (((*iter_mc_topo)->mother()).particleProperty() == PSI2S_PDG_ID) ? 0 : ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
+      //int mcidx = ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
+      int pdgid = (*iter_mc_topo)->particleProperty();
+      int trkidx = (*iter_mc_topo)->trackIndex() - rootIndex;
+      m_pdgid[m_numParticle] = pdgid;
+      m_trkidx[m_numParticle] = trkidx;
+      m_motheridx[m_numParticle] = mcidx;
+      m_motherpid[m_numParticle] = mpdgid;
+      m_numParticle++;
+    }
+    m_indexmc = m_numParticle;
+  }
+
 
   Event::McParticleCol::iterator iter_mc = mcParticleCol->begin();
   for (; iter_mc != mcParticleCol->end(); iter_mc++){
@@ -697,13 +811,13 @@ int Jpsi2invi::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
       // polar angle for both pions
       if ( ! ( fabs(cos(mdcTrk_p->theta())) < m_pion_polar_angle_max &&
       	       fabs(cos(mdcTrk_m->theta())) < m_pion_polar_angle_max )) continue;
-      if ( !evtflw_filled ) h_evtflw->Fill(3); // |cos#theta| cut 
+      if ( !evtflw_filled ) h_evtflw->Fill(2); // |cos#theta| cut 
 
       // pion momentum
       if ( ! ( fabs(mdcTrk_p->p()) < m_pion_momentum_max  &&
       	       fabs(mdcTrk_m->p()) < m_pion_momentum_max )) continue;
 
-      if ( !evtflw_filled ) h_evtflw->Fill(4); //|p| cut 
+      if ( !evtflw_filled ) h_evtflw->Fill(3); //|p| cut 
       
       // track PID
       double prob_pip, prob_kp, prob_pim, prob_km, prob_p, prob_pb; 
@@ -723,7 +837,7 @@ int Jpsi2invi::selectPionPlusPionMinus(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol
       // 	    prob_pim > prob_km &&
       // 	    prob_pim > m_prob_pion_min) ) continue;
 
-      if ( !evtflw_filled ) h_evtflw->Fill(5); //PID
+      if ( !evtflw_filled ) h_evtflw->Fill(4); //PID
  
       // apply vertex fit
       RecMdcKalTrack *pipTrk = (*(evtRecTrkCol->begin()+iPGood[i1]))->mdcKalTrack();
@@ -769,7 +883,11 @@ bool Jpsi2invi::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
 				  RecMdcKalTrack *pimTrk,
 				  bool evtflw_filled) {
 
-  HepLorentzVector pcms(0.011*m_ecms, 0., 0., m_ecms);
+  HepLorentzVector pcms;
+  if (!m_isZCcondition){
+    pcms = HepLorentzVector(0.011*m_ecms, 0., 0., m_ecms);
+  }
+  else{ pcms = HepLorentzVector(0.011*m_ecms, -0.001, 0.005, m_ecms); }
 
   HepLorentzVector p4_vtx_pip, p4_vtx_pim, p4_vtx_pipi, p4_vtx_recpipi;
   WTrackParameter wvpipTrk, wvpimTrk;
@@ -813,15 +931,15 @@ bool Jpsi2invi::hasGoodPiPiVertex(RecMdcKalTrack *pipTrk,
   double cospipi = cos(p4_vtx_pip.vect().angle(p4_vtx_pim.vect()));
   double cos2pisys = (p4_vtx_pip + p4_vtx_pim).cosTheta();
 
-  if( ! (cospipi < m_pipi_costheta_max) ) return false;
-  if( !evtflw_filled ) h_evtflw->Fill(6); // "cos#theta_{#pi^{+}#pi^{-}}<0.99"
+  //if( ! (cospipi < m_pipi_costheta_max) ) return false;
+  if( !evtflw_filled ) h_evtflw->Fill(5); // "cos#theta_{#pi^{+}#pi^{-}}<0.99"
 
-  if( ! (fabs(cos2pisys) < m_pipisys_costheta_max ) ) return false;
-  if( !evtflw_filled ) h_evtflw->Fill(7); // cos#theta_{#pi#pi sys}<0.99 
+  //if( ! (fabs(cos2pisys) < m_pipisys_costheta_max ) ) return false;
+  if( !evtflw_filled ) h_evtflw->Fill(6); // cos#theta_{#pi#pi sys}<0.99 
 
   if( ! ( p4_vtx_recpipi.m() >= m_dipion_mass_min &&
 	  p4_vtx_recpipi.m() <= m_dipion_mass_max) ) return false;
-  if( !evtflw_filled ) h_evtflw->Fill(8); // 3<M_{#pi#pi}^{rec}<3.2
+  if( !evtflw_filled ) h_evtflw->Fill(7); // 3<M_{#pi#pi}^{rec}<3.2
 
   saveVtxInfo(p4_vtx_pip, p4_vtx_pim); 
   m_vtx_mrecpipi = p4_vtx_recpipi.m();
@@ -861,8 +979,15 @@ int Jpsi2invi::selectNeutralTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
 		   && abs_costheta < m_costheta_endcap_max);
     double eraw = emcTrk->energy();
     
-    if ( !( (barrel && eraw > m_energy_barrel_min)
-	    || (endcap && eraw > m_energy_endcap_min)))  continue; 
+    if (!m_isZCcondition){     // Cut by "costheta"
+      if ( !( (barrel && eraw > m_energy_barrel_min)
+	      || (endcap && eraw > m_energy_endcap_min)))  continue; 
+    }
+    else{                      // Cut by "module"
+      int module = emcTrk->module();
+      if( module == 1 ){  if( !(eraw > m_energy_barrel_min) ) continue; }
+      else{ if( !(eraw > m_energy_endcap_min) ) continue; }
+    }
 
     // photon isolation: the opening angle between a candidate shower
     // and the closest charged track should be larger than 10 degree 
@@ -951,7 +1076,8 @@ void Jpsi2invi::saveGamInfo(std::vector<int> iGam,
     RecEmcShower* emcTrk = (*itTrk)->emcShower();
     double eraw = emcTrk->energy();
     double phi = emcTrk->phi();
-    double theta = emcTrk->theta(); 
+    double theta = emcTrk->theta();
+
     HepLorentzVector p4 = HepLorentzVector(eraw * sin(theta) * cos(phi),
 					   eraw * sin(theta) * sin(phi),
 					   eraw * cos(theta),
@@ -960,6 +1086,22 @@ void Jpsi2invi::saveGamInfo(std::vector<int> iGam,
     m_raw_gpy->push_back(p4.py());
     m_raw_gpz->push_back(p4.pz());
     m_raw_ge->push_back(p4.e());
+
+
+    int cstat = emcTrk->status();
+    int nhit = emcTrk->numHits();
+    int module = emcTrk->module();      
+    double secmom = emcTrk->secondMoment();      
+    double time = emcTrk->time();
+
+    m_raw_phi->push_back(phi);
+    m_raw_theta->push_back(theta);
+    m_raw_costheta->push_back(cos(theta));
+    m_raw_cstat->push_back(cstat);
+    m_raw_nhit->push_back(nhit);
+    m_raw_module->push_back(module);
+    m_raw_secmom->push_back(secmom);
+    m_raw_time->push_back(time);
   }
 }
 
@@ -982,12 +1124,18 @@ void Jpsi2invi::saveVtxInfo(HepLorentzVector p4_vtx_pip,
   m_vtx_pip_px = p4_vtx_pip.px();
   m_vtx_pip_py = p4_vtx_pip.py();
   m_vtx_pip_pz = p4_vtx_pip.pz();
+  m_vtx_pip_p = p4_vtx_pip.rho();
   m_vtx_pip_e = p4_vtx_pip.e();
+  m_vtx_pip_costheta = p4_vtx_pip.cosTheta();
+  m_vtx_pip_phi = p4_vtx_pip.phi();
 
   m_vtx_pim_px = p4_vtx_pim.px();
   m_vtx_pim_py = p4_vtx_pim.py();
   m_vtx_pim_pz = p4_vtx_pim.pz();
+  m_vtx_pim_p = p4_vtx_pim.rho();
   m_vtx_pim_e = p4_vtx_pim.e();
+  m_vtx_pim_costheta = p4_vtx_pim.cosTheta();
+  m_vtx_pim_phi = p4_vtx_pim.phi();
 
 }
 
