@@ -91,7 +91,7 @@ case $option in
     0.1.3) echo "Submit Condor jobs on data..."
 	   mkdir run/data
 	   mkdir run/log/data
-	   hep_sub -g physics -o /besfs/groups/nphy/users/xiaosy/run/run/tmp20171023/log.tex -e /besfs/groups/nphy/users/xiaosy/run/run/tmp20171023/err.txt /afs/ihep.ac.cn/users/x/xiaosy/bes/jpsi2invi/v0.1/condor/jpsi2invi/jpsi2invi_data.sh
+	   hep_sub -g physics -os SL5 -o /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/log/data/jpsi2invi_data.log -e /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/error/data/jpsi2invi_data.error condor/jpsi2invi/jpsi2invi_data.sh
 	   #qsub pbs/qsub_jpsi2invi_data.sh  
 	   ;;
 
