@@ -22,11 +22,12 @@ EventCnvSvc.digiRootInputFile = {
 MessageSvc.OutputLevel = 5;
 
 // Number of events to be processed (default is 10)
-ApplicationMgr.EvtMax = 5000;
-// ApplicationMgr.EvtMax = -1;
+//ApplicationMgr.EvtMax = 5000;
+ApplicationMgr.EvtMax = -1;
 
 //Jpsi2invi.OutputFileName="/afs/ihep.ac.cn/users/x/xiaosy/bes/jpsi2invi/v0.1/condor/jpsi2invi/jpsi2invi.root";
-Jpsi2invi.OutputFileName="/besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/data/jpsi2invi_data-$_CONDOR_IHEP_JOB_ID";
+//Jpsi2invi.OutputFileName="/besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/data/jpsi2invi_data-1.root"; 
+Jpsi2invi.OutputFileName="/besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/data/jpsi2invi_data-%{ProcID}.root";
 Jpsi2invi.IsMonteCarlo="false";
 // Jpsi2invi.IsMonteCarlo="true";
 

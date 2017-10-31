@@ -89,20 +89,26 @@ case $option in
 	   ;;
 
     0.1.3) echo "Submit Condor jobs on data..."
-	   mkdir run/data
-	   mkdir run/log/data
-	   hep_sub -g physics -os SL5 -o /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/log/data/jpsi2invi_data.log -e /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/error/data/jpsi2invi_data.error condor/jpsi2invi/jpsi2invi_data.sh
-	   #qsub pbs/qsub_jpsi2invi_data.sh  
+	   cd 
+	   mkdir -p /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/job_text/Data12
+	   mkdir -p /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/rootfile
+	   cd /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/gen_script
+	   ./make_jobOption_file_Data12_jpsi2invi.sh
+	   cd ../job_text/Data12
+	   mv jobOptions_jpsi2invi_data_psip_data12-633.txt jobOptions_jpsi2invi_data_psip_data12-0.txt
+	   boss.condor -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12-%{ProcId}.txt
+	   cd
+	   cd bes/jpsi2invi/v0.1  
 	   ;;
 
     0.1.4) echo "Check Condor jobs on data..."
 	   #./python/chk_condorjobs.py /besfs/groups/nphy/users/xiaosy/run/run/tmp20171023 633
-	   ./python/chk_condorjobs.py $HOME/bes/jpsi2invi/v0.1/run/data  633
+	   ./python/chk_condorjobs.py /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/rootfile  633
 	   ;;
     
     0.1.5) echo  "Select events on data..."
-	   mkdir -p  run/events/data 
-	   ./python/sel_events.py  run/data/jpsi2invi_data-1.root  run/events/data/jpsi2invi_data-1.root 
+	   mkdir -p  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event 
+	   ./python/sel_events.py  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/rootfile/jpsi2invi_data_psip_data12-1.root  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event/jpsi2invi_data_psip_data12-1.root 
 	   ;; 
 
     0.1.6) echo "Submit selection Condor jobs on data..."
