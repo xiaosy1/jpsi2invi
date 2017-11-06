@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 """
-Check PBS jobs 
+Check Condor jobs 
 """
 
-__author__ = "SHI Xin <shixin@ihep.ac.cn>"
-__copyright__ = "Copyright (c) SHI Xin"
-__created__ = "[2016-06-02 Thu 09:42]" 
+__author__ = "XIAO Suyu <xiaosuyu@ihep.ac.cn>"
+__created__ = "[2017-10-24 Tue 10:21]" 
 
 import sys
 import os
@@ -16,11 +15,11 @@ from tools import BossLogFile, EventsLogFile
 def usage():
     sys.stdout.write('''
 NAME
-    chk_pbsjobs.py 
+    chk_condorjobs.py 
 
 SYNOPSIS
 
-    ./chk_pbsjobs.py  input_dir num_of_files
+    ./chk_condorjobs.py  input_dir num_of_files
 
 \n''')
 
@@ -37,7 +36,7 @@ def main():
     log = src
     logdir = src.split('/')[-1]
     
-    if logdir in ['data', 'mc_psip12', 'con3650', 'data09', 'mc_psip09']:
+    if logdir in ['rootfile','Data12', 'data', 'mc_psip12', 'con3650', 'data09', 'mc_psip09']:
         logfiletype = 'BossLogFile'
     elif logdir == 'events':
         logfiletype = 'EventsLogFile'
