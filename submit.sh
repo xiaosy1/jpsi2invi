@@ -112,9 +112,16 @@ case $option in
 	   ;; 
 
     0.1.6) echo "Submit selection Condor jobs on data..."
-	   mkdir run/events/data
-	   mkdir run/log/events/data   
-	   qsub pbs/qsub_jpsi2invi_events_data.sh  
+	   cd
+	   mkdir /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event
+	   mkdir /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/job_text/Data12_event
+	   cd /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/gen_script
+	   ./make_jobOption_file_Data12_event.sh
+	   cd ../job_text/Data12_event
+	   mv jobOptions_jpsi2invi_data_psip_data12_event-633.txt jobOptions_jpsi2invi_data_psip_data12_event-0.txt
+	   boss.condor -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12_event-%{ProcId}.txt
+	   cd 
+	   cd bes/jpsi2invi/v0.1
 	   ;;
 
     0.1.7) echo "Check Condor jobs on events data..."
