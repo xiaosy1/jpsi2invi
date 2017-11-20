@@ -125,12 +125,12 @@ case $option in
 	   ;;
 
     0.1.7) echo "Check Condor jobs on events data..."
-	   ./python/chk_pbsjobs.py run/events/data  633
+	   ./python/chk_condorjobs.py /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event  633
 	   ;;
 
     0.1.8) echo  "Merge event root file on data..."
-	   mkdir run/hist/data 
-	   ./python/mrg_rootfiles.py  run/events/data run/hist/data 
+	   mkdir /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/hist
+	   ./python/mrg_rootfiles.py  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/hist
 	   ;; 
 
     0.1.9) echo  "Plot summary with data..."
