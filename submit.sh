@@ -84,57 +84,52 @@ case $option in
 	   ;;
     
     0.1.2) echo "Split data sample with each group 20G ..."
-	   ./python/get_samples.py  /bes3fs/offline/data/664p03/psip/dst $HOME/bes/jpsi2invi/v0.1/run/samples/data_664p03_psip.txt 20G
+	   ./python/get_samples.py  /bes3fs/offline/data/664p03/psip/dst run/samples/data_664p03_psip.txt 20G
 	   # made 633 groups 
 	   ;;
 
-    0.1.3) echo "Submit Condor jobs on data..."
-	   cd 
-	   mkdir -p /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/job_text/Data12
-	   mkdir -p /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/rootfile
-	   cd /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/gen_script
+    0.1.3) echo "Submit Condor jobs on data..." 
+	   mkdir -p run/jpsi2invi/job_text/Data12
+	   mkdir -p run/jpsi2invi/rootfile
+	   cd run/jpsi2invi/gen_script
 	   ./make_jobOption_file_Data12_jpsi2invi.sh
 	   cd ../job_text/Data12
 	   mv jobOptions_jpsi2invi_data_psip_data12-633.txt jobOptions_jpsi2invi_data_psip_data12-0.txt
 	   boss.condor -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12-%{ProcId}.txt
-	   cd
-	   cd bes/jpsi2invi/v0.1  
 	   ;;
 
     0.1.4) echo "Check Condor jobs on data..."
-	   #./python/chk_condorjobs.py /besfs/groups/nphy/users/xiaosy/run/run/tmp20171023 633
-	   ./python/chk_condorjobs.py /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/rootfile  633
+	   ./python/chk_condorjobs.py run/jpsi2invi/rootfile  633
 	   ;;
     
     0.1.5) echo  "Select events on data..."
-	   mkdir -p  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event 
-	   ./python/sel_events.py  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/rootfile/jpsi2invi_data_psip_data12-1.root  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event/jpsi2invi_data_psip_data12-1.root 
+	   mkdir -p  run/jpsi2invi/event 
+	   ./python/sel_events.py  run/jpsi2invi/rootfile/jpsi2invi_data_psip_data12-1.root  run/jpsi2invi/event/jpsi2invi_data_psip_data12-1.root 
 	   ;; 
 
     0.1.6) echo "Submit selection Condor jobs on data..."
 	   cd
-	   mkdir /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event
-	   mkdir /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/job_text/Data12_event
-	   cd /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/gen_script
+	   mkdir run/jpsi2invi/event
+	   mkdir run/jpsi2invi/job_text/Data12_event
+	   cd run/jpsi2invi/gen_script
 	   ./make_jobOption_file_Data12_event.sh
 	   cd ../job_text/Data12_event
-	   mv jobOptions_jpsi2invi_data_psip_data12_event-633.txt jobOptions_jpsi2invi_data_psip_data12_event-0.txt
-	   boss.condor -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12_event-%{ProcId}.txt
-	   cd 
-	   cd bes/jpsi2invi/v0.1
+	   mv jobOptions_jpsi2invi_data_psip_data12_event-633.sh jobOptions_jpsi2invi_data_psip_data12_event-0.sh
+       chmod 755 jobOptions_jpsi2invi_data_psip_data12_event-*
+	   hep_sub -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12_event-%{ProcId}.sh
 	   ;;
 
     0.1.7) echo "Check Condor jobs on events data..."
-	   ./python/chk_condorjobs.py /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event  633
+	   ./python/chk_condorjobs.py run/jpsi2invi/event  633
 	   ;;
 
     0.1.8) echo  "Merge event root file on data..."
-	   mkdir /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/hist
-	   ./python/mrg_rootfiles.py  /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/event /besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2invi/hist
+	   mkdir run/jpsi2invi/hist
+	   ./python/mrg_rootfiles.py  run/jpsi2invi/event run/jpsi2invi/hist
 	   ;; 
 
     0.1.9) echo  "Plot summary with data..."
-	   ./python/plt_summary.py data 
+	   ./python/plt_summary.py hist_data 
 	   ;; 
 
     0.1.10) echo "Split con3650 data sample with each group 20G ..."
@@ -143,13 +138,17 @@ case $option in
 	    ;;
 
     0.1.11) echo "Submit Condor jobs on con3650 data..."
-	    mkdir run/con3650
-	    mkdir run/log/con3650  
-	    qsub pbs/qsub_jpsi2invi_con3650.sh  
+	    mkdir run/jpsi2invi/job_text/data3650
+	    mkdir run/jpsi2invi/rootfile_data3650  
+	    cd run/jpsi2invi/gen_script
+		./make_jobOption_file_data3650.sh
+		cd ../job_text/data3650
+		mv jobOptions_jpsi2invi_data3650-11.txt jobOptions_jpsi2invi_data3650-0.txt
+		boss.condor -g physics -n 11 jobOptions_jpsi2invi_data3650-%{ProcId}.txt
 	    ;;
 
     0.1.12) echo "Check Condor jobs on con3650 data..."
-	   ./python/chk_pbsjobs.py run/con3650  11 
+	   ./python/chk_condorjobs.py run/jpsi2invi/rootfile_data3650  11 
 	   ;;
 
     0.1.13) echo  "Select events on con3650 data..."
@@ -242,42 +241,49 @@ case $option in
 	   # made 394 groups 
 	   ;;
 
-    0.2.3) echo "Submit PBS jobs on psi(2S) MC sample..."
-	   mkdir run/mc_psip12
-	   mkdir run/log/mc_psip12  
-	   qsub pbs/qsub_jpsi2invi_mc_psip12.sh  
+    0.2.3) echo "Submit Condor jobs on psi(2S) MC sample..."
+	   mkdir -p run/jpsi2invi/job_text/mc12
+	   mkdir -p run/jpsi2invi/rootfile_mc12
+	   cd run/jpsi2invi/gen_script
+	   ./make_jobOption_file_mc12_jpsi2invi.sh
+	   cd ../job_text/mc12
+	   mv jobOptions_jpsi2invi_psip_mc12-394.txt jobOptions_jpsi2invi_psip_mc12-0.txt
+	   boss.condor -g physics -n 394 jobOptions_jpsi2invi_psip_mc12-%{ProcId}.txt 
+	   cd 
+	   cd bes/jpsi2invi/v0.1
 	   ;;
 
-    0.2.4) echo "Check PBS jobs on psi(2S) MC sample..."
-	   ./python/chk_pbsjobs.py $HOME/bes/jpsi2invi/v0.1/run/mc_psip12  394 
+    0.2.4) echo "Check Condor jobs on psi(2S) MC sample..."
+	   ./python/chk_condorjobs.py $HOME/bes/jpsi2invi/v0.1/run/jpsi2invi/rootfile_mc12  394 
 	   ;;
 
     0.2.5) echo  "Select events on psi(2S) MC sample..."
-	   mkdir run/events/mc_psip12  
-	   for i in {1..394}  
-	   do  
-	       echo "processing run/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root ..."
-	       ./python/sel_events.py  run/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root  run/events/mc_psip12/jpsi2invi_mc_psip_12mc-$i.root
-	   done   
+	   mkdir run/jpsi2invi/event_mc12 
+	   ./python/sel_events.py  run/jpsi2invi/rootfile_mc12/jpsi2invi_psip_mc12-1.root  run/jpsi2invi/event_mc12/jpsi2invi_psip_mc12-1.root 
 	   ;; 
 
     0.2.6) echo "Submit selection PBS jobs on psi(2S) sample..."
-	   mkdir run/events/mc_psip12
-	   mkdir run/log/events/mc_psip12  
-	   qsub pbs/qsub_jpsi2invi_events_mc_psip12.sh  
+	   mkdir run/jpsi2invi/event_mc12
+	   mkdir run/jpsi2invi/job_text/mc12_event  
+	   cd run/jpsi2invi/gen_script
+	   ./make_jobOption_file_mc12_event.sh
+	   cd ../job_text/mc12_event
+	   mv jobOptions_jpsi2invi_psip_mc12_event-394.sh jobOptions_jpsi2invi_psip_mc12_event-0.sh
+	   chmod 755 jobOptions_jpsi2invi_psip_mc12_event-*
+	   hep_sub -g physics -n 394 jobOptions_jpsi2invi_psip_mc12_event-%{ProcId}.sh
 	   ;;
 
     0.2.7) echo "Check events selection jobs on psi(2S) MC sample..."
-	   ./python/chk_pbsjobs.py run/events/mc_psip12  394 
+	   ./python/chk_condorjobs.py run/jpsi2invi/event_mc12  394 
 	   ;;
 
     0.2.8) echo  "Merge events files..."
-	   mkdir run/hist/mc_psip12
-	   ./python/mrg_rootfiles.py  run/events/mc_psip12 run/hist/mc_psip12 
+	   mkdir run/jpsi2invi/hist_mc12
+	   ./python/mrg_rootfiles.py  run/jpsi2invi/event_mc12 run/jpsi2invi/hist_mc12
 	   ;; 
 
     0.2.9) echo  "Plot summary with data and psip(2S) MC ..."
-	   ./python/plt_summary.py data mc_psip12 
+	   ./python/plt_summary.py hist_mc12
 	   ;; 
 
     0.2.10) echo "Run with a few events on 09 MC ..." 
