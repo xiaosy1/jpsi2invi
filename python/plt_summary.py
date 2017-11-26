@@ -34,8 +34,11 @@ def main():
 
 def get_files_from_sample(sample):
     fs = [] 
+    if 'hist' in sample:
+        fs.append(ROOT.TFile('run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_1.root'))
+
     if 'data' in sample:
-        fs.append(ROOT.TFile('run/hist/data/jpsi2invi_data_merged_1.root'))
+        fs.append(ROOT.TFile('run/jpsi2invi/hist/data/jpsi2invi_data_merged_1.root'))
 
     if 'con3650' in sample:
         fs.append(ROOT.TFile('run/hist/con3650/jpsi2invi_con3650_merged_1.root'))
@@ -63,7 +66,7 @@ def get_common_objects_to_draw(fs, hname, leg):
     for f in fs:
         h = f.Get(hname)
         if fs.index(f) == 0:
-            h.Sumw2()
+            #h.Sumw2()
             h.GetXaxis().SetLabelSize(0.03) 
             h.GetYaxis().SetLabelSize(0.03) 
             h.GetYaxis().SetTitleOffset(1.8) 
@@ -89,6 +92,12 @@ def leg_add_entry_hist(leg, f, h):
 
     if sample in ['data' or 'data09']:
         leg.AddEntry(h, "Data", "lp")
+
+    elif sample in ['hist_mc12']:
+        leg.AddEntry(h, "hist_mc12")
+
+    elif sample in ['hist_data']:
+        leg.AddEntry(h, "hist_data")
 
     elif sample in ['con3650']:
         leg.AddEntry(h, "Cont.")
