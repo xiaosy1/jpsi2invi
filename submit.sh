@@ -117,6 +117,8 @@ case $option in
 	   mv jobOptions_jpsi2invi_data_psip_data12_event-633.sh jobOptions_jpsi2invi_data_psip_data12_event-0.sh
        chmod 755 jobOptions_jpsi2invi_data_psip_data12_event-*
 	   hep_sub -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12_event-%{ProcId}.sh
+	   cd 
+	   cd bes/jpsi2invi/v0.1
 	   ;;
 
     0.1.7) echo "Check Condor jobs on events data..."
@@ -129,7 +131,7 @@ case $option in
 	   ;; 
 
     0.1.9) echo  "Plot summary with data..."
-	   ./python/plt_summary.py hist_data 
+	   ./python/plt_summary.py hist 
 	   ;; 
 
     0.1.10) echo "Split con3650 data sample with each group 20G ..."
@@ -145,86 +147,80 @@ case $option in
 		cd ../job_text/data3650
 		mv jobOptions_jpsi2invi_data3650-11.txt jobOptions_jpsi2invi_data3650-0.txt
 		boss.condor -g physics -n 11 jobOptions_jpsi2invi_data3650-%{ProcId}.txt
-	    ;;
+	    cd 
+	    cd bes/jpsi2invi/v0.1
+		;;
 
     0.1.12) echo "Check Condor jobs on con3650 data..."
 	   ./python/chk_condorjobs.py run/jpsi2invi/rootfile_data3650  11 
 	   ;;
 
     0.1.13) echo  "Select events on con3650 data..."
-	   mkdir run/events/con3650
-	   for i in {1..11}  
-	   do  
-	       echo "processing run/con3650/jpsi2invi_con3650-$i.root ..."
-	       ./python/sel_events.py  run/con3650/jpsi2invi_con3650-$i.root  run/events/con3650/jpsi2invi_con3650-$i.root
-	   done   
+	   mkdir run/jpsi2invi/event_data3650
+	   mkdir run/jpsi2invi/job_text/data3650_event
+	   cd run/jpsi2invi/gen_script
+	   ./make_jobOption_file_data3650_event.sh
+	   cd ../job_text/data3650_event
+	   mv jobOptions_jpsi2invi_data3650_event-11.sh jobOptions_jpsi2invi_data3650_event-0.sh
+	   chmod 755 jobOptions_jpsi2invi_data3650_event-*
+	   hep_sub -g physics -n 11 jobOptions_jpsi2invi_data3650_event-%{ProcId}.sh
 	   ;; 
     
-    0.1.14) echo  "Merge event root file on con3650 data..."
-	   mkdir run/hist/con3650
-	   ./python/mrg_rootfiles.py  run/events/con3650 run/hist/con3650 
-	   ;; 
-
-    0.1.15) echo  "Plot summary with data and con3650..."
-	   ./python/plt_summary.py data con3650 
-	   ;; 
-
-    0.1.16) echo "Split data09 sample with each group 20G ..."
-	   ./python/get_samples.py /bes3fs/offline/data/664-1/psip/dst $HOME/bes/jpsi2invi/v0.1/run/samples/data_664-1_psip.txt 20G
-	   # made 314 groups 
-	   ;;
-    0.1.17) echo "Submit Condor jobs on 09 data..."
-	    mkdir run/data09
-	    mkdir -p run/log/data09  
-	    qsub pbs/qsub_jpsi2invi_data09.sh  
-	    ;;
-
-    0.1.18) echo "Check Condor jobs on 09 data..."
-	   ./python/chk_pbsjobs.py run/data09  314 
-	   ;;
-
-    0.1.19) echo  "Event selection on 09 data..."
-	   mkdir run/events/data09 
-	   ./python/sel_events.py  run/data09/jpsi2invi_data09-1.root  run/events/data09/jpsi2invi_data09-1.root 
-	   ;; 
-
-    0.1.20) echo "Condor jobs for event selection on 09 data..."
-	   mkdir run/events/data09
-	   mkdir run/log/events/data09   
-	   qsub pbs/qsub_jpsi2invi_events_data09.sh  
-	   ;;
-
-    0.1.21) echo "Check Condor jobs of event selection on 09 data..."
-	   ./python/chk_pbsjobs.py run/events/data09  314
-	   ;;
-
-    0.1.22) echo  "Merge event files on 09 data..."
-	   mkdir run/hist/data09
-	   ./python/mrg_rootfiles.py  run/events/data09 run/hist/data09 
-	   ;; 
-
-    0.1.23) echo  "Plot summary with 09 data..."
-	    ./python/plt_summary.py data09  
-	    ;; 
-
-    0.1.24) echo "Run with Jpsi2incl on a few data09 events ..."
-	   boss.exe pbs/jobOptions_jpsi2incl.txt
-	   ;;
-
-    0.1.25) echo "Submit Jpsi2incl Condor jobs on data09..."
-	   mkdir -p run/jpsi2incl/data09
-	   mkdir -p run/jpsi2incl/log/data09
-	   qsub pbs/qsub_jpsi2incl_data09.sh  
-	   ;;
-
-    0.1.26) echo "Check Jpsi2incl Condor jobs on 09 data..."
-	   ./python/chk_pbsjobs.py run/jpsi2incl/data09  314 
+	0.1.14)echo "Check event Condor jobs on con3650 data..."
+	   ./python/chk_condorjobs.py run/jpsi2invi/event_data3650 11
 	   ;;
     
-    0.1.27) echo "Select Jpsi2incl events on data09"
-	    mkdir -p run/jpsi2incl/events/data09 
-	    ./python/sel_events.py  run/jpsi2incl/data09/jpsi2incl_data09-1.root  run/jpsi2incl/events/data09/jpsi2incl_data09-1.root 
+	0.1.15) echo  "Merge event root file on con3650 data..."
+	   mkdir run/jpsi2invi/hist_data3650
+	   ./python/mrg_rootfiles.py  run/jpsi2invi/event_data3650 run/jpsi2invi/hist_data3650
 	   ;; 
+
+    0.1.16) echo  "Plot summary with data and con3650..."
+	   mkdir run/jpsi2invi/hist_data3650
+	   ./python/plt_summary.py data3650 
+	   ;;
+
+    0.1.17) echo "Submit Condor jobs on data for incl..." 
+	   mkdir -p run/jpsi2incl/job_text/Data12
+	   mkdir -p run/jpsi2incl/rootfile
+	   cd run/jpsi2incl/gen_script
+	   ./make_jobOption_file_Data12_jpsi2invi.sh
+	   cd ../job_text/Data12
+	   mv jobOptions_jpsi2incl_data_psip_data12-633.txt jobOptions_jpsi2incl_data_psip_data12-0.txt
+	   boss.condor -g physics -n 633 jobOptions_jpsi2incl_data_psip_data12-%{ProcId}.txt
+	   ;;
+
+    0.1.18) echo "Check Condor jobs on data..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile  633
+	   ;;
+    
+    0.1.19) echo "Submit selection Condor jobs on data..."
+	   mkdir run/jpsi2incl/event
+	   mkdir run/jpsi2incl/job_text/Data12_event
+	   cd run/jpsi2incl/gen_script
+	   ./make_jobOption_file_Data12_event.sh
+	   cd ../job_text/Data12_event
+	   mv jobOptions_jpsi2incl_data_psip_data12_event-633.sh jobOptions_jpsi2incl_data_psip_data12_event-0.sh
+       chmod 755 jobOptions_jpsi2incl_data_psip_data12_event-*
+	   hep_sub -g physics -n 633 jobOptions_jpsi2incl_data_psip_data12_event-%{ProcId}.sh
+	   cd 
+	   cd bes/jpsi2invi/v0.1
+	   ;;
+
+    0.1.20) echo "Check Condor jobs on events data..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/event  633
+	   ;;
+
+    0.1.21) echo  "Merge event root file on data..."
+	   mkdir run/jpsi2incl/hist
+	   ./python/mrg_rootfiles.py  run/jpsi2incl/event run/jpsi2incl/hist
+	   ;; 
+
+    0.1.22) echo  "Plot summary with data..."
+	   ./python/plt_summary.py hist_incl 
+	   ;; 
+	
+
 
     # --------------------------------------------------------------------------
     #  0.2 MC Sample 
@@ -262,7 +258,7 @@ case $option in
 	   ./python/sel_events.py  run/jpsi2invi/rootfile_mc12/jpsi2invi_psip_mc12-1.root  run/jpsi2invi/event_mc12/jpsi2invi_psip_mc12-1.root 
 	   ;; 
 
-    0.2.6) echo "Submit selection PBS jobs on psi(2S) sample..."
+    0.2.6) echo "Submit selection Condor jobs on psi(2S) sample..."
 	   mkdir run/jpsi2invi/event_mc12
 	   mkdir run/jpsi2invi/job_text/mc12_event  
 	   cd run/jpsi2invi/gen_script
@@ -283,48 +279,49 @@ case $option in
 	   ;; 
 
     0.2.9) echo  "Plot summary with data and psip(2S) MC ..."
-	   ./python/plt_summary.py hist_mc12
+	   ./python/plt_summary.py mc12
 	   ;; 
 
-    0.2.10) echo "Run with a few events on 09 MC ..." 
-	   boss.exe pbs/jobOptions_jpsi2invi.txt 
+    0.2.10) echo "Submit Condor jobs on psip(2S) for incl..." 
+	   mkdir -p run/jpsi2incl/job_text/mc12
+	   mkdir -p run/jpsi2incl/rootfile_mc12
+	   cd run/jpsi2incl/gen_script
+	   ./make_jobOption_file_mc12_jpsi2incl.sh
+	   cd ../job_text/mc12
+	   mv jobOptions_jpsi2incl_psip_mc12-394.txt jobOptions_jpsi2incl_psip_mc12-0.txt
+	   boss.condor -g physics -n 394 jobOptions_jpsi2incl_psip_mc12-%{ProcId}.txt
 	   ;;
 
-    0.2.11) echo "Split 09 psi(2S) MC sample with each group 20G ..."
-	   ./python/get_samples.py  /bes3fs/offline/data/664p01/psip/mc/09dst $HOME/bes/jpsi2invi/v0.1/run/samples/mc_664p01_psip_09mc.txt 20G
-	   # made 106 groups 
+    0.2.11) echo "Check Condor jobs on psip(2S)..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile_mc12  394
+	   ;;
+    
+    0.2.12) echo "Submit selection Condor jobs on psip(2S)..."
+	   mkdir run/jpsi2incl/event_mc12
+	   mkdir run/jpsi2incl/job_text/mc12_event
+	   cd run/jpsi2incl/gen_script
+	   ./make_jobOption_file_mc12_event.sh
+	   cd ../job_text/mc12_event
+	   mv jobOptions_jpsi2incl_psip_mc12_event-394.sh jobOptions_jpsi2incl_psip_mc12_event-0.sh
+       chmod 755 jobOptions_jpsi2incl_psip_mc12_event-*
+	   hep_sub -g physics -n 394 jobOptions_jpsi2incl_psip_mc12_event-%{ProcId}.sh
+	   cd 
+	   cd bes/jpsi2invi/v0.1
 	   ;;
 
-    0.2.12) echo "Submit PBS jobs on 09 psi(2S) MC sample..."
-	    mkdir run/mc_psip09
-	    mkdir run/log/mc_psip09
-	    qsub pbs/qsub_jpsi2invi_mc_psip09.sh  
-	    ;;
-
-    0.2.13) echo "Check PBS jobs on 09 psi(2S) MC sample..."
-	   ./python/chk_pbsjobs.py $HOME/bes/jpsi2invi/v0.1/run/mc_psip09  106
+    0.2.13) echo "Check Condor jobs on events psip(2S)..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/event_mc12  394
 	   ;;
 
-    0.2.14) echo  "Event selection on 09 psi(2S) MC sample..."
-	    mkdir run/events/mc_psip09 
-	    ./python/sel_events.py  run/mc_psip09/jpsi2invi_mc_psip_09mc-1.root  run/events/mc_psip09/jpsi2invi_mc_psip_09mc-1.root 
-	    ;; 
-
-    0.2.15) echo "Submit selection PBS jobs on 09 psi(2S) sample..."
-	   mkdir run/events/mc_psip09
-	   mkdir run/log/events/mc_psip09
-	   qsub pbs/qsub_jpsi2invi_events_mc_psip09.sh  
-	   ;;
-    0.2.16) echo "Check selection jobs on 09 psi(2S) MC sample..."
-	   ./python/chk_pbsjobs.py run/events/mc_psip09  106 
-	   ;;
-    0.2.17) echo  "Merge events files of 09 psi(2S) MC sample..."
-	   mkdir run/hist/mc_psip09
-	   ./python/mrg_rootfiles.py  run/events/mc_psip09 run/hist/mc_psip09 
+    0.2.14) echo  "Merge event root file on psip(2S)..."
+	   mkdir run/jpsi2incl/hist_mc12
+	   ./python/mrg_rootfiles.py  run/jpsi2incl/event_mc12 run/jpsi2incl/hist_mc12
 	   ;; 
-    0.2.18) echo  "Plot summary with 09 data and 09 psip(2S) MC ..."
-	   ./python/plt_summary.py data09 mc_psip09
+
+    0.2.15) echo  "Plot summary with psip(2S)..."
+	   ./python/plt_summary.py mc12_incl 
 	   ;; 
+	
 
 esac
 
