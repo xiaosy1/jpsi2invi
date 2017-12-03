@@ -37,11 +37,17 @@ def get_files_from_sample(sample):
     if 'hist' in sample:
         fs.append(ROOT.TFile('run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_1.root'))
 
-    if 'data' in sample:
-        fs.append(ROOT.TFile('run/jpsi2invi/hist/data/jpsi2invi_data_merged_1.root'))
+    if 'hist_incl' in sample:
+        fs.append(ROOT.TFile('run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_1.root'))
+    
+    if 'mc12' in sample:
+	    fs.append(ROOT.TFile('run/jpsi2invi/hist_mc12/jpsi2invi_psip_mc12_event_merged_1.root'))
 
-    if 'con3650' in sample:
-        fs.append(ROOT.TFile('run/hist/con3650/jpsi2invi_con3650_merged_1.root'))
+    if 'mc12_incl' in sample:
+	    fs.append(ROOT.TFile('run/jpsi2incl/hist_mc12/jpsi2incl_psip_mc12_event_merged_1.root'))
+
+    if 'data3650' in sample:
+		fs.append(ROOT.TFile('run/jpsi2invi/hist_data3650/jpsi2invi_data3650_event_merged_1.root'))
 
     if 'data09' in sample:
         fs.append(ROOT.TFile('run/hist/data09/jpsi2invi_data09_merged_1.root'))
@@ -93,14 +99,20 @@ def leg_add_entry_hist(leg, f, h):
     if sample in ['data' or 'data09']:
         leg.AddEntry(h, "Data", "lp")
 
+    elif sample in ['hist']:
+        leg.AddEntry(h, "hist")
+
+    elif sample in ['hist_incl']:
+        leg.AddEntry(h, "hist_incl")
+
     elif sample in ['hist_mc12']:
         leg.AddEntry(h, "hist_mc12")
 
-    elif sample in ['hist_data']:
-        leg.AddEntry(h, "hist_data")
+    elif sample in ['hist_mc12_incl']:
+        leg.AddEntry(h, "hist_mc12_incl")
 
-    elif sample in ['con3650']:
-        leg.AddEntry(h, "Cont.")
+    elif sample in ['hist_data3650']:
+        leg.AddEntry(h, "hist_data3650")
 
     elif sample in ['mc_psip12', 'mc_psip09']:
         leg.AddEntry(h, "#psi(2S) inclusive MC")
