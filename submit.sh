@@ -15,49 +15,41 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.2"    "Split data sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.1.3"    "Submit Condor jobs on data"
     printf "\n\t%-9s  %-40s"  "0.1.4"    "Check Condor jobs on data."
-    printf "\n\t%-9s  %-40s"  "0.1.5"    "Select events."
-    printf "\n\t%-9s  %-40s"  "0.1.6"    "Submit events selection jobs on data."
-    printf "\n\t%-9s  %-40s"  "0.1.7"    "Check events jobs on data."
-    printf "\n\t%-9s  %-40s"  "0.1.8"    "Merge events files." 
+    printf "\n\t%-9s  %-40s"  "0.1.5"    "Select events on data."
+    printf "\n\t%-9s  %-40s"  "0.1.6"    "Submit selection Condor jobs on data."
+    printf "\n\t%-9s  %-40s"  "0.1.7"    "Check Condor jobs on events data."
+	printf "\n\t%-9s  %-40s"  "0.1.8"    "Merge event root file on data." 
     printf "\n\t%-9s  %-40s"  "0.1.9"    "Plot summary with data."
     printf "\n\t%-9s  %-40s"  "0.1.10"   "Split con3650 data sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "0.1.11"   "Submit Condor jobs on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.12"   "Check Condor jobs on con3650 data"
     printf "\n\t%-9s  %-40s"  "0.1.13"   "Select events on con3650 data"
-    printf "\n\t%-9s  %-40s"  "0.1.14"   "Merge events on con3650 data"
-    printf "\n\t%-9s  %-40s"  "0.1.15"   "Plot summary with data and con3650"
-    printf "\n\t%-9s  %-40s"  "0.1.16"   "Split data09 sample with each group 20G"
-    printf "\n\t%-9s  %-40s"  "0.1.17"   "Submit Condor jobs on 09 data sample"
-    printf "\n\t%-9s  %-40s"  "0.1.18"   "Check Condor PBS jobs on 09 data sample"
-    printf "\n\t%-9s  %-40s"  "0.1.19"   "Event selecion on 09 data"
-    printf "\n\t%-9s  %-40s"  "0.1.20"   "PBS jobs for event selecion on 09 data"
-    printf "\n\t%-9s  %-40s"  "0.1.21"   "Check Condor jobs for event selecion on 09 data"
-    printf "\n\t%-9s  %-40s"  "0.1.22"   "Merge event file on 09 data"
-    printf "\n\t%-9s  %-40s"  "0.1.23"   "Plot summary on 09 data"
-    printf "\n\t%-9s  %-40s"  "0.1.24"   "Run with Jpsi2incl on a few 09 data events "
-    printf "\n\t%-9s  %-40s"  "0.1.25"   "Submit Jpsi2incl Condor jobs on data09"
-    printf "\n\t%-9s  %-40s"  "0.1.26"   "Check Jpsi2incl Condor jobs on data09"
-    printf "\n\t%-9s  %-40s"  "0.1.27"   "Select Jpsi2incl events on data09"
+    printf "\n\t%-9s  %-40s"  "0.1.14"   "Check enent Condor jobs on con3650 data."
+	printf "\n\t%-9s  %-40s"  "0.1.15"   "Merge event root file on con3650 data"
+    printf "\n\t%-9s  %-40s"  "0.1.16"   "Plot summary with data and con3650"
+    printf "\n\t%-9s  %-40s"  "0.1.17"   "Submit Condor jobs on data for incl"
+    printf "\n\t%-9s  %-40s"  "0.1.18"   "Check Condor jobs on data for incl"
+    printf "\n\t%-9s  %-40s"  "0.1.19"   "Submit selection Condor jobs on data for incl"
+    printf "\n\t%-9s  %-40s"  "0.1.20"   "Check Condor jobs on events data for incl"
+	printf "\n\t%-9s  %-40s"  "0.1.21"   "Merge event root file on data for incl"
+    printf "\n\t%-9s  %-40s"  "0.1.22"   "Plot summary with data for incl"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
     printf "\n\t%-9s  %-40s"  "0.2.2"    "Split psi(2S) MC sample with each group 20G"
-    printf "\n\t%-9s  %-40s"  "0.2.3"    "Submit PBS jobs on psi(2S) MC sample"     
-    printf "\n\t%-9s  %-40s"  "0.2.4"    "Check PBS jobs on psi(2S) MC sample"     
+    printf "\n\t%-9s  %-40s"  "0.2.3"    "Submit Condor jobs on psi(2S) MC sample"     
+    printf "\n\t%-9s  %-40s"  "0.2.4"    "Check Condor jobs on psi(2S) MC sample"     
     printf "\n\t%-9s  %-40s"  "0.2.5"    "Select events on psi(2S) MC sample"     
-    printf "\n\t%-9s  %-40s"  "0.2.6"    "Submit PBS jobs to select events on psi(2S) MC sample"     
+    printf "\n\t%-9s  %-40s"  "0.2.6"    "Submit selection Condor jobs on psi(2S) MC sample"     
     printf "\n\t%-9s  %-40s"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
     printf "\n\t%-9s  %-40s"  "0.2.8"    "Merge events files on psi(2S) MC"
     printf "\n\t%-9s  %-40s"  "0.2.9"    "Plot summary with data and psi(2S) MC"
-    printf "\n\t%-9s  %-40s"  "0.2.10"   "Run a few events on 09 psi(2S) MC"
-    printf "\n\t%-9s  %-40s"  "0.2.11"   "Split 09 psi(2S) MC sample with each group 20G"
-    printf "\n\t%-9s  %-40s"  "0.2.12"   "Submit PBS jobs on 09 psi(2S) MC sample"         
-    printf "\n\t%-9s  %-40s"  "0.2.13"   "Check PBS jobs on 09 psi(2S) MC sample"         
-    printf "\n\t%-9s  %-40s"  "0.2.14"   "Select events on 09 psi(2S) MC sample"         
-    printf "\n\t%-9s  %-40s"  "0.2.15"   "Submit PBS jobs to select events on 09 psi(2S) MC sample"         
-    printf "\n\t%-9s  %-40s"  "0.2.16"   "Check PBS jobs to select events on 09 psi(2S) MC sample"         
-    printf "\n\t%-9s  %-40s"  "0.2.17"   "Merge events file on 09 psi(2S) MC sample"         
-    printf "\n\t%-9s  %-40s"  "0.2.18"   "Plot summary with 09 data and 09 psi(2S) MC sample"         
+    printf "\n\t%-9s  %-40s"  "0.2.10"   "Submit Condor jobs on psi(2S) MC sample for incl"         
+    printf "\n\t%-9s  %-40s"  "0.2.11"   "Check Condor jobs on psi(2S) MC sample for incl"         
+    printf "\n\t%-9s  %-40s"  "0.2.12"   "Submit Condor jobs to select events on psi(2S) MC sample for incl"
+	printf "\n\t%-9s  %-40s"  "0.2.13"   "Check Condor jobs to select events on psi(2S) MC sample for incl" 
+    printf "\n\t%-9s  %-40s"  "0.2.14"   "Merge events file on psi(2S) MC sample for incl"         
+    printf "\n\t%-9s  %-40s"  "0.2.15"   "Plot summary with psi(2S) MC sample for incl"         
     printf "\n\n" 
 }
 
@@ -79,7 +71,7 @@ case $option in
     0.1) echo "Running on data sample..."
 	 ;;
 
-    0.1.1) echo "Run with a few events ..."
+    0.1.1) echo "Run with a few samples ..."
 	   boss.exe condor/jobOptions_jpsi2invi.txt
 	   ;;
     
@@ -135,8 +127,9 @@ case $option in
 	   ;; 
 
     0.1.10) echo "Split con3650 data sample with each group 20G ..."
-	    ./python/get_samples.py  /bes3fs/offline/data/663p01/3650/dst $HOME/bes/jpsi2invi/v0.1/run/samples/data_663p01_3650.txt 20G
-	    # made 11 groups 
+	   mkdir run/samples/data3650 
+	   ./python/get_samples.py  /bes3fs/offline/data/664-1/3650/dst $HOME/bes/jpsi2invi/v0.1/run/samples/data3650/data_663p01_3650.txt 20G
+	    # made 84 groups 
 	    ;;
 
     0.1.11) echo "Submit Condor jobs on con3650 data..."
@@ -145,14 +138,14 @@ case $option in
 	    cd run/jpsi2invi/gen_script
 		./make_jobOption_file_data3650.sh
 		cd ../job_text/data3650
-		mv jobOptions_jpsi2invi_data3650-11.txt jobOptions_jpsi2invi_data3650-0.txt
-		boss.condor -g physics -n 11 jobOptions_jpsi2invi_data3650-%{ProcId}.txt
+		mv jobOptions_jpsi2invi_data3650-84.txt jobOptions_jpsi2invi_data3650-0.txt
+		boss.condor -g physics -n 84 jobOptions_jpsi2invi_data3650-%{ProcId}.txt
 	    cd 
 	    cd bes/jpsi2invi/v0.1
 		;;
 
     0.1.12) echo "Check Condor jobs on con3650 data..."
-	   ./python/chk_condorjobs.py run/jpsi2invi/rootfile_data3650  11 
+	   ./python/chk_condorjobs.py run/jpsi2invi/rootfile_data3650  84 
 	   ;;
 
     0.1.13) echo  "Select events on con3650 data..."
@@ -161,9 +154,9 @@ case $option in
 	   cd run/jpsi2invi/gen_script
 	   ./make_jobOption_file_data3650_event.sh
 	   cd ../job_text/data3650_event
-	   mv jobOptions_jpsi2invi_data3650_event-11.sh jobOptions_jpsi2invi_data3650_event-0.sh
+	   mv jobOptions_jpsi2invi_data3650_event-84.sh jobOptions_jpsi2invi_data3650_event-0.sh
 	   chmod 755 jobOptions_jpsi2invi_data3650_event-*
-	   hep_sub -g physics -n 11 jobOptions_jpsi2invi_data3650_event-%{ProcId}.sh
+	   hep_sub -g physics -n 84 jobOptions_jpsi2invi_data3650_event-%{ProcId}.sh
 	   ;; 
     
 	0.1.14)echo "Check event Condor jobs on con3650 data..."
@@ -190,11 +183,11 @@ case $option in
 	   boss.condor -g physics -n 633 jobOptions_jpsi2incl_data_psip_data12-%{ProcId}.txt
 	   ;;
 
-    0.1.18) echo "Check Condor jobs on data..."
+    0.1.18) echo "Check Condor jobs on data for incl..."
 	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile  633
 	   ;;
     
-    0.1.19) echo "Submit selection Condor jobs on data..."
+    0.1.19) echo "Submit selection Condor jobs on data for incl..."
 	   mkdir run/jpsi2incl/event
 	   mkdir run/jpsi2incl/job_text/Data12_event
 	   cd run/jpsi2incl/gen_script
@@ -207,16 +200,16 @@ case $option in
 	   cd bes/jpsi2invi/v0.1
 	   ;;
 
-    0.1.20) echo "Check Condor jobs on events data..."
+    0.1.20) echo "Check Condor jobs on events data for incl..."
 	   ./python/chk_condorjobs.py run/jpsi2incl/event  633
 	   ;;
 
-    0.1.21) echo  "Merge event root file on data..."
+    0.1.21) echo  "Merge event root file on data for incl..."
 	   mkdir run/jpsi2incl/hist
 	   ./python/mrg_rootfiles.py  run/jpsi2incl/event run/jpsi2incl/hist
 	   ;; 
 
-    0.1.22) echo  "Plot summary with data..."
+    0.1.22) echo  "Plot summary with data for incl..."
 	   ./python/plt_summary.py hist_incl 
 	   ;; 
 	
@@ -292,11 +285,11 @@ case $option in
 	   boss.condor -g physics -n 394 jobOptions_jpsi2incl_psip_mc12-%{ProcId}.txt
 	   ;;
 
-    0.2.11) echo "Check Condor jobs on psip(2S)..."
+    0.2.11) echo "Check Condor jobs on psip(2S) for incl..."
 	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile_mc12  394
 	   ;;
     
-    0.2.12) echo "Submit selection Condor jobs on psip(2S)..."
+    0.2.12) echo "Submit selection Condor jobs on psip(2S) for incl..."
 	   mkdir run/jpsi2incl/event_mc12
 	   mkdir run/jpsi2incl/job_text/mc12_event
 	   cd run/jpsi2incl/gen_script
@@ -309,16 +302,16 @@ case $option in
 	   cd bes/jpsi2invi/v0.1
 	   ;;
 
-    0.2.13) echo "Check Condor jobs on events psip(2S)..."
+    0.2.13) echo "Check Condor jobs on events psip(2S) for incl..."
 	   ./python/chk_condorjobs.py run/jpsi2incl/event_mc12  394
 	   ;;
 
-    0.2.14) echo  "Merge event root file on psip(2S)..."
+    0.2.14) echo  "Merge event root file on psip(2S) for incl..."
 	   mkdir run/jpsi2incl/hist_mc12
 	   ./python/mrg_rootfiles.py  run/jpsi2incl/event_mc12 run/jpsi2incl/hist_mc12
 	   ;; 
 
-    0.2.15) echo  "Plot summary with psip(2S)..."
+    0.2.15) echo  "Plot summary with psip(2S) for incl..."
 	   ./python/plt_summary.py mc12_incl 
 	   ;; 
 	
