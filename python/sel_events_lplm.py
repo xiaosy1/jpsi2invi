@@ -39,6 +39,7 @@ h_evtflw.GetXaxis().SetBinLabel(10, '0.45<|p_{lm}|<2.0')
 
 
 h_mrecpipi_el = ROOT.TH1D('h_mrecpipi_el', 'mrecpipi_el', 100, 3.04, 3.16)
+h_mrecpipi_el_fit = ROOT.TH1D('h_mrecpipi_el_fit', 'mrecpipi_el_fit', 400, 3.00, 3.20)
 h_mpipi_el = ROOT.TH1D('h_mpipi_el', 'mpipi_el', 100, 0.2, 0.7) 
 h_pip_p_el = ROOT.TH1D('h_pip_p_el', 'pip_p_el', 100, 0.0, 0.5) 
 h_pim_p_el = ROOT.TH1D('h_pim_p_el', 'pim_p_el', 100, 0.0, 0.5) 
@@ -146,6 +147,7 @@ def main():
 
             if (t.jpsi2elel_flag == 1 and (cut_el_eop_p or cut_el_eop_m or cut_el_eop_pm) and cut_invMass_el):
                 h_mrecpipi_el.Fill(t.vtx_mrecpipi)
+                h_mrecpipi_el_fit.Fill(t.vtx_mrecpipi)
                 h_melel.Fill(t.vtx_melel)
                 h_elp_p.Fill(t.vtx_elp_p)
                 h_elm_p.Fill(t.vtx_elm_p)
@@ -258,6 +260,7 @@ def write_histograms():
     h_evtflw.Write()
 
     h_mrecpipi_el.Write()
+    h_mrecpipi_el_fit.Write()
     h_mpipi_el.Write()
     h_pip_p_el.Write()
     h_pim_p_el.Write()

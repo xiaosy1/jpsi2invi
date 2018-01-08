@@ -33,6 +33,12 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.1.20"   "Check Condor jobs on events data for incl"
 	printf "\n\t%-9s  %-40s"  "0.1.21"   "Merge event root file on data for incl"
     printf "\n\t%-9s  %-40s"  "0.1.22"   "Plot summary with data for incl"
+    printf "\n\t%-9s  %-40s"  "0.1.23"   "Submit Condor jobs on data for lplm"
+    printf "\n\t%-9s  %-40s"  "0.1.24"   "Check Condor jobs on data for lplm"
+    printf "\n\t%-9s  %-40s"  "0.1.25"   "Submit selection Condor jobs on data for lplm"
+    printf "\n\t%-9s  %-40s"  "0.1.26"   "Check Condor jobs on events data for lplm"
+	printf "\n\t%-9s  %-40s"  "0.1.27"   "Merge event root file on data for lplm"
+    printf "\n\t%-9s  %-40s"  "0.1.28"   "Plot summary with data for lplm"
     printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "0.2"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "0.2.1"    "Run with a few samples"
@@ -213,6 +219,45 @@ case $option in
 	   ./python/plt_summary.py hist_incl 
 	   ;; 
 	
+    0.1.23) echo "Submit Condor jobs on data for lplm..." 
+	   mkdir -p run/jpsi2lplm/job_text/Data12
+	   mkdir -p run/jpsi2lplm/rootfile
+	   cd run/jpsi2lplm/gen_script
+	   ./make_jobOption_file_Data12_jpsi2lplm.sh
+	   cd ../job_text/Data12
+	   mv jobOptions_jpsi2lplm_data_psip_data12-633.txt jobOptions_jpsi2lplm_data_psip_data12-0.txt
+	   boss.condor -g physics -n 633 jobOptions_jpsi2lplm_data_psip_data12-%{ProcId}.txt
+	   ;;
+
+    0.1.24) echo "Check Condor jobs on data for lplm..."
+	   ./python/chk_condorjobs.py run/jpsi2lplm/rootfile  633
+	   ;;
+    
+    0.1.25) echo "Submit selection Condor jobs on data for lplm..."
+	   mkdir run/jpsi2lplm/event
+	   mkdir run/jpsi2lplm/job_text/Data12_event
+	   cd run/jpsi2lplm/gen_script
+	   ./make_jobOption_file_Data12_event.sh
+	   cd ../job_text/Data12_event
+	   mv jobOptions_jpsi2lplm_data_psip_data12_event-633.sh jobOptions_jpsi2lplm_data_psip_data12_event-0.sh
+       chmod 755 jobOptions_jpsi2lplm_data_psip_data12_event-*
+	   hep_sub -g physics -n 633 jobOptions_jpsi2lplm_data_psip_data12_event-%{ProcId}.sh
+	   cd 
+	   cd bes/jpsi2invi/v0.1
+	   ;;
+
+    0.1.26) echo "Check Condor jobs on events data for lplm..."
+	   ./python/chk_condorjobs.py run/jpsi2lplm/event  633
+	   ;;
+
+    0.1.27) echo  "Merge event root file on data for lplm..."
+	   mkdir run/jpsi2lplm/hist
+	   ./python/mrg_rootfiles.py  run/jpsi2lplm/event run/jpsi2lplm/hist
+	   ;; 
+
+    0.1.28) echo  "Plot summary with data for lplm..."
+	   ./python/plt_summary.py hist_lplm 
+	   ;; 
 
 
     # --------------------------------------------------------------------------
