@@ -50,12 +50,12 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.2.7"    "Check events selection jobs on psi(2S) MC"
     printf "\n\t%-9s  %-40s"  "0.2.8"    "Merge events files on psi(2S) MC"
     printf "\n\t%-9s  %-40s"  "0.2.9"    "Plot summary with data and psi(2S) MC"
-    printf "\n\t%-9s  %-40s"  "0.2.10"   "Submit Condor jobs on psi(2S) MC sample for incl"         
-    printf "\n\t%-9s  %-40s"  "0.2.11"   "Check Condor jobs on psi(2S) MC sample for incl"         
-    printf "\n\t%-9s  %-40s"  "0.2.12"   "Submit Condor jobs to select events on psi(2S) MC sample for incl"
-	printf "\n\t%-9s  %-40s"  "0.2.13"   "Check Condor jobs to select events on psi(2S) MC sample for incl" 
-    printf "\n\t%-9s  %-40s"  "0.2.14"   "Merge events file on psi(2S) MC sample for incl"         
-    printf "\n\t%-9s  %-40s"  "0.2.15"   "Plot summary with psi(2S) MC sample for incl"         
+    printf "\n\t%-9s  %-40s"  "0.2.17"   "Submit Condor jobs on psi(2S) MC sample for incl"         
+    printf "\n\t%-9s  %-40s"  "0.2.18"   "Check Condor jobs on psi(2S) MC sample for incl"         
+    printf "\n\t%-9s  %-40s"  "0.2.19"   "Submit Condor jobs to select events on psi(2S) MC sample for incl"
+	printf "\n\t%-9s  %-40s"  "0.2.20"   "Check Condor jobs to select events on psi(2S) MC sample for incl" 
+    printf "\n\t%-9s  %-40s"  "0.2.21"   "Merge events file on psi(2S) MC sample for incl"         
+    printf "\n\t%-9s  %-40s"  "0.2.22"   "Plot summary with psi(2S) MC sample for incl"         
     printf "\n\n" 
 }
 
@@ -106,7 +106,6 @@ case $option in
 	   ;; 
 
     0.1.6) echo "Submit selection Condor jobs on data..."
-	   cd
 	   mkdir run/jpsi2invi/event
 	   mkdir run/jpsi2invi/job_text/Data12_event
 	   cd run/jpsi2invi/gen_script
@@ -320,7 +319,7 @@ case $option in
 	   ./python/plt_summary.py mc12
 	   ;; 
 
-    0.2.10) echo "Submit Condor jobs on psip(2S) for incl..." 
+    0.2.17) echo "Submit Condor jobs on psip(2S) for incl..." 
 	   mkdir -p run/jpsi2incl/job_text/mc12
 	   mkdir -p run/jpsi2incl/rootfile_mc12
 	   cd run/jpsi2incl/gen_script
@@ -330,11 +329,11 @@ case $option in
 	   boss.condor -g physics -n 394 jobOptions_jpsi2incl_psip_mc12-%{ProcId}.txt
 	   ;;
 
-    0.2.11) echo "Check Condor jobs on psip(2S) for incl..."
+    0.2.18) echo "Check Condor jobs on psip(2S) for incl..."
 	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile_mc12  394
 	   ;;
     
-    0.2.12) echo "Submit selection Condor jobs on psip(2S) for incl..."
+    0.2.19) echo "Submit selection Condor jobs on psip(2S) for incl..."
 	   mkdir run/jpsi2incl/event_mc12
 	   mkdir run/jpsi2incl/job_text/mc12_event
 	   cd run/jpsi2incl/gen_script
@@ -347,16 +346,16 @@ case $option in
 	   cd bes/jpsi2invi/v0.1
 	   ;;
 
-    0.2.13) echo "Check Condor jobs on events psip(2S) for incl..."
+    0.2.20) echo "Check Condor jobs on events psip(2S) for incl..."
 	   ./python/chk_condorjobs.py run/jpsi2incl/event_mc12  394
 	   ;;
 
-    0.2.14) echo  "Merge event root file on psip(2S) for incl..."
+    0.2.21) echo  "Merge event root file on psip(2S) for incl..."
 	   mkdir run/jpsi2incl/hist_mc12
 	   ./python/mrg_rootfiles.py  run/jpsi2incl/event_mc12 run/jpsi2incl/hist_mc12
 	   ;; 
 
-    0.2.15) echo  "Plot summary with psip(2S) for incl..."
+    0.2.22) echo  "Plot summary with psip(2S) for incl..."
 	   ./python/plt_summary.py mc12_incl 
 	   ;; 
 	

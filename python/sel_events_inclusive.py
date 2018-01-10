@@ -35,7 +35,7 @@ h_evtflw.GetXaxis().SetBinLabel(7, 'cos#theta_{#pi#pi sys}<0.9')
 h_evtflw.GetXaxis().SetBinLabel(8, '3<M_{#pi#pi}^{rec}<3.2') 
 
 h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 100, 3.03, 3.17)
-h_mrecpipi_narrow = ROOT.TH1D('h_mrecpipi_narrow', 'mrecpipi_narrow', 100, 3.03, 3.17)
+#h_mrecpipi_narrow = ROOT.TH1D('h_mrecpipi_narrow', 'mrecpipi_narrow', 100, 3.03, 3.17)
 h_mpipi = ROOT.TH1D('h_mpipi', 'mpipi', 100, 0.2, 0.7) 
 h_pip_p = ROOT.TH1D('h_pip_p', 'pip_p', 100, 0.0, 0.5) 
 h_pim_p = ROOT.TH1D('h_pim_p', 'pim_p', 100, 0.0, 0.5) 
@@ -138,11 +138,12 @@ def fill_histograms_all_combination(t):
 
         if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):            
-            h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
+ #           h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
 
             if (nsurvived==0 and (3.03 < t.vtx_mrecpipi[loop] and t.vtx_mrecpipi[loop] < 3.17)): 
                 nsurvived = 1
-                h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
+            #    h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
+                h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
 			#if ( nentry == 1 )
 			#	h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
 
@@ -183,7 +184,7 @@ def fill_histograms_all_combination(t):
 def write_histograms():
     h_evtflw.Write()
     h_mrecpipi.Write()
-    h_mrecpipi_narrow.Write()
+ #   h_mrecpipi_narrow.Write()
     h_mpipi.Write()
     h_pip_p.Write()
     h_pim_p.Write()
