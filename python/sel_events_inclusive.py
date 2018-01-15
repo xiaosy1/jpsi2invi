@@ -35,7 +35,7 @@ h_evtflw.GetXaxis().SetBinLabel(7, 'cos#theta_{#pi#pi sys}<0.9')
 h_evtflw.GetXaxis().SetBinLabel(8, '3<M_{#pi#pi}^{rec}<3.2') 
 
 h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 100, 3.03, 3.17)
-h_mrecpipi_narrow = ROOT.TH1D('h_mrecpipi_narrow', 'mrecpipi_narrow', 100, 3.03, 3.17)
+#h_mrecpipi_narrow = ROOT.TH1D('h_mrecpipi_narrow', 'mrecpipi_narrow', 100, 3.03, 3.17)
 h_mpipi = ROOT.TH1D('h_mpipi', 'mpipi', 100, 0.2, 0.7) 
 h_pip_p = ROOT.TH1D('h_pip_p', 'pip_p', 100, 0.0, 0.5) 
 h_pim_p = ROOT.TH1D('h_pim_p', 'pim_p', 100, 0.0, 0.5) 
@@ -45,6 +45,12 @@ h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 200, -1.0, 1.0)
 h_cos2pisys = ROOT.TH1D('h_cos2pisys', 'cos2pisys', 100, -1.0, 1.0)
 h_ngam = ROOT.TH1D('h_ngam', 'ngam', 100, 0, 20)
 
+ROOT.gROOT.ProcessLine(
+"struct MyTreeStruct{\
+	Double_t vtx_mrecpipi;\
+	Int_t m_indexmc;\
+	Int_t m_indexmc;\
+};"    )
 
 def usage():
     sys.stdout.write('''
@@ -83,6 +89,16 @@ def main():
     pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=entries).start()
     time_start = time()
 
+    fout = ROOT.TFile(outfile, "RECREATE")
+    t_out = ROOT.TTree('signal', 'signal')
+    mystruct = ROOT.MyTreeStruct()
+    t_out.Branch('vtx_mrecpipi', mystruct, 'vtx_mrecpipi/D')
+    t_out.Branch('indexmc', mystruct, 'indexmc/I')
+    t_out.Branch('pdgid', mystruct, 'm_pdgid[100]/I')
+    t_out.Branch('trkidx', mystruct, 'm_trkidx[100]/I')
+    t_out.Branch('motherpid', mystruct, 'm_motherpid[100]/I')
+    t_out.Branch('motheridx', mystruct, 'm_motheridx[100]/I')
+
     for jentry in xrange(entries):
         pbar.update(jentry+1)
         # get the next tree in the chain and verify
@@ -103,7 +119,8 @@ def main():
         # if select_jpsi_to_invisible(t): 
         #    h_mrecpipi.Fill(t.vtx_mrecpipi)
  
-    fout = ROOT.TFile(outfile, "RECREATE")
+ #   fout = ROOT.TFile(outfile, "RECREATE")
+    t_out.Write()
     write_histograms() 
     fout.Close()
     pbar.finish()
@@ -138,11 +155,12 @@ def fill_histograms_all_combination(t):
 
         if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):            
-            h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
+ #           h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
 
             if (nsurvived==0 and (3.03 < t.vtx_mrecpipi[loop] and t.vtx_mrecpipi[loop] < 3.17)): 
                 nsurvived = 1
-                h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
+            #    h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
+                h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
 			#if ( nentry == 1 )
 			#	h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
 
@@ -183,7 +201,7 @@ def fill_histograms_all_combination(t):
 def write_histograms():
     h_evtflw.Write()
     h_mrecpipi.Write()
-    h_mrecpipi_narrow.Write()
+ #   h_mrecpipi_narrow.Write()
     h_mpipi.Write()
     h_pip_p.Write()
     h_pim_p.Write()

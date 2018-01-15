@@ -1,0 +1,15 @@
+
+
+Decay psi(2S)
+1.0000    J/psi  pi+ pi-                 JPIPI;
+Enddecay
+
+Decay J/psi
+1.0000    p+ anti-p-                              J2BB1;
+Enddecay
+
+
+End
+
+
+
