@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 """
-Calculate table 5
+Calculate table 5 and table 10
 """
 
 __author__ = "XIAO Suyu <xiaosuyu@ihep.ac.cn>"
