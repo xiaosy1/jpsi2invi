@@ -121,7 +121,7 @@ void roohistpdf()
     
     if(hist_id==1){  // For Jpsi2Incl
       RooRealVar nsig("nsig","signal fraction",1000000, 0.0, 100000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",1000000, 0.0, 100000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",1000000, 0.0, 1000000000.0); 
     }
     
     if(hist_id==2){ // For Jpsi2Invi
