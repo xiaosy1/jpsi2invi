@@ -22,8 +22,8 @@ TEST=False
 # Global constants 
 JPSI_MASS = 3.096916; 
 
-#NonPiPiJpsi=True
-NonPiPiJpsi=False
+NonPiPiJpsi=True
+#NonPiPiJpsi=False
 
 PID_PSIP=100443
 PID_PION_PLUS=211
@@ -54,24 +54,10 @@ h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 200, -1.0, 1.0)
 h_cos2pisys = ROOT.TH1D('h_cos2pisys', 'cos2pisys', 100, -1.0, 1.0)
 h_ngam = ROOT.TH1D('h_ngam', 'ngam', 100, 0, 20)
 
-<<<<<<< HEAD
 ROOT.gROOT.ProcessLine(
 "struct MyTreeStruct{\
 	Double_t vtx_mrecpipi;\
 };"    );
-#ROOT.gROOT.ProcessLine(
-#"struct MyTreeStruct2{\
-#	Double_t indexmc;\
-#};"
-#)
-=======
-#ROOT.gROOT.ProcessLine(
-#"struct MyTreeStruct{\
-#	Double_t vtx_mrecpipi;\
-#	Int_t m_indexmc;\
-#	Int_t m_indexmc;\
-#};"    )
->>>>>>> besiii/master
 
 def usage():
     sys.stdout.write('''
@@ -110,20 +96,12 @@ def main():
     pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=entries).start()
     time_start = time()
 
-<<<<<<< HEAD
     fout = ROOT.TFile(outfile, "RECREATE")
     t_out = ROOT.TTree('signal', 'signal')
     mystruct = ROOT.MyTreeStruct()
 #    mystruct2 = ROOT.MyTreeStruct2()
     t_out.Branch('vtx_mrecpipi', mystruct, 'vtx_mrecpipi/D')
 #    t_out.Branch('indexmc', mystruct2, 'indexmc/D')
-=======
-#    fout = ROOT.TFile(outfile, "RECREATE")
-#    t_out = ROOT.TTree('signal', 'signal')
-#    mystruct = ROOT.MyTreeStruct()
-#    t_out.Branch('vtx_mrecpipi', mystruct, 'vtx_mrecpipi/D')
-#    t_out.Branch('indexmc', mystruct, 'indexmc/I')
->>>>>>> besiii/master
 #    t_out.Branch('pdgid', mystruct, 'm_pdgid[100]/I')
 #    t_out.Branch('trkidx', mystruct, 'm_trkidx[100]/I')
 #    t_out.Branch('motherpid', mystruct, 'm_motherpid[100]/I')
@@ -144,18 +122,11 @@ def main():
         if nb<=0:
             continue
 
-<<<<<<< HEAD
-    #    fill_histograms_all_combination(t, t_out, mystruct, mystruct2)
-        fill_histograms_all_combination(t, t_out, mystruct)
-        
-        #if select_jpsi_to_invisible(t): 
-=======
         if NonPiPiJpsi:                            # Non-PiPiJpsi
             if not ( check_pipiJpsi(t) ):
                 fill_histograms_all_combination(t)
         else:                                      # Normal 
             fill_histograms_all_combination(t)
->>>>>>> besiii/master
  
     fout = ROOT.TFile(outfile, "RECREATE")
  #   t_out.Write()
@@ -167,10 +138,6 @@ def main():
     sys.stdout.write(' \nDone in %s. \n' % dur) 
 
 
-<<<<<<< HEAD
-#def fill_histograms_all_combination(t, t_out, mystruct, mystruct2):
-def fill_histograms_all_combination(t, t_out, mystruct):
-=======
 def check_pipiJpsi(t):
 
     pion_plus_flag =0
@@ -193,7 +160,6 @@ def check_pipiJpsi(t):
 
 
 def fill_histograms_all_combination(t):
->>>>>>> besiii/master
     
     nentry = t.npipi
     nsurvived = 0
@@ -214,28 +180,11 @@ def fill_histograms_all_combination(t):
         if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):            
             h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
-<<<<<<< HEAD
-         #   h_mrecpipi.Fill(t.vtx_mrecpipi)
-            mystruct.vtx_mrecpipi = t.vtx_mrecpipi[loop]
-         #   print t.indexmc[loop]
-            #mystruct2.indexmc = t.indexmc[loop]
-            t_out.Fill()
-			
-
-          #  if (nsurvived==0 and (3.03 < t.vtx_mrecpipi[loop] and t.vtx_mrecpipi[loop] < 3.17)): 
-          #      nsurvived = 1
-            #    h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
-            #    h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
-			#if ( nentry == 1 )
-			#	h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
-
-=======
             h_mrecpipi_fit.Fill(t.vtx_mrecpipi[loop])
 
             if (nsurvived==0 and (3.03 < t.vtx_mrecpipi[loop] and t.vtx_mrecpipi[loop] < 3.17)): 
                 nsurvived = 1
                 h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
->>>>>>> besiii/master
 
         if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
