@@ -22,8 +22,8 @@ TEST=False
 # Global constants 
 JPSI_MASS = 3.096916; 
 
-NonPiPiJpsi=True
-#NonPiPiJpsi=False
+#NonPiPiJpsi=True
+NonPiPiJpsi=False
 
 PID_PSIP=100443
 PID_PION_PLUS=211
@@ -96,11 +96,12 @@ def main():
     pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=entries).start()
     time_start = time()
 
-    fout = ROOT.TFile(outfile, "RECREATE")
-    t_out = ROOT.TTree('signal', 'signal')
-    mystruct = ROOT.MyTreeStruct()
-#    mystruct2 = ROOT.MyTreeStruct2()
-    t_out.Branch('vtx_mrecpipi', mystruct, 'vtx_mrecpipi/D')
+#    fout = ROOT.TFile(outfile, "RECREATE")
+#    t_out = ROOT.TTree('signal', 'signal')
+#    mystruct = ROOT.MyTreeStruct()
+##    mystruct2 = ROOT.MyTreeStruct2()
+#    t_out.Branch('vtx_mrecpipi', mystruct, 'vtx_mrecpipi/D')
+
 #    t_out.Branch('indexmc', mystruct2, 'indexmc/D')
 #    t_out.Branch('pdgid', mystruct, 'm_pdgid[100]/I')
 #    t_out.Branch('trkidx', mystruct, 'm_trkidx[100]/I')

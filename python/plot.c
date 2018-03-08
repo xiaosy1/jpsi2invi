@@ -53,6 +53,7 @@ int make_fig(TH1F* h1, TH1F* h2, TH1F* h3, double hmax,
   htmp_mc->SetLineColor(29);
   htmp_mc->SetMinimum(0);
 
+  htmp_data->Scale(400.0/341.0);
   htmp_data->Draw("same,P");
   htmp_data->Sumw2();
   htmp_data->SetMarkerStyle(20);
@@ -128,12 +129,12 @@ int make_fig(TH1F* h1, TH1F* h2, TH1F* h3, double hmax,
     }
   if(flag==7 || flag==8)
     {
-      TArrow *ar1 = new TArrow(-0.80, hmax*0.7, -0.80, hmax*0.5, 0.02, "|>");
+      TArrow *ar1 = new TArrow(-0.80, hmax*0.7, -0.80, hmax*0.6, 0.02, "|>");
       ar1->Draw();
       ar1->SetLineColor(4);
       ar1->SetLineWidth(1.5);
 
-      TArrow *ar2 = new TArrow(0.80, hmax*0.7, 0.80, hmax*0.5, 0.02, "|>");
+      TArrow *ar2 = new TArrow(0.80, hmax*0.7, 0.80, hmax*0.6, 0.02, "|>");
       ar2->Draw();
       ar2->SetLineColor(4);
       ar2->SetLineWidth(1.5);
@@ -152,12 +153,12 @@ int make_fig(TH1F* h1, TH1F* h2, TH1F* h3, double hmax,
     }
   if(flag==6)
     {
-      TArrow *ar1 = new TArrow(-0.90, 0.35*1000000, -0.90, 0.25*1000000, 0.02, "|>");
+      TArrow *ar1 = new TArrow(-0.90, 0.9*1000000, -0.90, 0.8*1000000, 0.02, "|>");
       ar1->Draw();
       ar1->SetLineColor(4);
       ar1->SetLineWidth(1.5);
 
-      TArrow *ar2 = new TArrow(0.90, 0.35*1000000, 0.90, 0.25*1000000, 0.02, "|>");
+      TArrow *ar2 = new TArrow(0.90, 0.9*1000000, 0.90, 0.8*1000000, 0.02, "|>");
       ar2->Draw();
       ar2->SetLineColor(4);
       ar2->SetLineWidth(1.5);
@@ -183,7 +184,7 @@ int plot()
    
    // difference is only [3.03-3.17] (mrecpipi) <--> [3.04-3.16] (mrecpipi_org for past root files)
    // Need to change "h_mrecpipi" !! from next time. 
-   hist_title_1  << "h_mrecpipi_org" ;  
+   hist_title_1  << "h_mrecpipi" ;  
 
    hist_title_2  << "h_mpipi" ;
    hist_title_3  << "h_pip_p" ;
@@ -228,7 +229,7 @@ int plot()
    TH1F* htmp_8_new_data = dynamic_cast<TH1F*>(gDirectory->Get(hist_title_8.str().c_str()));
 
 
-   TFile *f3 = new TFile("./run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_nonpipi.root");
+   TFile *f3 = new TFile("./run/jpsi2incl/hist_mc12/jpsi2incl_psip_mc12_event_merged_nonpipi.root");
    TH1F* htmp_1_nonpipiJpsi = dynamic_cast<TH1F*>(gDirectory->Get(hist_title_1.str().c_str()));
    TH1F* htmp_2_nonpipiJpsi = dynamic_cast<TH1F*>(gDirectory->Get(hist_title_2.str().c_str()));
    TH1F* htmp_3_nonpipiJpsi = dynamic_cast<TH1F*>(gDirectory->Get(hist_title_3.str().c_str()));
@@ -250,49 +251,49 @@ int plot()
    htmp_1_new_mc->GetXaxis()->SetRange(xmin1,xmax1);
    htmp_1_new_data->GetXaxis()->SetRange(xmin1,xmax1);
 
-   hmax1 = 8000000;
+   hmax1 = 30000000;
    xtitle1 = "M(recoil(#pi^{+}#pi^{-})) (GeV/c^{2})";
    ytitle1 = "Events/(0.0012 GeV/c^{2})";
    figname1 = "./psfile/incl_mrecpipi.eps";
    make_fig(htmp_1_new_mc, htmp_1_new_data, htmp_1_nonpipiJpsi, hmax1, xtitle1, ytitle1, figname1, 1);
 
-   hmax2 = 1300000;
+   hmax2 = 4500000;
    xtitle2 = "M(#pi^{+}#pi^{-}) (GeV/c^{2})";
    ytitle2 = "Events/(0.005 GeV/c^{2})";
    figname2 = "./psfile/incl_mpipi.eps";
    make_fig(htmp_2_new_mc, htmp_2_new_data, htmp_2_nonpipiJpsi, hmax2, xtitle2, ytitle2, figname2, 2);
 
-   hmax3 = 800000;
+   hmax3 = 3000000;
    xtitle3 = "P(#pi^{+}) (GeV/c)";
    ytitle3 = "Events/(0.005 GeV/c)";
    figname3 = "./psfile/incl_pip_p.eps";
    make_fig(htmp_3_new_mc, htmp_3_new_data, htmp_3_nonpipiJpsi, hmax3, xtitle3, ytitle3, figname3, 3);
 
-   hmax4 = 800000;
+   hmax4 = 3000000;
    xtitle4 = "P(#pi^{-}) (GeV/c)";
    ytitle4 = "Events/(0.005 GeV/c)";
    figname4 = "./psfile/incl_pim_p.eps";
    make_fig(htmp_4_new_mc, htmp_4_new_data, htmp_4_nonpipiJpsi, hmax4, xtitle4, ytitle4, figname4, 4);
 
-   hmax5 = 800000;
+   hmax5 = 2000000;
    xtitle5 = "Cos#theta_{#pi^{+}#pi^{-}}";
    ytitle5 = "Events/0.01";
    figname5 = "./psfile/incl_cospipi.eps";
    make_fig(htmp_5_new_mc, htmp_5_new_data, htmp_5_nonpipiJpsi, hmax5, xtitle5, ytitle5, figname5, 5);
 
-   hmax6 = 520000;
+   hmax6 = 1500000;
    xtitle6 = "Cos#theta_{#pi#pi sys.}";
    ytitle6 = "Events/0.02";
    figname6 = "./psfile/incl_cos2pisys.eps";
    make_fig(htmp_6_new_mc, htmp_6_new_data, htmp_6_nonpipiJpsi, hmax6, xtitle6, ytitle6, figname6, 6);
 
-   hmax7 = 700000;
+   hmax7 = 2000000;
    xtitle7 = "Cos#theta_{#pi^{+}}";
    ytitle7 = "Events/0.02";
    figname7 = "./psfile/incl_pip_costhe.eps";
    make_fig(htmp_7_new_mc, htmp_7_new_data, htmp_7_nonpipiJpsi, hmax7, xtitle7, ytitle7, figname7, 7);
 
-   hmax8 = 700000;
+   hmax8 = 2000000;
    xtitle8 = "Cos#theta_{#pi^{-}}";
    ytitle8 = "Events/0.02";
    figname8 = "./psfile/incl_pim_costhe.eps";
