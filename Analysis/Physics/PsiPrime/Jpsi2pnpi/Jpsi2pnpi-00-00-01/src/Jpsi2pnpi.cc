@@ -30,7 +30,10 @@
 #include "VertexFit/IVertexDbSvc.h"
 #include "VertexFit/Helix.h"
 #include "VertexFit/WTrackParameter.h"
-#include "VertexFit/VertexFit.h"
+//#include "VertexFit/VertexFit.h"
+#include "VertexFit/KalmanKinematicFit.h"
+#include "VertexFit/SecondVertexFit.h"
+#include "VertexFit/KinematicFit.h"
 
 #include "ParticleID/ParticleID.h"
 #include "McTruth/McParticle.h"
@@ -81,6 +84,7 @@ private:
   // output file
   std::string m_output_filename;
   bool m_isMonteCarlo; 
+  bool m_isZCcondition;
   TFile* m_fout; 
   
   // define Histograms
@@ -150,7 +154,7 @@ private:
   double m_kal_trkm_py;
   double m_kal_trkm_pz;
 
-  // fitted info
+  // vertex fitting info
   double m_vtx_proton_px; 
   double m_vtx_proton_py; 
   double m_vtx_proton_pz;
@@ -180,6 +184,40 @@ private:
   double m_vtx_proton_pion_e;
   double m_vtx_proton_pion_m;
     
+   // kinematic fitting info
+   double m_kmfit_chi2;
+
+  double m_kmfit_proton_px; 
+  double m_kmfit_proton_py; 
+  double m_kmfit_proton_pz;
+  double m_kmfit_proton_p; 
+  double m_kmfit_proton_e;
+  double m_kmfit_proton_costheta;
+  double m_kmfit_proton_phi;
+
+  double m_kmfit_neutron_px; 
+  double m_kmfit_neutron_py; 
+  double m_kmfit_neutron_pz;
+  double m_kmfit_neutron_p; 
+  double m_kmfit_neutron_e;
+  double m_kmfit_neutron_m;
+  double m_kmfit_neutron_costheta;
+  double m_kmfit_neutron_phi;
+
+  double m_kmfit_pion_px; 
+  double m_kmfit_pion_py; 
+  double m_kmfit_pion_pz; 
+  double m_kmfit_pion_p;
+  double m_kmfit_pion_e;
+  double m_kmfit_pion_costheta;
+  double m_kmfit_pion_phi;
+
+  double m_kmfit_proton_pion_p;
+  double m_kmfit_proton_pion_e;
+  double m_kmfit_proton_pion_m;
+
+
+
   // check MDC and EMC match
   long m_pion_matched;
   long m_lep_matched;
@@ -189,6 +227,12 @@ private:
   int m_npho;
 
   //  MC truth info
+  int m_indexmc;
+  int m_pdgid[100];
+  int m_trkidx[100];
+  int m_motheridx[100];
+  int m_motherpid[100];
+
   double m_mc_mom_pip;
   double m_mc_mom_pim;
   double m_mc_mom_mup;
@@ -239,6 +283,9 @@ private:
   void saveVtxInfo(HepLorentzVector,
 		   HepLorentzVector,
 		   HepLorentzVector); 
+  void saveKmfitInfo(HepLorentzVector,
+		     HepLorentzVector,
+		     HepLorentzVector); 
   void saveGamInfo(std::vector<int>,
 		   SmartDataPtr<EvtRecTrackCol>);
   int selectChargedTracks(SmartDataPtr<EvtRecEvent>,
@@ -280,6 +327,7 @@ LOAD_FACTORY_ENTRIES( Jpsi2pnpi )
 
 const double PION_MASS = 0.139570;
 const double PROTON_MASS = 0.938272;
+const double NEUTRON_MASS = 0.939565;
 
 const int ProtonPionMinusFlag = 1;
 const int AntiProtonPionPlusFlag = 2;
@@ -311,7 +359,11 @@ Jpsi2pnpi::Jpsi2pnpi(const std::string& name, ISvcLocator* pSvcLocator) :
 {
   declareProperty("OutputFileName", m_output_filename);
   declareProperty("IsMonteCarlo", m_isMonteCarlo);
-  declareProperty("Ecms", m_ecms = 3.097);
+  declareProperty("ZChi_AnaCondition", m_isZCcondition=false);
+  //declareProperty("ZChi_AnaCondition", m_isZCcondition=true);
+  //declareProperty("Ecms", m_ecms = 3.097);
+  //declareProperty("Ecms", m_ecms = 3.686);
+  declareProperty("Ecms", m_ecms);
   declareProperty("Vr0cut", m_vr0cut=1.0);
   declareProperty("Vz0cut", m_vz0cut=10.0);
   declareProperty("ChaCosthetaCut", m_cha_costheta_cut=0.93);
@@ -395,9 +447,11 @@ void Jpsi2pnpi::book_histogram() {
   h_evtflw->GetXaxis()->SetBinLabel(1, "raw");
   h_evtflw->GetXaxis()->SetBinLabel(2, "N_{Good}=2");
 
-  h_evtflw->GetXaxis()->SetBinLabel(3, "PID"); 
+  h_evtflw->GetXaxis()->SetBinLabel(3, "PID, ppim"); 
+  h_evtflw->GetXaxis()->SetBinLabel(5, "PID, pbpip"); 
 
-  h_evtflw->GetXaxis()->SetBinLabel(4, "0.75<M_{#p#pi}^{rec}<1.13");
+  h_evtflw->GetXaxis()->SetBinLabel(4, "0.75<M_{#p#pi}^{rec}<1.13, nbar");
+  h_evtflw->GetXaxis()->SetBinLabel(6, "0.75<M_{#p#pi}^{rec}<1.13, n");
 }
 
 
@@ -470,7 +524,7 @@ void Jpsi2pnpi::book_tree() {
   m_tree->Branch("kal_trkm_py", &m_kal_trkm_py, "kal_trkm_py/D");
   m_tree->Branch("kal_trkm_pz", &m_kal_trkm_pz, "kal_trkm_pz/D");
 
-  // fitted info
+  // vertex fitting info
   m_tree->Branch("vtx_proton_px", &m_vtx_proton_px, "vtx_proton_px/D");
   m_tree->Branch("vtx_proton_py", &m_vtx_proton_py, "vtx_proton_py/D");
   m_tree->Branch("vtx_proton_pz", &m_vtx_proton_pz, "vtx_proton_pz/D");
@@ -500,8 +554,47 @@ void Jpsi2pnpi::book_tree() {
   m_tree->Branch("vtx_proton_pion_e", &m_vtx_proton_pion_e, "vtx_proton_pion_e/D");
   m_tree->Branch("vtx_proton_pion_m", &m_vtx_proton_pion_m, "vtx_proton_pion_m/D");
   
+  // kinematic fitting info
+  m_tree->Branch("kmfit_chi2", &m_kmfit_chi2, "kmfit_chi2/D");
+  
+  m_tree->Branch("kmfit_proton_px", &m_kmfit_proton_px, "kmfit_proton_px/D");
+  m_tree->Branch("kmfit_proton_py", &m_kmfit_proton_py, "kmfit_proton_py/D");
+  m_tree->Branch("kmfit_proton_pz", &m_kmfit_proton_pz, "kmfit_proton_pz/D");
+  m_tree->Branch("kmfit_proton_p", &m_kmfit_proton_p, "kmfit_proton_p/D");
+  m_tree->Branch("kmfit_proton_e", &m_kmfit_proton_e, "kmfit_proton_e/D");
+  m_tree->Branch("kmfit_proton_costheta", &m_kmfit_proton_costheta, "kmfit_proton_costheta/D");
+  m_tree->Branch("kmfit_proton_phi", &m_kmfit_proton_phi, "kmfit_proton_phi/D");
+
+  m_tree->Branch("kmfit_neutron_px", &m_kmfit_neutron_px, "kmfit_neutron_px/D");
+  m_tree->Branch("kmfit_neutron_py", &m_kmfit_neutron_py, "kmfit_neutron_py/D");
+  m_tree->Branch("kmfit_neutron_pz", &m_kmfit_neutron_pz, "kmfit_neutron_pz/D");
+  m_tree->Branch("kmfit_neutron_p", &m_kmfit_neutron_p, "kmfit_neutron_p/D");
+  m_tree->Branch("kmfit_neutron_e", &m_kmfit_neutron_e, "kmfit_neutron_e/D");
+  m_tree->Branch("kmfit_neutron_m", &m_kmfit_neutron_m, "kmfit_neutron_m/D");
+  m_tree->Branch("kmfit_neutron_costheta", &m_kmfit_neutron_costheta, "kmfit_neutron_costheta/D");
+  m_tree->Branch("kmfit_neutron_phi", &m_kmfit_neutron_phi, "kmfit_neutron_phi/D");
+
+  m_tree->Branch("kmfit_pion_px", &m_kmfit_pion_px, "kmfit_pion_px/D");
+  m_tree->Branch("kmfit_pion_py", &m_kmfit_pion_py, "kmfit_pion_py/D");
+  m_tree->Branch("kmfit_pion_pz", &m_kmfit_pion_pz, "kmfit_pion_pz/D");
+  m_tree->Branch("kmfit_pion_p", &m_kmfit_pion_p, "kmfit_pion_p/D");
+  m_tree->Branch("kmfit_pion_e", &m_kmfit_pion_e, "kmfit_pion_e/D");
+  m_tree->Branch("kmfit_pion_costheta", &m_kmfit_pion_costheta, "kmfit_pion_costheta/D");
+  m_tree->Branch("kmfit_pion_phi", &m_kmfit_pion_phi, "kmfit_pion_phi/D");
+  
+  m_tree->Branch("kmfit_proton_pion_p", &m_kmfit_proton_pion_p, "kmfit_proton_pion_p/D");
+  m_tree->Branch("kmfit_proton_pion_e", &m_kmfit_proton_pion_e, "kmfit_proton_pion_e/D");
+  m_tree->Branch("kmfit_proton_pion_m", &m_kmfit_proton_pion_m, "kmfit_proton_pion_m/D");
+
+
   // MC truth info
   if (!m_isMonteCarlo) return; 
+  m_tree->Branch("indexmc", &m_indexmc, "indexmc/I");
+  m_tree->Branch("pdgid", m_pdgid, "m_pdgid[100]/I");
+  m_tree->Branch("trkidx", m_trkidx, "m_trkidx[100]/I");
+  m_tree->Branch("motherpid", m_motherpid, "m_motherpid[100]/I");
+  m_tree->Branch("motheridx", m_motheridx, "m_motheridx[100]/I");
+
   m_tree->Branch("mc_mom_pip", &m_mc_mom_pip, "mc_mom_pip/D");
   m_tree->Branch("mc_mom_pim", &m_mc_mom_pim, "mc_mom_pim/D");
   m_tree->Branch("mc_mom_mup", &m_mc_mom_mup, "mc_mom_mup/D");
@@ -542,6 +635,7 @@ void Jpsi2pnpi::book_tree() {
 
 void Jpsi2pnpi::clearVariables() {
 
+  // EMC Info
   m_raw_gpx->clear();
   m_raw_gpy->clear();
   m_raw_gpz->clear();
@@ -550,6 +644,16 @@ void Jpsi2pnpi::clearVariables() {
   m_raw_cstat->clear();
   m_raw_nhit->clear();
   m_raw_secmom->clear();
+
+  // MC Topology
+  m_indexmc = 0;
+  for(int i=0;i<100;i++)
+    {
+      m_pdgid[i] = 0;
+      m_trkidx[i] = 0;
+      m_motheridx[i] = 0;
+      m_motherpid[i] = 0;
+    }
 
   m_run = 0;
   m_event = 0;
@@ -582,8 +686,58 @@ bool Jpsi2pnpi::buildJpsiToPNPi() {
 
 
 void Jpsi2pnpi::saveGenInfo() {
-  SmartDataPtr<Event::McParticleCol> mcParticleCol(eventSvc(), "/Event/MC/McParticleCol");
-  HepLorentzVector mc_psip,mc_pip,mc_pim,mc_ep,mc_em,mc_mup,mc_mum,mc_p,mc_pb,mc_n,mc_nb,mc_jpsi;
+   SmartDataPtr<Event::McParticleCol> mcParticleCol(eventSvc(), "/Event/MC/McParticleCol");
+   //HepLorentzVector mc_psip,mc_pip,mc_pim,mc_ep,mc_em,mc_mup,mc_mum,mc_p,mc_pb,mc_n,mc_nb,mc_jpsi;
+   HepLorentzVector mc_psip(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_pip(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_pim(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_ep(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_em(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_mup(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_mum(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_p(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_pb(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_n(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_nb(0.0, 0.0, 0.0, 0.0);
+   HepLorentzVector mc_jpsi(0.0, 0.0, 0.0, 0.0);
+   
+   int Mother_PDG_ID;
+   if (m_ecms < 3.5){ // For J/psi, m_ecms=3.097
+      Mother_PDG_ID = JPSI_PDG_ID; 
+   }
+   else{  // Otherwise, For Psip, m_ecms=3.686
+      Mother_PDG_ID = PSI2S_PDG_ID;   
+   }
+   
+  // MC Topology 
+  {
+    int m_numParticle = 0;
+    bool Decay = false;
+    int rootIndex = -1;
+    Event::McParticleCol::iterator iter_mc_topo = mcParticleCol->begin();
+    for (; iter_mc_topo != mcParticleCol->end(); iter_mc_topo++) {
+      if ((*iter_mc_topo)->primaryParticle() && Decay) { rootIndex++; continue; }
+      if ((*iter_mc_topo)->primaryParticle()) continue;
+      if (!(*iter_mc_topo)->decayFromGenerator()) continue;
+      if ((*iter_mc_topo)->particleProperty() == Mother_PDG_ID) {
+	Decay = true;
+	rootIndex = (*iter_mc_topo)->trackIndex();
+      }
+      if (!Decay) continue;
+      int mpdgid = ((*iter_mc_topo)->mother()).particleProperty();
+      int mcidx = (((*iter_mc_topo)->mother()).particleProperty() == Mother_PDG_ID) ? 0 : ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
+      //int mcidx = ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
+      int pdgid = (*iter_mc_topo)->particleProperty();
+      int trkidx = (*iter_mc_topo)->trackIndex() - rootIndex;
+      m_pdgid[m_numParticle] = pdgid;
+      m_trkidx[m_numParticle] = trkidx;
+      m_motheridx[m_numParticle] = mcidx;
+      m_motherpid[m_numParticle] = mpdgid;
+      m_numParticle++;
+    }
+    m_indexmc = m_numParticle;
+  }
+
 
   Event::McParticleCol::iterator iter_mc = mcParticleCol->begin();
   for (; iter_mc != mcParticleCol->end(); iter_mc++){
@@ -598,7 +752,8 @@ void Jpsi2pnpi::saveGenInfo() {
 	mc_pim = (*iter_mc)->initialFourMomentum();
     }
 
-    if ((*iter_mc)->mother().particleProperty() == JPSI_PDG_ID ) {
+    //if ((*iter_mc)->mother().particleProperty() == JPSI_PDG_ID ) {
+    if ((*iter_mc)->mother().particleProperty() == Mother_PDG_ID ) {
       if((*iter_mc)->particleProperty() == -MUON_PDG_ID )
 	mc_mup = (*iter_mc)->initialFourMomentum();
 
@@ -800,7 +955,11 @@ int Jpsi2pnpi::selectProtonPion(SmartDataPtr<EvtRecTrackCol> evtRecTrkCol,
       if( pid_flag1==0 && pid_flag2==1){ pid_flag = AntiProtonPionPlusFlag; }
 
       m_pnpi_flag = pid_flag;
-      if ( !evtflw_filled ) h_evtflw->Fill(2); //PID
+      //if ( !evtflw_filled ) h_evtflw->Fill(2); //PID
+      if ( !evtflw_filled ){
+	if( pid_flag == ProtonPionMinusFlag ){ h_evtflw->Fill(2);} //PID
+	if( pid_flag == AntiProtonPionPlusFlag ){ h_evtflw->Fill(4);} //PID 
+      }
 
       // apply vertex fit
       RecMdcKalTrack *pTrk = (*(evtRecTrkCol->begin()+iPGood[i1]))->mdcKalTrack();
@@ -854,7 +1013,12 @@ bool Jpsi2pnpi::hasGoodProtonPiVertex(RecMdcKalTrack *pTrk,
 				      RecMdcKalTrack *piTrk,
 				      bool evtflw_filled) {
 
-  HepLorentzVector pcms(0.011*m_ecms, 0., 0., m_ecms);
+  //HepLorentzVector pcms(0.011*m_ecms, 0., 0., m_ecms);
+  HepLorentzVector pcms;
+  if (!m_isZCcondition){
+    pcms = HepLorentzVector(0.011*m_ecms, 0., 0., m_ecms);
+  }
+  else{ pcms = HepLorentzVector(0.011*m_ecms, -0.001, 0.005, m_ecms); }
 
   HepLorentzVector p4_vtx_proton, p4_vtx_pion;
   HepLorentzVector p4_vtx_rec_proton_pion, p4_vtx_proton_pion;
@@ -902,10 +1066,39 @@ bool Jpsi2pnpi::hasGoodProtonPiVertex(RecMdcKalTrack *pTrk,
   if( ! ( p4_vtx_rec_proton_pion.m() >= m_neutron_mass_min &&
           p4_vtx_rec_proton_pion.m() <= m_neutron_mass_max ) ) return false; 
 
-  if( !evtflw_filled ) h_evtflw->Fill(3); // 0.75<M_{#proton#pi}^{rec}<1.13
+  //if( !evtflw_filled ) h_evtflw->Fill(3); // 0.75<M_{#proton#pi}^{rec}<1.13
+  if( !evtflw_filled ){
+    if( m_pnpi_flag == 1 ){ h_evtflw->Fill(3);} // 0.75<M_{#proton#pi}^{rec}<1.13
+    if( m_pnpi_flag == 2 ){ h_evtflw->Fill(5);} // 0.75<M_{#proton#pi}^{rec}<1.13
+  }
+
 
   saveVtxInfo(p4_vtx_proton, p4_vtx_pion, p4_vtx_rec_proton_pion); 
-  
+
+
+  //*****  Kinematic Fit : 1C constraint *****//
+  KalmanKinematicFit * kmfit = KalmanKinematicFit::instance();
+  kmfit->init();
+  kmfit->AddTrack(0, wpi);
+  kmfit->AddTrack(1, wp);
+  kmfit->AddMissTrack(2,NEUTRON_MASS);
+  kmfit->AddFourMomentum(0, pcms );
+  if(!kmfit->Fit(0)) return false;
+
+  double chi2 = kmfit->chisq(0);
+  m_kmfit_chi2 = chi2;
+  //std::cout <<  " fitting chi2 = " << chi2 << std::endl;
+
+  HepLorentzVector p4_kmfit_pion = kmfit->pfit(0);
+  HepLorentzVector p4_kmfit_proton = kmfit->pfit(1);
+  HepLorentzVector p4_kmfit_neutron = kmfit->pfit(2);
+
+  HepLorentzVector p4_kmfit_rec_proton_pion = pcms - p4_kmfit_proton - p4_kmfit_pion;
+  HepLorentzVector p4_kmfit_proton_pion = p4_kmfit_proton + p4_kmfit_pion;
+
+
+  saveKmfitInfo(p4_kmfit_proton, p4_kmfit_pion, p4_kmfit_rec_proton_pion); 
+
   return true;
 }
 
@@ -938,8 +1131,15 @@ int Jpsi2pnpi::selectNeutralTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
 		   && abs_costheta < m_costheta_endcap_max);
     double eraw = emcTrk->energy();
     
-    if ( !( (barrel && eraw > m_energy_barrel_min)
-	    || (endcap && eraw > m_energy_endcap_min)))  continue; 
+    if (!m_isZCcondition){     // Cut by "costheta"
+      if ( !( (barrel && eraw > m_energy_barrel_min)
+	      || (endcap && eraw > m_energy_endcap_min)))  continue; 
+    }
+    else{                      // Cut by "module"
+      int module = emcTrk->module();
+      if( module == 1 ){  if( !(eraw > m_energy_barrel_min) ) continue; }
+      else{ if( !(eraw > m_energy_endcap_min) ) continue; }
+    }
 
     // photon isolation: the opening angle between a candidate shower
     // and the closest charged track should be larger than 10 degree 
@@ -1108,10 +1308,49 @@ void Jpsi2pnpi::saveVtxInfo(HepLorentzVector p4_vtx_proton,
   m_vtx_neutron_phi = p4_vtx_rec_proton_pion.phi();
   
   m_vtx_neutron_m = p4_vtx_rec_proton_pion.m();
-  
+
   m_vtx_proton_pion_p = p4_vtx_proton_pion.rho();
   m_vtx_proton_pion_e = p4_vtx_proton_pion.e();
   m_vtx_proton_pion_m = p4_vtx_proton_pion.m();
+}
+
+
+
+void Jpsi2pnpi::saveKmfitInfo(HepLorentzVector p4_kmfit_proton,
+			      HepLorentzVector p4_kmfit_pion,
+			      HepLorentzVector p4_kmfit_rec_proton_pion){
+
+  HepLorentzVector p4_kmfit_proton_pion = p4_kmfit_proton + p4_kmfit_pion;
+
+  m_kmfit_proton_px = p4_kmfit_proton.px();
+  m_kmfit_proton_py = p4_kmfit_proton.py();
+  m_kmfit_proton_pz = p4_kmfit_proton.pz();
+  m_kmfit_proton_p = p4_kmfit_proton.rho();
+  m_kmfit_proton_e = p4_kmfit_proton.e();      
+  m_kmfit_proton_costheta = p4_kmfit_proton.cosTheta();
+  m_kmfit_proton_phi = p4_kmfit_proton.phi();
+  
+  m_kmfit_pion_px = p4_kmfit_pion.px();
+  m_kmfit_pion_py = p4_kmfit_pion.py();
+  m_kmfit_pion_pz = p4_kmfit_pion.pz();
+  m_kmfit_pion_p = p4_kmfit_pion.rho();
+  m_kmfit_pion_e = p4_kmfit_pion.e();
+  m_kmfit_pion_costheta = p4_kmfit_pion.cosTheta();
+  m_kmfit_pion_phi = p4_kmfit_pion.phi();
+  
+  m_kmfit_neutron_px = p4_kmfit_rec_proton_pion.px();
+  m_kmfit_neutron_py = p4_kmfit_rec_proton_pion.py();
+  m_kmfit_neutron_pz = p4_kmfit_rec_proton_pion.pz();
+  m_kmfit_neutron_p = p4_kmfit_rec_proton_pion.rho();
+  m_kmfit_neutron_e = p4_kmfit_rec_proton_pion.e();
+  m_kmfit_neutron_costheta = p4_kmfit_rec_proton_pion.cosTheta();
+  m_kmfit_neutron_phi = p4_kmfit_rec_proton_pion.phi();
+  
+  m_kmfit_neutron_m = p4_kmfit_rec_proton_pion.m();
+
+  m_kmfit_proton_pion_p = p4_kmfit_proton_pion.rho();
+  m_kmfit_proton_pion_e = p4_kmfit_proton_pion.e();
+  m_kmfit_proton_pion_m = p4_kmfit_proton_pion.m();
 }
 
 
