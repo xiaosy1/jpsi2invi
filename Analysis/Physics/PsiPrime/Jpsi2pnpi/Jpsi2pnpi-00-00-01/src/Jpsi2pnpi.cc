@@ -341,6 +341,8 @@ const int PSI2S_PDG_ID = 100443;
 const int PROTON_PDG_ID = 2212; 
 const int NEUTRON_PDG_ID = 2112; 
 
+const int KMFIT_FLAG = 0;
+
 //
 // member functions
 //
@@ -1077,27 +1079,38 @@ bool Jpsi2pnpi::hasGoodProtonPiVertex(RecMdcKalTrack *pTrk,
 
 
   //*****  Kinematic Fit : 1C constraint *****//
-  KalmanKinematicFit * kmfit = KalmanKinematicFit::instance();
-  kmfit->init();
-  kmfit->AddTrack(0, wpi);
-  kmfit->AddTrack(1, wp);
-  kmfit->AddMissTrack(2,NEUTRON_MASS);
-  kmfit->AddFourMomentum(0, pcms );
-  if(!kmfit->Fit(0)) return false;
+  if( KMFIT_FLAG == 1)
+    {
+      KalmanKinematicFit * kmfit = KalmanKinematicFit::instance();
+      kmfit->init();
+      kmfit->AddTrack(0, wpi);
+      kmfit->AddTrack(1, wp);
+      kmfit->AddMissTrack(2,NEUTRON_MASS);
+      kmfit->AddFourMomentum(0, pcms );
+      if(!kmfit->Fit(0)) return false;
+      
+      double chi2 = kmfit->chisq(0);
+      m_kmfit_chi2 = chi2;
+      //std::cout <<  " fitting chi2 = " << chi2 << std::endl;
+      
+      HepLorentzVector p4_kmfit_pion = kmfit->pfit(0);
+      HepLorentzVector p4_kmfit_proton = kmfit->pfit(1);
+      HepLorentzVector p4_kmfit_neutron = kmfit->pfit(2);
+      
+      HepLorentzVector p4_kmfit_rec_proton_pion = pcms - p4_kmfit_proton - p4_kmfit_pion;
+      HepLorentzVector p4_kmfit_proton_pion = p4_kmfit_proton + p4_kmfit_pion;
 
-  double chi2 = kmfit->chisq(0);
-  m_kmfit_chi2 = chi2;
-  //std::cout <<  " fitting chi2 = " << chi2 << std::endl;
+      saveKmfitInfo(p4_kmfit_proton, p4_kmfit_pion, p4_kmfit_rec_proton_pion); 
+    }
+  else
+    {
+      HepLorentzVector p4_kmfit_pion(-99.0,-99.0,-99.0,-99.0);
+      HepLorentzVector p4_kmfit_proton(-99.0,-99.0,-99.0,-99.0);
+      HepLorentzVector p4_kmfit_proton(-99.0,-99.0,-99.0,-99.0);
 
-  HepLorentzVector p4_kmfit_pion = kmfit->pfit(0);
-  HepLorentzVector p4_kmfit_proton = kmfit->pfit(1);
-  HepLorentzVector p4_kmfit_neutron = kmfit->pfit(2);
+      saveKmfitInfo(p4_kmfit_proton, p4_kmfit_pion, p4_kmfit_rec_proton_pion); 
+    }
 
-  HepLorentzVector p4_kmfit_rec_proton_pion = pcms - p4_kmfit_proton - p4_kmfit_pion;
-  HepLorentzVector p4_kmfit_proton_pion = p4_kmfit_proton + p4_kmfit_pion;
-
-
-  saveKmfitInfo(p4_kmfit_proton, p4_kmfit_pion, p4_kmfit_rec_proton_pion); 
 
   return true;
 }
