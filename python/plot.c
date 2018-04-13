@@ -13,7 +13,7 @@ int make_fig(TH1F* h1, TH1F* h2, TH1F* h3, double hmax,
 
   gStyle->SetAxisColor(1);
 
-  
+  gStyle->SetCanvasColor(0);
   TCanvas *MyC_tmp = new TCanvas("MyC_tmp","",500,375);
   htmp_mc->SetMaximum(hmax);
   
@@ -185,7 +185,6 @@ int plot()
    // difference is only [3.03-3.17] (mrecpipi) <--> [3.04-3.16] (mrecpipi_org for past root files)
    // Need to change "h_mrecpipi" !! from next time. 
    hist_title_1  << "h_mrecpipi" ;  
-
    hist_title_2  << "h_mpipi" ;
    hist_title_3  << "h_pip_p" ;
    hist_title_4  << "h_pim_p" ;
