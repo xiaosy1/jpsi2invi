@@ -38,15 +38,16 @@ void roohistpdf()
 */
  //  signal_pdf_rootfile = "./rootfile/jpsi2lplm_data_psip_data09_merged_1.root" ;
    signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
-   jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_1.root" ;
-   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_1.root" ;
+   jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
+   //jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_n.root" ;
+   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_invi.root" ;
   
    // 2. Select Fiiting Set
    int hist_id;  // hist_id = 1 (J/psi->inclusive), 2 (J/psi->invisible)
-   hist_id = 1;
+   hist_id = 2;
 
    int Fitting_Method; // Fitting_Method = 1 (Unbinned), or 2 (Binned) . %% For Jpsi->inclusive, only "Binned" can be used because of huge data size. 
-   Fitting_Method=2;
+   Fitting_Method=1;
    
    // 3. Output files for the fitting result
    std::string table, figname;
@@ -121,7 +122,7 @@ void roohistpdf()
     
     if(hist_id==1){  // For Jpsi2Incl
       RooRealVar nsig("nsig","signal fraction",1000000, 0.0, 100000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",1000000, 0.0, 1000000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",10000000, 0.0, 10000000000.0); 
     }
     
     if(hist_id==2){ // For Jpsi2Invi
@@ -144,6 +145,7 @@ void roohistpdf()
     
     RooPlot* xframe;
     RooFitResult* result;
+    gStyle->SetCanvasColor(0);
     if(Fitting_Method==1)
     {
        TTree* tree = (TTree*) gDirectory->Get("signal");
@@ -165,15 +167,49 @@ void roohistpdf()
        xframe->Draw(); 
        xframe->GetXaxis()->CenterTitle();
        xframe->GetYaxis()->CenterTitle();
+       xframe->GetYaxis()->SetTitle("Events / ( 0.001 GeV/c^{2} )");
+       xframe->GetXaxis()->SetTitle("M(recoil(#pi^{+}#pi^{-})) (GeV/c^{2})");
+
+       xframe->GetXaxis()->SetNdivisions(505);
+       xframe->GetYaxis()->SetNdivisions(505);
+
+       xframe->GetXaxis()->SetTitleFont(132);
+       xframe->GetYaxis()->SetTitleFont(132);
+       xframe->GetXaxis()->SetLabelFont(132);
+       xframe->GetYaxis()->SetLabelFont(132);
+       xframe->GetXaxis()->SetTitleOffset(1.2);
+       //htmp_mc->GetYaxis()->SetTitleOffset(1.6);
+       xframe->GetYaxis()->SetTitleOffset(1.1);
+
+       xframe->GetXaxis()->SetTitleSize(0.065);
+       xframe->GetYaxis()->SetTitleSize(0.065);
+       xframe->GetXaxis()->SetLabelOffset(0.02);
+       xframe->GetYaxis()->SetLabelOffset(0.02);
+  
+       xframe->GetXaxis()->SetLabelSize(0.05);
+       xframe->GetYaxis()->SetLabelSize(0.05);
+
+       TGaxis::SetMaxDigits(3);
+       gPad->SetTicks(1,1);
+  
+	 //  gPad->SetCanvasColor(0);
+       gPad->SetBottomMargin(0.17);
+       gPad->SetLeftMargin(0.16);
+
+       xframe->SetName("");
+       xframe->SetTitle("");
+       xframe->SetName("");
+       xframe->SetTitle("");
     }
 
     if(Fitting_Method==2)
     {
        std::stringstream hist_title_2;
-       hist_title_2  << "h_mrecpipi" ;
+       hist_title_2  << "h_mrecpipi_fit" ;
        TH1F* histo = dynamic_cast<TH1F*>(gDirectory->Get(hist_title_2.str().c_str()));
 
-       histo->Rebin(1);
+       histo->Rebin(10);    //1MeV
+       //histo->Rebin(2);  //0.2MeV
 
        RooDataHist *data = new RooDataHist("data2","data2", x, histo); 
 
@@ -192,6 +228,7 @@ void roohistpdf()
        xframe->GetYaxis()->CenterTitle();
        
        xframe->GetYaxis()->SetTitle("Events / ( 0.001 GeV/c^{2} )");
+       //xframe->GetYaxis()->SetTitle("Events / ( 0.0002 GeV/c^{2} )");
        xframe->GetXaxis()->SetTitle("M(recoil(#pi^{+}#pi^{-})) (GeV/c^{2})");
 
        xframe->GetXaxis()->SetNdivisions(505);

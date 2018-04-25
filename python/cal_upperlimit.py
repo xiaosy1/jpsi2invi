@@ -3,21 +3,24 @@ import sys
 import ROOT
 import math
 
+# for data 2009
+#x0 = -7.55/10000.0
+#sigma = 33.6/10000.0
 
-x0 = -7.55/10000.0
-sigma = 33.6/10000.0
+# for data 2012
+x0 = -215.14/10000.0
+sigma = 34.58/10000.0
 
-#x0 = -2.66/1000.0
-#sigma = 3/1000.0
+mu_t=[0]*130000
+Prob=[0]*130000
 
-mu_t=[0]*30000
-Prob=[0]*30000
-
-h_gaus = ROOT.TH1F('hgaus', 'hgaus', 23000, -0.006, 0.017)
-
+# h_gaus = ROOT.TH1F('hgaus', 'hgaus', 23000, -0.006, 0.017)
+h_gaus = ROOT.TH1F('hgaus', 'hgaus', 25000, -0.023, 0.002)
 sum = 0.0
-for i in range(0, 23000):
-	mu_t[i] = (-6.0+i*0.001)/1000.0
+# for i in range(0, 23000):
+for i in range(0, 25000):
+	# mu_t[i] = (-6.0+i*0.001)/1000.0
+	mu_t[i] = (-23.0+i*0.001)/1000.0
 	c1 = 1/math.sqrt(2*3.141592653858*sigma*sigma)
 	Prob[i] = c1*math.exp(-(x0-mu_t[i])*(x0-mu_t[i])/2/sigma/sigma)
 	h_gaus.SetBinContent(i+1, Prob[i])
@@ -36,7 +39,8 @@ ratio = 0.90
 tmp_sum = 0.0
 hmax = 0.0
 
-for j in range(0, 23000):
+# for j in range(0, 23000):
+for j in range(0, 25000):
 	if Prob[j] > hmax:
 		hmax = Prob[j]
 			
@@ -60,8 +64,10 @@ ROOT.gPad.SetLeftMargin(0.12)
 ROOT.gPad.SetBottomMargin(0.17)
 ROOT.gPad.GetFrame().SetBorderMode(0)
 
-h_gaus_shaded = ROOT.TH1F('hgaus_shaded', 'hgaus_shaded', 23000, -0.006, 0.017)
-for i in range(0, 23000):
+# h_gaus_shaded = ROOT.TH1F('hgaus_shaded', 'hgaus_shaded', 23000, -0.006, 0.017)
+h_gaus_shaded = ROOT.TH1F('hgaus_shaded', 'hgaus_shaded', 25000, -0.023, 0.002)
+# for i in range(0, 23000):
+for i in range(0, 25000):
 	if mu_t[i]>=0.0 and CL_mu>mu_t[i]:
 		h_gaus_shaded.SetBinContent(i+1, Prob[i])
 	else:
