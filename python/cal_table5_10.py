@@ -9,17 +9,17 @@ __created__ = "[2018-02-01 Thu 17:21]"
 
 import math
 
-n_anything = 57795500.0
-n_anything_err = 8874.0
+n_anything = 57901400.0
+n_anything_err = 8872.31
 #n_anything = 18658100.0
 #n_anything_err = 5000
 n_anything_09 = 18658100.0
 
 n_invisible = 397611.0
-n_invisible_err = 684.0
+n_invisible_err = 683.748
 n_invisible_09 = 137770.0
 
-n_other = 16163.0
+n_other = 13779.0
 n_other_09 = 3877.0
 
 n_total_2B_09 = 134586.0
@@ -44,18 +44,29 @@ eff_pp = 2.64
 #eff_pp = 2.54
 eff_2b_err = 0.02
 
-eff_trigger = 99.4
-eff_trigger_err = 0.1
+#eff_trigger = 99.4
+#eff_trigger_err = 0.1
+eff_trigger = 99.8
+eff_trigger_err = 0.04
 
 n_mumu_09 = 65558.0
 n_ee_09 = 65668.0
 n_nn_09 = 2361.0
 n_pp_09 = 999.0
 
-stat_err = 0.03
-fit_err = 0.44
+#stat_err = 0.03
+#fit_err = 0.44
+#n_gam_err = 1.90
+#trig_err = 0.12
+#mumu_shower_err = 0.5
+#ee_shower_err = 0.6
+#nn_shower_err = 41.5
+#pp_shower_err = 1.3
+
+stat_err = 0.02
+fit_err = 0.46
 n_gam_err = 1.90
-trig_err = 0.12
+trig_err = 0.04
 mumu_shower_err = 0.5
 ee_shower_err = 0.6
 nn_shower_err = 41.5
@@ -87,10 +98,10 @@ print "MC_err \t\t= \t%.3f \t%.3f \t%.3f \t%.3f" %(eff_2b_err/eff_mumu*100, eff_
 print "shower_err \t= \t%.1f \t%.1f \t%.1f \t%.1f" %(mumu_shower_err, ee_shower_err, nn_shower_err, pp_shower_err)
 
 print "\nItems",      "\t\tBF(%)", "\t\teff_2B(%)", "\teff_trig(%)", "\tNumber", "\t\t\tNumber_09", "\tratio_12/09"
-print "jpsi->mumu", "\t%.3f+-%.3f"%(b_mumu, b_mumu_err), "\t%.2f+-%.2f"%(eff_mumu, eff_2b_err), "\t%.1f+-%.1f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_mumu, n_mumu_err), "\t%d"%n_mumu_09, "\t\t%.3f"%(n_mumu/n_mumu_09)
-print "jpsi->ee", "\t%.3f+-%.3f"%(b_ee, b_ee_err), "\t%.2f+-%.2f"%(eff_ee, eff_2b_err), "\t%.1f+-%.1f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_ee, n_ee_err), "\t%d"%n_ee_09, "\t\t%.3f"%(n_ee/n_ee_09)
-print "jpsi->nn", "\t%.3f+-%.3f"%(b_nn, b_nn_err), "\t%.2f+-%.2f"%(eff_nn, eff_2b_err), "\t%.1f+-%.1f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_nn, n_nn_err), "\t%d"%n_nn_09, "\t\t%.3f"%(n_nn/n_nn_09)
-print "jpsi->pp", "\t%.3f+-%.3f"%(b_pp, b_pp_err), "\t%.2f+-%.2f"%(eff_pp, eff_2b_err), "\t%.1f+-%.1f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_pp, n_pp_err), "\t\t%d"%n_pp_09, "\t\t%.3f"%(n_pp/n_pp_09)
+print "jpsi->mumu", "\t%.3f+-%.3f"%(b_mumu, b_mumu_err), "\t%.2f+-%.2f"%(eff_mumu, eff_2b_err), "\t%.1f+-%.2f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_mumu, n_mumu_err), "\t%d"%n_mumu_09, "\t\t%.3f"%(n_mumu/n_mumu_09)
+print "jpsi->ee", "\t%.3f+-%.3f"%(b_ee, b_ee_err), "\t%.2f+-%.2f"%(eff_ee, eff_2b_err), "\t%.1f+-%.2f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_ee, n_ee_err), "\t%d"%n_ee_09, "\t\t%.3f"%(n_ee/n_ee_09)
+print "jpsi->nn", "\t%.3f+-%.3f"%(b_nn, b_nn_err), "\t%.2f+-%.2f"%(eff_nn, eff_2b_err), "\t%.1f+-%.2f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_nn, n_nn_err), "\t%d"%n_nn_09, "\t\t%.3f"%(n_nn/n_nn_09)
+print "jpsi->pp", "\t%.3f+-%.3f"%(b_pp, b_pp_err), "\t%.2f+-%.2f"%(eff_pp, eff_2b_err), "\t%.1f+-%.2f"%(eff_trigger, eff_trigger_err), "\t%.2f+-%.2f"%(n_pp, n_pp_err), "\t\t%d"%n_pp_09, "\t\t%.3f"%(n_pp/n_pp_09)
 
 n_total_2B = n_mumu + n_ee + n_nn + n_pp
 n_total_2B_err = math.sqrt((n_mumu + n_ee + n_nn + n_pp)**2 * (stat_err**2 + fit_err**2 + n_gam_err**2 + trig_err**2) + n_mumu**2 * ((b_mumu_err/b_mumu)**2 + (eff_2b_err/eff_mumu)**2 + mumu_shower_err**2) + n_ee**2 * ((b_ee_err/b_ee)**2 + (eff_2b_err/eff_ee)**2 + ee_shower_err**2) + n_nn**2 * ((b_nn_err/b_nn)**2 + (eff_2b_err/eff_nn)**2 + nn_shower_err**2) + n_pp**2 * ((b_pp_err/b_pp)**2 + (eff_2b_err/eff_pp)**2 + pp_shower_err**2) ) /100

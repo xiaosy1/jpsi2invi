@@ -171,9 +171,10 @@ case $option in
         ;;
 
     0.1.8) echo "Submit selection Condor jobs on data ---- 2..." 
-	    cd run/jpsi2invi/job_text/Data12
+	    cd run/jpsi2invi/job_text/Data12_event
         find . -name "*.out.*" | xargs rm
-        find . -name "*.err.*" | xargs rm	   
+        find . -name "*.err.*" | xargs rm	  
+	    rm ../../event/jpsi2invi_data_psip_data12_event-*	
 	    hep_sub -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12_event-%{ProcId}.sh
 	    cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
@@ -184,12 +185,13 @@ case $option in
 
     0.1.10) echo  "Merge event root file on data..."
 	   mkdir run/jpsi2invi/hist
+	   rm jpsi2invi_data_psip_data12_event_merged_1.root
 	   ./python/mrg_rootfiles.py  run/jpsi2invi/event run/jpsi2invi/hist
 	   ;; 
 
     0.1.11) echo  "Plot summary with data..."
 	   ./python/plt_summary.py hist 
-	   ；；
+	   ;;
 
     0.2) echo "Running on con3650 data..."
 	 ;;
@@ -319,6 +321,7 @@ case $option in
 	   mkdir run/jpsi2incl/event
 	   mkdir run/jpsi2incl/job_text/Data12_event
 	   cd run/jpsi2incl/gen_script
+	   rm ../job_text/Data12_event/jobOptions_jpsi2incl_data_psip_data12_event-*
 	   ./make_jobOption_file_Data12_event.sh
 	   cd ../job_text/Data12_event
 	   mv jobOptions_jpsi2incl_data_psip_data12_event-633.sh jobOptions_jpsi2incl_data_psip_data12_event-0.sh
@@ -336,6 +339,7 @@ case $option in
 	    cd run/jpsi2incl/job_text/Data12_event
         find . -name "*.out.*" | xargs rm
         find . -name "*.err.*" | xargs rm	   
+		rm ../../event/jpsi2incl_data_psip_data12_event-*
 	    hep_sub -g physics -n 633 jobOptions_jpsi2incl_data_psip_data12_event-%{ProcId}.sh
 	    cd 
 	    cd bes/jpsi2invi/v0.1
@@ -347,6 +351,7 @@ case $option in
 
     0.3.10) echo  "Merge event root file on data for incl..."
 	   mkdir run/jpsi2incl/hist
+	   rm run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_1.root
 	   ./python/mrg_rootfiles.py  run/jpsi2incl/event run/jpsi2incl/hist
 	   ;; 
 
