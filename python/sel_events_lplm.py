@@ -39,6 +39,7 @@ h_evtflw.GetXaxis().SetBinLabel(10, '0.45<|p_{lm}|<2.0')
 
 
 h_mrecpipi_el = ROOT.TH1D('h_mrecpipi_el', 'mrecpipi_el', 100, 3.04, 3.16)
+#h_mrecpipi_el_fit = ROOT.TH1D('h_mrecpipi_el_fit', 'mrecpipi_el_fit', 7000, 3.03, 3.17)
 h_mrecpipi_el_fit = ROOT.TH1D('h_mrecpipi_el_fit', 'mrecpipi_el_fit', 400, 3.00, 3.20)
 h_mpipi_el = ROOT.TH1D('h_mpipi_el', 'mpipi_el', 100, 0.2, 0.7) 
 h_pip_p_el = ROOT.TH1D('h_pip_p_el', 'pip_p_el', 100, 0.0, 0.5) 
