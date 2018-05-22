@@ -15,6 +15,7 @@ import ROOT
 from progressbar import Bar, Percentage, ProgressBar
 from time import time 
 from tools import duration, check_outfile_path
+from array import array
 
 #TEST=True 
 TEST=False
@@ -54,7 +55,7 @@ h_pip_costhe = ROOT.TH1D('h_pip_costhe', 'pip_costhe', 100, -1.0, 1.0)
 h_pim_costhe = ROOT.TH1D('h_pim_costhe', 'pim_costhe', 100, -1.0, 1.0)
 h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 200, -1.0, 1.0)
 h_cos2pisys = ROOT.TH1D('h_cos2pisys', 'cos2pisys', 100, -1.0, 1.0)
-h_ngam = ROOT.TH1D('h_ngam', 'ngam', 100, 0, 20)
+h_ncharged = ROOT.TH1D('h_ncharged', 'ncharged', 100, 0, 20)
 
 ROOT.gROOT.ProcessLine(
 "struct MyTreeStruct{\
@@ -94,6 +95,7 @@ def main():
     fin = ROOT.TFile(infile)
     t = fin.Get('tree')
     entries = t.GetEntriesFast()
+
 
     pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=entries).start()
     time_start = time()
@@ -217,12 +219,37 @@ def fill_histograms_all_combination(t):
             cut_cospipi                   and cut_pi_PID and cut_mjpsi_sig):
             h_cos2pisys.Fill(t.vtx_cos2pisys[loop])
 
-       # if (             cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
-        #    cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
-         #   h_ngam.Fill(t.ngam)
+#        if (             cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
+#            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+#            h_ngam.Fill(t.ngam)
 
+        
+        # if (t.run<0):
+            
+        #     fout = ROOT.TFile(outfile, "RECREATE")
+        #     t_out = ROOT.TTree('signal', 'signal')
+        #     n_run = array('i',[0])
+        #     n_event = array('i',[0])
+        #     n_indexmc = array('i',[0])
+        #     t_out.Branch('run', n_run, 'run/I')
+        #     t_out.Branch('event', n_event, 'event/I')
+        #     t_out.Branch('indexmc', n_indexmc, 'indexmc/I')
+        #     n_pdgid = array('i',100*[-99])
+        #     n_motheridx = array('i',100*[-99])
+        #     t_out.Branch('pdgid', n_pdgid, 'pdgid[100]/I')
+        #     t_out.Branch('motheridx', n_motheridx, 'motheridx[100]/I')
+
+        #     n_run[0] = t.run
+        #     n_event[0] = t.event
+        #     n_indexmc[0] = t.indexmc
+        #     for ii in range(t.m_indexmc):
+        #         n_pdgid[ii] = t.m_pdgid[ii]
+        #         n_motheridx[ii] = t.m_motheridx[ii]
+
+        #     t_out.Fill()
     
 def write_histograms():
+    # t_out.Write()
     h_evtflw.Write()
     h_mrecpipi.Write()
     h_mrecpipi_fit.Write()
@@ -234,7 +261,7 @@ def write_histograms():
     h_pim_costhe.Write()
     h_cospipi.Write()
     h_cos2pisys.Write()
-    h_ngam.Write()
+    h_ncharged.Write()
 
     
 def select_jpsi_to_invisible(t):

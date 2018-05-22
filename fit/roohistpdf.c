@@ -15,6 +15,8 @@
 #include "TAxis.h"
 #include "TH1.h"
 #include "TH2.h"
+#include "RooPlot.h"
+#include "RooHist.h"
 
 #include <fstream>
 #include <string>
@@ -31,17 +33,19 @@ void roohistpdf()
    std::string signal_pdf_rootfile;
    std::string jpsi2incl_rootfile;
    std::string jpsi2invi_rootfile;
-/*
-   signal_pdf_rootfile = "./rootfile/jpsi2lplm_data_psip_data09_merged_1.root" ;
-   jpsi2incl_rootfile =    "./rootfile/jpsi2incl_data_psip_data09_merged_1.root" ;
-   jpsi2invi_rootfile =    "./rootfile/jpsi2invi_data_psip_data09_merged_1.root" ;
-*/
- //  signal_pdf_rootfile = "./rootfile/jpsi2lplm_data_psip_data09_merged_1.root" ;
+   
+//	TCanvas* c = new TCanvas("","",900,300);
+//	c->Divide(3);
+    
+
    signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
-   jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
-   //jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_n.root" ;
-   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_invi.root" ;
+   jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_1.root" ;
+   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_1.root" ;
   
+//   signal_pdf_rootfile =   "../RooFit/rootfile/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
+//   jpsi2incl_rootfile =    "../RooFit/rootfile/jpsi2incl_data_psip_data12_merged_1.root" ;
+//   jpsi2invi_rootfile =    "../RooFit/rootfile/jpsi2invi_data_psip_data12_merged_1.root" ;
+
    // 2. Select Fiiting Set
    int hist_id;  // hist_id = 1 (J/psi->inclusive), 2 (J/psi->invisible)
    hist_id = 2;
@@ -79,12 +83,13 @@ void roohistpdf()
      TFile *f1 = new TFile(signal_pdf_rootfile.c_str());
 
     std::stringstream hist_title;
-   // hist_title << "h_mrecpipi_el" ;
     hist_title << "h_mrecpipi_el_fit" ;
     
     TH1F* histll = dynamic_cast<TH1F*>(gDirectory->Get(hist_title.str().c_str()));
     
     RooRealVar x("vtx_mrecpipi","M(recoil(#pi^{+}#pi^{-}))",3.03,3.17) ;
+    //RooRealVar x("vtx_mrecpipi","M(recoil(#pi^{+}#pi^{-}))",3.02,3.18) ;
+    //RooRealVar x("vtx_mrecpipi","M(recoil(#pi^{+}#pi^{-}))",3.04,3.16) ;
     
     RooDataHist *data1 = new RooDataHist("data","data", x, histll); 
     
@@ -117,17 +122,17 @@ void roohistpdf()
     RooChebychev bkg("bkg","background p.d.f.", x, RooArgList(c0,c1)); 
     
     // 3rd order polynomial function
-    //RooRealVar c2("c2","coefficient #2",-0.1,-1.,1.) ; 
+   // RooRealVar c2("c2","coefficient #2",-0.1,-1.,1.) ; 
     //RooChebychev bkg("bkg","background p.d.f.",x,RooArgList(c0,c1,c2)) ; 
     
     if(hist_id==1){  // For Jpsi2Incl
-      RooRealVar nsig("nsig","signal fraction",1000000, 0.0, 100000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",10000000, 0.0, 10000000000.0); 
+      RooRealVar nsig("nsig","signal fraction",1000000, 0.0, 1000000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",100000, 0.0, 200000000.0); 
     }
     
     if(hist_id==2){ // For Jpsi2Invi
-      RooRealVar nsig("nsig","signal fraction",10000, 0.0, 1000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",10000, 0.0, 1000000.0); 
+      RooRealVar nsig("nsig","signal fraction",1000000, 0.0, 1000000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",100000, 0.0, 20000000.0); 
     }
       
     RooAddPdf model("model", "model", RooArgList(signalpdf,bkg), RooArgList(nsig, nbkg));
@@ -151,9 +156,9 @@ void roohistpdf()
        TTree* tree = (TTree*) gDirectory->Get("signal");
 
        RooRealVar xtree("vtx_mrecpipi","M(recoil(#pi^{+}#pi^{-}))",3.03,3.17) ;
-		cout<<"1"<<endl;
+       //RooRealVar xtree("vtx_mrecpipi","M(recoil(#pi^{+}#pi^{-}))",3.02,3.18) ;
+       //RooRealVar xtree("vtx_mrecpipi","M(recoil(#pi^{+}#pi^{-}))",3.04,3.16) ;
        RooDataSet data_tree("data", "data J/psi->invisible", tree, xtree);
-		cout<<"2"<<endl;
 
        //model.fitTo(data_tree);
        result = model.fitTo(data_tree, Save(kTRUE));
@@ -161,10 +166,14 @@ void roohistpdf()
        //RooPlot* xframe = xtree.frame();
        xframe = xtree.frame();
        data_tree.plotOn(xframe, Binning(140)); 
+       //data_tree.plotOn(xframe, Binning(160)); 
+       //data_tree.plotOn(xframe, Binning(120)); 
        model.plotOn(xframe); 
        //model.plotOn(xframe, Components(sig), LineStyle(kDotted), LineColor(kRed)); 
        model.plotOn(xframe, Components(bkg), LineStyle(kDashed), LineColor(kGreen)); 
-       xframe->Draw(); 
+      //  c->cd(1);
+      //  gPad->SetLogy();
+	     xframe->Draw(); 
        xframe->GetXaxis()->CenterTitle();
        xframe->GetYaxis()->CenterTitle();
        xframe->GetYaxis()->SetTitle("Events / ( 0.001 GeV/c^{2} )");
@@ -205,10 +214,11 @@ void roohistpdf()
     if(Fitting_Method==2)
     {
        std::stringstream hist_title_2;
+       //hist_title_2  << "h_mrecpipi" ;
        hist_title_2  << "h_mrecpipi_fit" ;
        TH1F* histo = dynamic_cast<TH1F*>(gDirectory->Get(hist_title_2.str().c_str()));
 
-       histo->Rebin(10);    //1MeV
+       histo->Rebin(7);    //1MeV
        //histo->Rebin(2);  //0.2MeV
 
        RooDataHist *data = new RooDataHist("data2","data2", x, histo); 
@@ -223,7 +233,9 @@ void roohistpdf()
  
        //model.plotOn(xframe, Components(signalpdf), LineStyle(kDotted), LineColor(kRed)); 
        model.plotOn(xframe, Components(bkg), LineStyle(kDashed), LineColor(kGreen)); 
-       xframe->Draw(); 
+  //     c->cd(1);
+  //     gPad->SetLogy();
+	   xframe->Draw(); 
        xframe->GetXaxis()->CenterTitle();
        xframe->GetYaxis()->CenterTitle();
        
@@ -275,19 +287,30 @@ void roohistpdf()
 
     std::cout<<"chi2/"<<result->floatParsFinal().getSize()<<" ="<<xframe->chiSquare("model_Norm[vtx_mrecpipi]", "h_data2" ,result->floatParsFinal().getSize())<<std::endl;
 
+	// RooHist* hresid = xframe->residHist();
+	// RooHist* hpull = xframe->pullHist();
+	// RooPlot* frame2 = x.frame(Title("Residual Distribution"));
+	// frame2->addPlotable(hresid, "P");
+	// c->cd(2); frame2->Draw();
+  //   gPad->SetLogy();
+	// RooPlot* frame3 = x.frame(Title("Pull Distribution"));
+	// frame3->addPlotable(hpull,"P");
+	// frame3->SetMarkerSize(0.1);
+	// c->cd(3); frame3->Draw();
     gPad->SetLogy();
-    
+
     if(hist_id==1){ // For Jpsi2Incl
-      xframe->SetMaximum(65000000);
+      xframe->SetMaximum(40000000);
       xframe->SetMinimum(100000);
     }
     
     if(hist_id==2){ //For Jpsi2Invi
-      xframe->SetMaximum(800000);
-      xframe->SetMinimum(100);
+      xframe->SetMaximum(4000000);
+      xframe->SetMinimum(10);
     }
     
     // Print to eps file
+    // c->Print(figname.c_str());
     gPad->Print(figname.c_str());
   }
 

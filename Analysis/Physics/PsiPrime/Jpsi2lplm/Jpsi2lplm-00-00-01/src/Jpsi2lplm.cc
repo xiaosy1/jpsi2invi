@@ -386,7 +386,8 @@ Jpsi2lplm::Jpsi2lplm(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("Ecms", m_ecms = 3.686);
   declareProperty("Vr0cut", m_vr0cut=1.0);
   declareProperty("Vz0cut", m_vz0cut=10.0);
-  declareProperty("ChaCosthetaCut", m_cha_costheta_cut=0.93);
+  //declareProperty("ChaCosthetaCut", m_cha_costheta_cut=0.93);
+  declareProperty("ChaCosthetaCut", m_cha_costheta_cut=0.83);
   declareProperty("TotalNumberOfChargedMax", m_total_number_of_charged_max=50);
   declareProperty("MinEstCut", m_min_emctime=0.0);
   declareProperty("MaxEstCut", m_max_emctime=14.0);
@@ -396,6 +397,7 @@ Jpsi2lplm::Jpsi2lplm(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("CosthetaEndcapMax", m_costheta_endcap_max=0.92);
   declareProperty("EnergyBarrelMin", m_energy_barrel_min=0.025); 
   declareProperty("EnergyEndcapMin", m_energy_endcap_min=0.050); 
+  //declareProperty("EnergyEndcapMin", m_energy_endcap_min=50.0); 
   declareProperty("PhotonIsoAngleMin", m_photon_iso_angle_min=10);
   declareProperty("LeptonMomentumMax", m_lepton_momentum_min=0.6); 
   declareProperty("LeptonMomentumMin", m_lepton_momentum_max=2.5); 

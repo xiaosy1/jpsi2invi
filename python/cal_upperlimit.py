@@ -9,7 +9,7 @@ import math
 
 # for data 2012
 x0 = -215.14/10000.0
-sigma = 34.58/10000.0
+sigma = 34.44/10000.0
 
 mu_t=[0]*130000
 Prob=[0]*130000
@@ -22,7 +22,8 @@ for i in range(0, 25000):
 	# mu_t[i] = (-6.0+i*0.001)/1000.0
 	mu_t[i] = (-23.0+i*0.001)/1000.0
 	c1 = 1/math.sqrt(2*3.141592653858*sigma*sigma)
-	Prob[i] = c1*math.exp(-(x0-mu_t[i])*(x0-mu_t[i])/2/sigma/sigma)
+	#Prob[i] = c1*math.exp(-(x0-mu_t[i])*(x0-mu_t[i])/2/sigma/sigma)
+	Prob[i] = c1*math.exp(-(x0-mu_t[i])*(x0-mu_t[i])/2/sigma/sigma)*pow(10.0, 5.0)
 	h_gaus.SetBinContent(i+1, Prob[i])
 	
 	if (mu_t[i]>0.0) :
@@ -30,7 +31,9 @@ for i in range(0, 25000):
 
 ROOT.gStyle.SetCanvasColor(0)
 c = ROOT.TCanvas("c","",800,600)
+c.SetLogy()
 c.cd()
+h_gaus.GetYaxis().SetRangeUser(0.0001, 100000000)
 h_gaus.Draw()
 
 c.SetTicks(1,1)
@@ -95,6 +98,7 @@ h_gaus.GetXaxis().SetLabelSize(0.05)
 h_gaus.GetYaxis().SetLabelSize(0.05)
 h_gaus.GetXaxis().SetTitle("Br(J/#psi#rightarrow invisible)/Br(J/#psi#rightarrow#mu^{+}#mu^{-    })")
 h_gaus.GetYaxis().SetTitle("Likelihood(in arbitrary unit)")
+#h_gaus.GetYaxis().SetLabel("*10^{5}")
 h_gaus.GetXaxis().CenterTitle()
 h_gaus.GetYaxis().CenterTitle()
 h_gaus.GetYaxis().SetNdivisions(505)
