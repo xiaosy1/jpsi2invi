@@ -8,7 +8,7 @@ import math
 #sigma = 33.6/10000.0
 
 # for data 2012
-x0 = -215.14/10000.0
+x0 = -219.72/10000.0
 sigma = 34.44/10000.0
 
 mu_t=[0]*130000
@@ -31,9 +31,9 @@ for i in range(0, 25000):
 
 ROOT.gStyle.SetCanvasColor(0)
 c = ROOT.TCanvas("c","",800,600)
-c.SetLogy()
+#c.SetLogy()
 c.cd()
-h_gaus.GetYaxis().SetRangeUser(0.0001, 100000000)
+#h_gaus.GetYaxis().SetRangeUser(0.0001, 100000000)
 h_gaus.Draw()
 
 c.SetTicks(1,1)
@@ -63,7 +63,8 @@ print CL_mu
 t1 = ROOT.TLine(CL_mu, 0, CL_mu, hmax*1.05)
 t1.Draw()
 
-ROOT.gPad.SetLeftMargin(0.12)
+#ROOT.gPad.SetLeftMargin(0.12)
+ROOT.gPad.SetLeftMargin(0.2)
 ROOT.gPad.SetBottomMargin(0.17)
 ROOT.gPad.GetFrame().SetBorderMode(0)
 

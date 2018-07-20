@@ -176,7 +176,7 @@ void roohistpdf()
 	     xframe->Draw(); 
        xframe->GetXaxis()->CenterTitle();
        xframe->GetYaxis()->CenterTitle();
-       xframe->GetYaxis()->SetTitle("Events / ( 0.001 GeV/c^{2} )");
+       xframe->GetYaxis()->SetTitle("Events / ( 0.01 GeV/c^{2} )");
        xframe->GetXaxis()->SetTitle("M(recoil(#pi^{+}#pi^{-})) (GeV/c^{2})");
 
        xframe->GetXaxis()->SetNdivisions(505);
@@ -239,7 +239,7 @@ void roohistpdf()
        xframe->GetXaxis()->CenterTitle();
        xframe->GetYaxis()->CenterTitle();
        
-       xframe->GetYaxis()->SetTitle("Events / ( 0.001 GeV/c^{2} )");
+       xframe->GetYaxis()->SetTitle("Events / ( 0.01 GeV/c^{2} )");
        //xframe->GetYaxis()->SetTitle("Events / ( 0.0002 GeV/c^{2} )");
        xframe->GetXaxis()->SetTitle("M(recoil(#pi^{+}#pi^{-})) (GeV/c^{2})");
 
