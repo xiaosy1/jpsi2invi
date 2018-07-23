@@ -25,24 +25,33 @@ mbc.SetBottomMargin(0.15)
 # mbc.SetLogx()
 
 
-histo = 'h_ngam'
+# histo = 'h_ngam'
+histo = 'h_ncharged'
+
 # xmin = 0.0
 # xmax = 2.5
 
-f0 = TFile('run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_93.root')
-f1 = TFile('run/jpsi2invi/hist_mc12/jpsi2invi_psip_mc12_event_merged_93.root')
-f2 = TFile('run/jpsi2invi/hist_data3650/jpsi2invi_data3650_event_merged_93.root')
+# f0 = TFile('run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_93.root')
+# f1 = TFile('run/jpsi2invi/hist_mc12/jpsi2invi_psip_mc12_event_merged_93.root')
+# f2 = TFile('run/jpsi2invi/hist_data3650/jpsi2invi_data3650_event_merged_93.root')
+
+f0 = TFile('run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_1.root')
+f1 = TFile('run/jpsi2incl/hist_mc12/jpsi2incl_psip_mc12_event_merged_1.root')
+f2 = TFile('run/jpsi2incl/hist_data3650/jpsi2incl_data3650_event_merged_1.root')
+
 
 h0_E = f0.Get(histo)
 h1_E = f1.Get(histo)
 h2_E = f2.Get(histo)
 
-#h1_E.Scale(341.0/400.0)
-a = (422149.0 - 6516.0 * 11.33)/530403.0
+# h1_E.Scale(341.0/400.0)
+
+# a = (422149.0 - 6516.0 * 7.866)/530403.0
+a = (49088989.0 - 97673.0 * 7.866)/54497972.0
 h1_E.Scale( a )
-h2_E.Scale(11.33)
 print 'h1_E.Scale = %.5f' % a
 
+h2_E.Scale(7.866)
 hs = THStack('hs', '')
 
 #h0_E.GetYaxis().SetRangeUser(0, 600000)
@@ -60,10 +69,9 @@ h0_E.SetMarkerStyle(20)
 h0_E.SetMarkerSize(0.55)
 
 # h4_E.GetYaxis().SetTitle(ytitle)
-h1_E.GetYaxis().SetTitleOffset(1.5)
+hs.GetYaxis().SetTitleOffset(1.5)
 
-legend = TLegend(0.55, 0.68, 0.77, 0.87)
-# legend = TLegend(0.62, 0.68, 0.84, 0.87)
+legend = TLegend(0.55, 0.68, 0.84, 0.87)
 # legend = TLegend(0.18, 0.68, 0.48, 0.87)
 legend.AddEntry(h0_E,'Data')
 legend.AddEntry(h1_E,'Inclusive MC')
@@ -73,6 +81,9 @@ legend.SetBorderSize(0)
 legend.SetFillColor(0)
 legend.Draw()
 
-h1_E.GetXaxis().SetTitle("N_{#gamma}")
-mbc.SaveAs("python/plots/ngam_93.pdf")
+# hs.GetXaxis().SetTitle("N_{#gamma}")
+# mbc.SaveAs("python/plots/ngam_93.pdf")
+
+hs.GetXaxis().SetTitle("N_{charged}")
+mbc.SaveAs("python/plots/ncharged.pdf")
 

@@ -64,6 +64,18 @@ usage() {
     printf "\n\t%-9s  %-40s"  "0.4.11"    "Plot summary with data for lplm"
 
     printf "\n\t%-9s  %-40s"  ""         ""
+    printf "\n\t%-9s  %-40s"  "0.7"      "[run con3650 data for jpsi2incl]" 
+    printf "\n\t%-9s  %-40s"  "0.7.2"    "Generate Condor jobs on con3650 data for incl ---- 1"
+    printf "\n\t%-9s  %-40s"  "0.7.3"    "Test for con3650 data for incl"
+    printf "\n\t%-9s  %-40s"  "0.7.4"    "Submit Condor jobs on con3650 data for incl ---- 2"
+    printf "\n\t%-9s  %-40s"  "0.7.5"    "Check Condor jobs on con3650 data for incl"
+    printf "\n\t%-9s  %-40s"  "0.7.6"    "Generate Selection Condor jobs on con3650 data for incl ---- 1."
+    printf "\n\t%-9s  %-40s"  "0.7.7"    "Test for con3650 data event for incl"
+    printf "\n\t%-9s  %-40s"  "0.7.8"    "Submit selection Condor jobs on con3650 data for incl ---- 2"
+    printf "\n\t%-9s  %-40s"  "0.7.9"    "Check Condor jobs on events con3650 data for incl"
+	printf "\n\t%-9s  %-40s"  "0.7.10"    "Merge event root file on con3650 data for incl" 
+
+    printf "\n\t%-9s  %-40s"  ""         ""
     printf "\n\t%-9s  %-40s"  "1.1"      "[run on MC sample]"
     printf "\n\t%-9s  %-40s"  "1.1.1"    "Split psi(2S) MC sample with each group 20G"
     printf "\n\t%-9s  %-40s"  "1.1.2"    "Generate Condor jobs on psi(2S) MC sample ---- 1"     
@@ -461,6 +473,79 @@ case $option in
      0.4.11) echo  "Plot summary with data for lplm..."
 	   ./python/plt_summary.py hist_lplm 
 	   ;; 
+
+
+    0.7) echo "Running on con3650 data for jpsi2incl..."
+	 ;;
+
+    0.7.2) echo "Generate Condor jobs on con3650 data for incl---- 1..."
+	    mkdir run/jpsi2incl/job_text/data3650
+	    mkdir run/jpsi2incl/rootfile_data3650  
+	    cd run/jpsi2incl/gen_script
+		./make_jobOption_file_data3650.sh
+		cd ../job_text/data3650
+		mv jobOptions_jpsi2incl_data3650-84.txt jobOptions_jpsi2incl_data3650-0.txt
+	   ;;
+
+    0.7.3) echo "test for data3650 for incl" 
+        echo "have you changed test number?(yes / no)
+        ./run/jpsi2incl/job_text/data3650/jobOptions_jpsi2incl_data3650-0.txt"
+        read opt
+        if [ $opt == "yes" ]
+            then
+            echo "now in yes"  
+            cd run/jpsi2incl/job_text/data3650
+            boss.exe jobOptions_jpsi2incl_data3650-0.txt
+        else
+            echo "Default value is 'no', please change test number."
+        fi
+        ;;
+
+    0.7.4) echo "Submit Condor jobs on data for incl ---- 2..." 
+	    cd run/jpsi2incl/job_text/data3650
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	
+        rm ../../rootfile_data3650/jpsi2incl_data3650-
+		boss.condor -g physics -n 84 jobOptions_jpsi2incl_data3650-%{ProcId}.txt
+		;;
+
+    0.7.5) echo "Check Condor jobs on con3650 data for incl..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile_data3650  84 
+	   ;;
+
+    0.7.6) echo  "Generate selection Condor jobs on con3650 data for incl ---- 1..."
+	   mkdir run/jpsi2incl/event_data3650
+	   mkdir run/jpsi2incl/job_text/data3650_event
+	   cd run/jpsi2incl/gen_script
+       rm ../job_text/data3650_event/jobOptions_jpsi2incl_data3650_event-*
+	   ./make_jobOption_file_data3650_event.sh
+	   cd ../job_text/data3650_event
+	   mv jobOptions_jpsi2incl_data3650_event-84.sh jobOptions_jpsi2incl_data3650_event-0.sh
+	   chmod 755 jobOptions_jpsi2incl_data3650_event-*
+	   ;;
+
+    0.7.7) echo "test for data event for incl" 
+		cd run/jpsi2incl/job_text/data3650_event
+		./jobOptions_jpsi2incl_data3650_event-0.sh
+        ;;
+
+    0.7.8) echo "Submit selection Condor jobs on con3650 data for incl ---- 2..." 
+	    cd run/jpsi2incl/job_text/data3650_event
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm
+ 		rm ../../event_data3650/jpsi2incl_data3650_event-*		
+	    hep_sub -g physics -n 84 jobOptions_jpsi2incl_data3650_event-%{ProcId}.sh
+	    ;; 
+    
+	0.7.9)echo "Check event Condor jobs on con3650 data for incl..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/event_data3650 84
+	   ;;
+    
+	0.7.10) echo  "Merge event root file on con3650 data for incl..."
+	   mkdir run/jpsi2incl/hist_data3650
+	   ./python/mrg_rootfiles.py  run/jpsi2incl/event_data3650 run/jpsi2incl/hist_data3650
+	   ;; 
+
 
 
     # --------------------------------------------------------------------------

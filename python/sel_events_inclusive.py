@@ -186,6 +186,7 @@ def fill_histograms_all_combination(t):
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):            
             h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
             h_mrecpipi_fit.Fill(t.vtx_mrecpipi[loop])
+            h_ncharged.Fill(t.ncharged)
 
             if (nsurvived==0 and (3.03 < t.vtx_mrecpipi[loop] and t.vtx_mrecpipi[loop] < 3.17)): 
                 nsurvived = 1

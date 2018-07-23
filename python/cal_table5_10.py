@@ -9,7 +9,10 @@ __created__ = "[2018-02-01 Thu 17:21]"
 
 import math
 
-mc = 0.77
+#vi = 0.77
+#cl = 1.040
+vi = 1.0
+cl = 1.0
 
 n_anything = 57901400.0
 n_anything_err = 8900.0
@@ -21,7 +24,7 @@ n_invisible = 397611.0
 n_invisible_err = 683.748
 n_invisible_09 = 137770.0
 
-n_other = 13779.0 * mc
+n_other = 13779.0 * vi
 n_other_09 = 3877.0
 
 n_total_2B_09 = 134586.0
@@ -30,16 +33,16 @@ N_invisible_09 = -670.0
 b_mumu = 5.961
 b_ee = 5.971
 b_nn = 0.209
-b_pp = 0.202
+b_pp = 0.2120
 b_mumu_err = 0.033
 b_ee_err = 0.032
 b_nn_err = 0.016
 b_pp_err = 0.0029
 
-eff_mumu = 93770.0*mc/1502682.0*100.0
-eff_ee = 94983.0*mc/1503130.0*100.0
-eff_nn = 61413.0*mc/1001934.0*100.0
-eff_pp = 26370.0*mc/997676.0*100.0
+eff_mumu = 93770.0*vi/1502682.0/cl*100.0
+eff_ee = 94983.0*vi/1503130.0/cl*100.0
+eff_nn = 61413.0*vi/1001934.0/cl*100.0
+eff_pp = 26370.0*vi/997676.0/cl*100.0
 #eff_mumu = 6.24
 #eff_ee = 6.32
 #eff_nn = 6.13
