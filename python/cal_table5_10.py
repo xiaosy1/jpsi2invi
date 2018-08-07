@@ -78,7 +78,7 @@ n_gam_err = 1.90
 trig_err = 0.04
 mumu_shower_err = 0.5
 ee_shower_err = 0.6
-nn_shower_err = 41.5
+nn_shower_err = 54.8
 pp_shower_err = 1.3
 
 print "\nPsip_data_12/09 \t= \t%.4f" % (341.0/106.0)
