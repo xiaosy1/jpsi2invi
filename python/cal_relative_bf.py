@@ -35,7 +35,7 @@ def error_sub(A, a, B, b):
 inv_down, e_inv_down = error_mul(39.25, 0.07, 0.998, 0.0004)
 c = 443620.0+13779.0*0.998
 f = 396471.0*0.0047
-aaa, bbb = error_sub(396471.0, f, c, 9357.0)
+aaa, bbb = error_sub(396471.0, f, c, 9725.0)
 print "N_invi = %.2f +- %.2f" %(aaa, bbb)
 inv, e_inv = error_div(aaa, bbb, inv_down, e_inv_down)
 print "invi = %.2f +- %.2f" %(inv, e_inv)
