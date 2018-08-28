@@ -36,22 +36,23 @@ void roohistpdf()
    
 //	TCanvas* c = new TCanvas("","",900,300);
 //	c->Divide(3);
-    
 
-   signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
-   jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_1.root" ;
-   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_1.root" ;
+    // 2009 data set
+  //  signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
+  //  jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
+  //  jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_invi.root" ;
   
-//   signal_pdf_rootfile =   "../RooFit/rootfile/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
-//   jpsi2incl_rootfile =    "../RooFit/rootfile/jpsi2incl_data_psip_data12_merged_1.root" ;
-//   jpsi2invi_rootfile =    "../RooFit/rootfile/jpsi2invi_data_psip_data12_merged_1.root" ;
-
+   // 2012 data set
+   signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
+   jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
+   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_invi.root" ;
+  
    // 2. Select Fiiting Set
    int hist_id;  // hist_id = 1 (J/psi->inclusive), 2 (J/psi->invisible)
-   hist_id = 2;
+   hist_id = 1;
 
    int Fitting_Method; // Fitting_Method = 1 (Unbinned), or 2 (Binned) . %% For Jpsi->inclusive, only "Binned" can be used because of huge data size. 
-   Fitting_Method=1;
+   Fitting_Method=2;
    
    // 3. Output files for the fitting result
    std::string table, figname;
@@ -131,7 +132,7 @@ void roohistpdf()
     }
     
     if(hist_id==2){ // For Jpsi2Invi
-      RooRealVar nsig("nsig","signal fraction",1000000, 0.0, 1000000000.0); 
+      RooRealVar nsig("nsig","signal fraction",100000, 0.0, 1000000000.0); 
       RooRealVar nbkg("nbkg","background fraction",100000, 0.0, 20000000.0); 
     }
       
