@@ -444,6 +444,7 @@ case $option in
 
      0.4.10) echo  "Merge event root file on data for lplm..."
 	   mkdir run/jpsi2lplm/hist
+       rm run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root
 	   ./python/mrg_rootfiles.py  run/jpsi2lplm/event run/jpsi2lplm/hist
 	   ;; 
 
@@ -1035,6 +1036,7 @@ case $option in
 
      3.4.10) echo  "Merge event root file on data09 for lplm..."
 	   mkdir run/jpsi2lplm/hist_data09
+       rm run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_1.root
 	   ./python/mrg_rootfiles.py  run/jpsi2lplm/event_data09 run/jpsi2lplm/hist_data09
 	   ;; 
 
