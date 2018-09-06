@@ -38,14 +38,14 @@ void roohistpdf()
 //	c->Divide(3);
 
     // 2009 data set
-  //  signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
-  //  jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
-  //  jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_invi.root" ;
+  //  signal_pdf_rootfile =   "run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_fit.root" ;
+   jpsi2incl_rootfile =    "../run/jpsi2incl/hist_data09/jpsi2incl_data_psip_data09_event_merged_fit.root" ;
+   jpsi2invi_rootfile =    "../run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_fit.root" ;
   
    // 2012 data set
    signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
-   jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
-   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_invi.root" ;
+  //  jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
+  //  jpsi2invi_rootfile =    "run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_fit.root" ;
   
    // 2. Select Fiiting Set
    int hist_id;  // hist_id = 1 (J/psi->inclusive), 2 (J/psi->invisible)
@@ -95,7 +95,7 @@ void roohistpdf()
     RooDataHist *data1 = new RooDataHist("data","data", x, histll); 
     
     // Smoothing 
-    int g_conv_flag = 0;   // g_conv_flag==1 --> Gaussian convolution to the signal PDF
+    int g_conv_flag = 1;   // g_conv_flag==1 --> Gaussian convolution to the signal PDF
     if( g_conv_flag == 0 )
     {
        RooHistPdf signalpdf("SignalPDF", "Signal PDF", x, *data1, 4);
@@ -106,20 +106,26 @@ void roohistpdf()
        // Smoothing 
        RooHistPdf signalpdf1("SignalPDF", "Signal PDF", x, *data1, 4);
 
-       RooRealVar mean("mean","mean of gaussian",0, -0.5, 0.5) ; 
-       RooRealVar sigma("sigma","width of gaussian",0.01, 0.0001, 0.5) ; 
+       RooRealVar mean("mean","mean of gaussian",3.097, 3.08, 3.11) ; 
+       RooRealVar mean1("mean1","mean1 of gaussian",3.097, 3.08, 3.11) ; 
+       RooRealVar sigma("sigma","width of gaussian",0.00145, 0.001, 0.002) ; 
+       RooRealVar sigma1("sigma1","width1 of gaussian",0.00353, 0.003, 0.004) ; 
+       RooGaussian sig("sig", "signal component 0", x, mean, sigma);
+       RooGaussian sig1("sig1", "signal component 1", x, mean1, sigma1);
        RooGaussian gauss("gauss","gaussian PDF",x,mean,sigma) ;  
 
        //RooRealVar gmfrac("gmfrac", "fraction of gaussian", 0.5, 0.00001, 1.0);
        //RooAddModel gauss1("gauss1","gaus test", RooArgList(gauss, gauss2), gmfrac);
        x.setBins(10000, "fft");
-    
-       RooFFTConvPdf signalpdf("GConvSignal", "Gaussian covoluted signal PDF", x, signalpdf1, gauss);
+
+      //  RooFFTConvPdf signalpdf("GConvSignal", "Gaussian covoluted signal PDF", x, signalpdf1, gauss);
+       RooRealVar sig1frac("sig1frac", "fraction of component 1 in signal", 0.71, 0.6, 0.999);
+       RooAddPdf signalpdf("signalpdf", "Signal", RooArgList(sig, sig1),sig1frac);
     }
 
     // 2nd order polynomial function 
-    RooRealVar c0("c0","coefficient #0", 0.0, -10.0, 10.0); 
-    RooRealVar c1("c1","coefficient #1", 0.0, -10.0, 10.0); 
+    RooRealVar c0("c0","coefficient #0", -0.16, -0.3, 0.1); 
+    RooRealVar c1("c1","coefficient #1", -0.08, -0.2, 0.1); 
     RooChebychev bkg("bkg","background p.d.f.", x, RooArgList(c0,c1)); 
     
     // 3rd order polynomial function
@@ -127,13 +133,13 @@ void roohistpdf()
     //RooChebychev bkg("bkg","background p.d.f.",x,RooArgList(c0,c1,c2)) ; 
     
     if(hist_id==1){  // For Jpsi2Incl
-      RooRealVar nsig("nsig","signal fraction",1000000, 0.0, 1000000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",100000, 0.0, 200000000.0); 
+      RooRealVar nsig("nsig","signal fraction",    17220000, 12000000.0,     22000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",42560000, 30000000.0,    54000000.0); 
     }
     
     if(hist_id==2){ // For Jpsi2Invi
-      RooRealVar nsig("nsig","signal fraction",100000, 0.0, 1000000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",100000, 0.0, 20000000.0); 
+      RooRealVar nsig("nsig","signal fraction",200000, 0.0, 1000000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",400000, 0.0, 20000000.0); 
     }
       
     RooAddPdf model("model", "model", RooArgList(signalpdf,bkg), RooArgList(nsig, nbkg));
@@ -170,11 +176,11 @@ void roohistpdf()
        //data_tree.plotOn(xframe, Binning(160)); 
        //data_tree.plotOn(xframe, Binning(120)); 
        model.plotOn(xframe); 
-       //model.plotOn(xframe, Components(sig), LineStyle(kDotted), LineColor(kRed)); 
        model.plotOn(xframe, Components(bkg), LineStyle(kDashed), LineColor(kGreen)); 
-      //  c->cd(1);
-      //  gPad->SetLogy();
-	     xframe->Draw(); 
+       model.plotOn(xframe, Components(signalpdf), LineStyle(kDotted)); 
+       signalpdf.plotOn(xframe, Components(sig), LineStyle(kDotted), LineColor(kRed)); 
+       signalpdf.plotOn(xframe, Components(sig1), LineStyle(kDotted), LineColor(kOrange+2));	     xframe->Draw(); 
+       gPad->SetLogy();
        xframe->GetXaxis()->CenterTitle();
        xframe->GetYaxis()->CenterTitle();
        xframe->GetYaxis()->SetTitle("Events / ( 0.01 GeV/c^{2} )");
@@ -232,11 +238,13 @@ void roohistpdf()
        data->plotOn(xframe); 
        model.plotOn(xframe);
  
-       //model.plotOn(xframe, Components(signalpdf), LineStyle(kDotted), LineColor(kRed)); 
+       model.plotOn(xframe, Components(signalpdf), LineStyle(kDotted)); 
+       signalpdf.plotOn(xframe, Components(sig), LineStyle(kDotted), LineColor(kRed)); 
+       signalpdf.plotOn(xframe, Components(sig1), LineStyle(kDotted), LineColor(kOrange+2)); 
        model.plotOn(xframe, Components(bkg), LineStyle(kDashed), LineColor(kGreen)); 
   //     c->cd(1);
-  //     gPad->SetLogy();
 	   xframe->Draw(); 
+     gPad->SetLogy();
        xframe->GetXaxis()->CenterTitle();
        xframe->GetYaxis()->CenterTitle();
        
@@ -298,7 +306,7 @@ void roohistpdf()
 	// frame3->addPlotable(hpull,"P");
 	// frame3->SetMarkerSize(0.1);
 	// c->cd(3); frame3->Draw();
-    gPad->SetLogy();
+    //gPad->SetLogy();
 
     if(hist_id==1){ // For Jpsi2Incl
       xframe->SetMaximum(40000000);
