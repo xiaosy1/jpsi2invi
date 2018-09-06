@@ -26,7 +26,7 @@
 using namespace RooFit ;
 
 
-void roohistpdf_invi_gauss_09()
+void roohistpdf_incl_gauss_09()
 {
    // Setting :: 
    // 1. ROOT Files
