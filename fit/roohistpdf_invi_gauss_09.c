@@ -26,7 +26,7 @@
 using namespace RooFit ;
 
 
-void roohistpdf()
+void roohistpdf_invi_gauss_09()
 {
    // Setting :: 
    // 1. ROOT Files
@@ -49,10 +49,10 @@ void roohistpdf()
   
    // 2. Select Fiiting Set
    int hist_id;  // hist_id = 1 (J/psi->inclusive), 2 (J/psi->invisible)
-   hist_id = 1;
+   hist_id = 2;
 
    int Fitting_Method; // Fitting_Method = 1 (Unbinned), or 2 (Binned) . %% For Jpsi->inclusive, only "Binned" can be used because of huge data size. 
-   Fitting_Method=2;
+   Fitting_Method=1;
    
    // 3. Output files for the fitting result
    std::string table, figname;
@@ -124,7 +124,7 @@ void roohistpdf()
     }
 
     // 2nd order polynomial function 
-    RooRealVar c0("c0","coefficient #0", -0.16, -0.3, 0.1); 
+    RooRealVar c0("c0","coefficient #0", 0.1, -0.3, 0.9); 
     RooRealVar c1("c1","coefficient #1", -0.08, -0.2, 0.1); 
     RooChebychev bkg("bkg","background p.d.f.", x, RooArgList(c0,c1)); 
     
@@ -178,8 +178,8 @@ void roohistpdf()
        model.plotOn(xframe); 
        model.plotOn(xframe, Components(bkg), LineStyle(kDashed), LineColor(kGreen)); 
        model.plotOn(xframe, Components(signalpdf), LineStyle(kDotted)); 
-       signalpdf.plotOn(xframe, Components(sig), LineStyle(kDotted), LineColor(kRed)); 
-       signalpdf.plotOn(xframe, Components(sig1), LineStyle(kDotted), LineColor(kOrange+2));	     
+      //  signalpdf.plotOn(xframe, Components(sig), LineStyle(kDotted), LineColor(kRed)); 
+      //  signalpdf.plotOn(xframe, Components(sig1), LineStyle(kDotted), LineColor(kOrange+2));	     
        xframe->Draw("e"); 
        gPad->SetLogy();
        xframe->GetXaxis()->CenterTitle();

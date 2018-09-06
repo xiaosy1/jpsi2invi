@@ -156,7 +156,6 @@ case $option in
 	   ./make_jobOption_file_Data12_jpsi2invi.sh
 	   cd ../job_text/Data12
 	   mv jobOptions_jpsi2invi_data_psip_data12-633.txt jobOptions_jpsi2invi_data_psip_data12-0.txt
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.1.3) echo "Test for data" 
@@ -168,7 +167,6 @@ case $option in
             echo "now in yes"  
             cd run/jpsi2invi/job_text/Data12
             boss.exe jobOptions_jpsi2invi_data_psip_data12-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -180,7 +178,6 @@ case $option in
         find . -name "*.err.*" | xargs rm	   
 		rm ../../rootfile/jpsi2invi_data_psip_data12-*
 		boss.condor -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12-%{ProcId}.txt
-	    cd $HOME/bes/jpsi2invi/v0.1
 	    ;;
 
     0.1.5) echo "Check Condor jobs on data..."
@@ -195,13 +192,11 @@ case $option in
 	   cd ../job_text/Data12_event
 	   mv jobOptions_jpsi2invi_data_psip_data12_event-633.sh jobOptions_jpsi2invi_data_psip_data12_event-0.sh
        chmod 755 jobOptions_jpsi2invi_data_psip_data12_event-*
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.1.7) echo "Test for data event" 
 		cd run/jpsi2invi/job_text/Data12_event
 		./jobOptions_jpsi2invi_data_psip_data12_event-0.sh
-		cd $HOME/bes/jpsi2invi/v0.1
         ;;
 
     0.1.8) echo "Submit selection Condor jobs on data ---- 2..." 
@@ -210,7 +205,6 @@ case $option in
         find . -name "*.err.*" | xargs rm	  
 	    rm ../../event/jpsi2invi_data_psip_data12_event-*	
 	    hep_sub -g physics -n 633 jobOptions_jpsi2invi_data_psip_data12_event-%{ProcId}.sh
-	    cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.1.9) echo "Check Condor jobs on events data..."
@@ -218,8 +212,7 @@ case $option in
 	   ;;
 
     0.1.10) echo  "Merge event root file on data..."
-	   mkdir run/jpsi2invi/hist
-	   rm jpsi2invi_data_psip_data12_event_merged_1.root
+	   rm run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_1.root
 	   ./python/mrg_rootfiles.py  run/jpsi2invi/event run/jpsi2invi/hist
 	   ;; 
 
@@ -243,7 +236,6 @@ case $option in
 		./make_jobOption_file_data3650.sh
 		cd ../job_text/data3650
 		mv jobOptions_jpsi2invi_data3650-84.txt jobOptions_jpsi2invi_data3650-0.txt
-	    cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.2.3) echo "test for data3650" 
@@ -255,7 +247,6 @@ case $option in
             echo "now in yes"  
             cd run/jpsi2invi/job_text/data3650
             boss.exe jobOptions_jpsi2invi_data3650-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -266,8 +257,6 @@ case $option in
         find . -name "*.out.*" | xargs rm
         find . -name "*.err.*" | xargs rm	   
 		boss.condor -g physics -n 84 jobOptions_jpsi2invi_data3650-%{ProcId}.txt
-	    cd 
-	    cd bes/jpsi2invi/v0.1
 		;;
 
     0.2.5) echo "Check Condor jobs on con3650 data..."
@@ -282,13 +271,11 @@ case $option in
 	   cd ../job_text/data3650_event
 	   mv jobOptions_jpsi2invi_data3650_event-84.sh jobOptions_jpsi2invi_data3650_event-0.sh
 	   chmod 755 jobOptions_jpsi2invi_data3650_event-*
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.2.7) echo "test for data event" 
 		cd run/jpsi2invi/job_text/data3650_event
 		./jobOptions_jpsi2invi_data3650_event-0.sh
-		cd $HOME/bes/jpsi2invi/v0.1
         ;;
 
     0.2.8) echo "Submit selection Condor jobs on con3650 data ---- 2..." 
@@ -320,10 +307,9 @@ case $option in
 	   mkdir -p run/jpsi2incl/job_text/Data12
 	   mkdir -p run/jpsi2incl/rootfile
 	   cd run/jpsi2incl/gen_script
-	   ./make_jobOption_file_Data12_jpsi2invi.sh
+	   ./make_jobOption_file_Data12_jpsi2incl.sh
 	   cd ../job_text/Data12
 	   mv jobOptions_jpsi2incl_data_psip_data12-633.txt jobOptions_jpsi2incl_data_psip_data12-0.txt
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.3.3) echo "test for data for incl" 
@@ -335,7 +321,6 @@ case $option in
             echo "now in yes"  
             cd run/jpsi2incl/job_text/Data12
             boss.exe jobOptions_jpsi2incl_data_psip_data12-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -362,13 +347,11 @@ case $option in
 	   cd ../job_text/Data12_event
 	   mv jobOptions_jpsi2incl_data_psip_data12_event-633.sh jobOptions_jpsi2incl_data_psip_data12_event-0.sh
        chmod 755 jobOptions_jpsi2incl_data_psip_data12_event-*
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.3.7) echo "Test for data event for incl" 
 		cd run/jpsi2incl/job_text/Data12_event
 		./jobOptions_jpsi2incl_data_psip_data12_event-0.sh
-		cd $HOME/bes/jpsi2invi/v0.1
         ;;
 
     0.3.8) echo "Submit selection Condor jobs on data for incl ---- 2..." 
@@ -377,8 +360,6 @@ case $option in
         find . -name "*.err.*" | xargs rm	   
 		rm ../../event/jpsi2incl_data_psip_data12_event-*
 	    hep_sub -g physics -n 633 jobOptions_jpsi2incl_data_psip_data12_event-%{ProcId}.sh
-	    cd 
-	    cd bes/jpsi2invi/v0.1
 	    ;;
 
     0.3.9) echo "Check Condor jobs on events data for incl..."
@@ -405,7 +386,6 @@ case $option in
 	   ./make_jobOption_file_Data12_jpsi2lplm.sh
 	   cd ../job_text/Data12
 	   mv jobOptions_jpsi2lplm_data_psip_data12-633.txt jobOptions_jpsi2lplm_data_psip_data12-0.txt
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     0.4.3) echo "test for data for lplm" 
@@ -417,7 +397,6 @@ case $option in
             echo "now in yes"  
             cd run/jpsi2lplm/job_text/Data12
             boss.exe jobOptions_jpsi2lplm_data_psip_data12-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -438,17 +417,16 @@ case $option in
 	   mkdir run/jpsi2lplm/event
 	   mkdir run/jpsi2lplm/job_text/Data12_event
 	   cd run/jpsi2lplm/gen_script
+       rm ../job_text/Data12_event/jobOptions_jpsi2lplm_data_psip_data12_event-*
 	   ./make_jobOption_file_Data12_event.sh
 	   cd ../job_text/Data12_event
 	   mv jobOptions_jpsi2lplm_data_psip_data12_event-633.sh jobOptions_jpsi2lplm_data_psip_data12_event-0.sh
        chmod 755 jobOptions_jpsi2lplm_data_psip_data12_event-*
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
  	0.4.7) echo "Test for data event for lplm" 
 		cd run/jpsi2lplm/job_text/Data12_event
 		./jobOptions_jpsi2lplm_data_psip_data12_event-0.sh
-		cd $HOME/bes/jpsi2invi/v0.1
 		;;
 
 	0.4.8) echo "Submit selection Condor jobs on data for lplm ---- 2..." 
@@ -458,7 +436,6 @@ case $option in
 	    rm ../../event/jpsi2lplm_data_psip_data12_event-*
 		hep_sub -g physics -n 633 jobOptions_jpsi2lplm_data_psip_data12_event-%{ProcId}.sh
 	    cd 
-	    cd bes/jpsi2invi/v0.1
 	    ;;
 
      0.4.9) echo "Check Condor jobs on events data for lplm..."
@@ -467,6 +444,7 @@ case $option in
 
      0.4.10) echo  "Merge event root file on data for lplm..."
 	   mkdir run/jpsi2lplm/hist
+       rm run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root
 	   ./python/mrg_rootfiles.py  run/jpsi2lplm/event run/jpsi2lplm/hist
 	   ;; 
 
@@ -567,7 +545,6 @@ case $option in
 	   ./make_jobOption_file_mc12_jpsi2invi.sh
 	   cd ../job_text/mc12
 	   mv jobOptions_jpsi2invi_psip_mc12-394.txt jobOptions_jpsi2invi_psip_mc12-0.txt
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     1.1.3) echo "Test for psi(2S) MC sample" 
@@ -579,7 +556,6 @@ case $option in
             echo "now in yes"  
             cd run/jpsi2invi/job_text/mc12
             boss.exe jobOptions_jpsi2invi_psip_mc12-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -590,8 +566,6 @@ case $option in
         find . -name "*.out.*" | xargs rm
         find . -name "*.err.*" | xargs rm	  
 	   boss.condor -g physics -n 394 jobOptions_jpsi2invi_psip_mc12-%{ProcId}.txt 
-	   cd 
-	   cd bes/jpsi2invi/v0.1
 	   ;;
 
     1.1.5) echo "Check Condor jobs on psi(2S) MC sample..."
@@ -606,13 +580,11 @@ case $option in
 	   cd ../job_text/mc12_event
 	   mv jobOptions_jpsi2invi_psip_mc12_event-394.sh jobOptions_jpsi2invi_psip_mc12_event-0.sh
 	   chmod 755 jobOptions_jpsi2invi_psip_mc12_event-*
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     1.1.7) echo "Test for psi(2S) MC sample event" 
 		cd run/jpsi2invi/job_text/mc12_event
 		./jobOptions_jpsi2invi_psip_mc12_event-0.sh
-		cd $HOME/bes/jpsi2invi/v0.1
         ;;
 
     1.1.8) echo "Submit selection Condor jobs on psi(2S) MC sample ---- 2..." 
@@ -646,7 +618,6 @@ case $option in
 	   ./make_jobOption_file_mc12_jpsi2incl.sh
 	   cd ../job_text/mc12
 	   mv jobOptions_jpsi2incl_psip_mc12-394.txt jobOptions_jpsi2incl_psip_mc12-0.txt
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     1.3.3) echo "test for psip(2S) MC sample for incl" 
@@ -658,7 +629,6 @@ case $option in
             echo "now in yes"  
             cd run/jpsi2incl/job_text/mc12
             boss.exe jobOptions_jpsi2incl_psip_mc12-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -684,13 +654,11 @@ case $option in
 	   cd ../job_text/mc12_event
 	   mv jobOptions_jpsi2incl_psip_mc12_event-394.sh jobOptions_jpsi2incl_psip_mc12_event-0.sh
        chmod 755 jobOptions_jpsi2incl_psip_mc12_event-*
-	   cd $HOME/bes/jpsi2invi/v0.1
 	   ;;
 
     1.3.7) echo "Test for psip(2S) MC sample event for incl" 
 		cd run/jpsi2incl/job_text/mc12_event
 		./jobOptions_jpsi2incl_psip_mc12_event-0.sh
-		cd $HOME/bes/jpsi2invi/v0.1
         ;;
 
     1.3.8) echo "Submit selection Condor jobs on psip(2S) MC sample for incl ---- 2..." 
@@ -698,8 +666,6 @@ case $option in
         find . -name "*.out.*" | xargs rm
         find . -name "*.err.*" | xargs rm	   	   
 	   hep_sub -g physics -n 394 jobOptions_jpsi2incl_psip_mc12_event-%{ProcId}.sh
-	   cd 
-	   cd bes/jpsi2invi/v0.1
 	   ;;
 
     1.3.9) echo "Check Condor jobs on events psip(2S) MC sample for incl..."
@@ -727,7 +693,6 @@ case $option in
             echo "now in yes"  
             cd run/gen_mc/jpsi2ee/job_text/jobs
             boss.exe jobOptions_jpsi2invi_gen_mc_ee-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -801,7 +766,6 @@ case $option in
             echo "now in yes"  
             cd run/gen_mc/jpsi2ee/job_text/jobs
             boss.exe jobOptions_jpsi2incl_gen_mc_ee-0.txt
-            cd $HOME/bes/jpsi2invi/v0.1
         else
             echo "Default value is 'no', please change test number."
         fi
@@ -862,6 +826,219 @@ case $option in
 	   ./python/mrg_rootfiles.py  run/gen_mc/jpsi2nn/job_text/event_nn/incl run/gen_mc/jpsi2nn/job_text/hist
 	   ./python/mrg_rootfiles.py  run/gen_mc/jpsi2pp/job_text/event_pp/incl run/gen_mc/jpsi2pp/job_text/hist
 	   ;;
+
+    3.1) echo "Running on data09 sample..."
+	 ;;
+
+    3.1.1) echo "Split data09 sample with each group 20G ..."
+	   ./python/get_samples.py  /bes3fs/offline/data/664-1/psip/dst run/samples/data09/data_664-1_psip.txt 20G
+	   # made 633 groups 
+	   ;;
+
+    3.1.2) echo "Generate Condor jobs on data09 ---- 1..." 
+	   cd run/jpsi2invi/gen_script
+	   ./make_jobOption_file_data09_jpsi2invi.sh
+	   cd ../job_text/data09
+	   mv jobOptions_jpsi2invi_data_psip_data09-314.txt jobOptions_jpsi2invi_data_psip_data09-0.txt
+	   ;;
+
+    3.1.3) echo "Test for data09" 
+        echo "have you changed test number?(yes / no)
+        ./run/jpsi2invi/job_text/data09/jobOptions_jpsi2invi_data_psip_data09-0.txt"
+        read opt
+        if [ $opt == "yes" ]
+            then
+            echo "now in yes"  
+            cd run/jpsi2invi/job_text/data09
+            boss.exe jobOptions_jpsi2invi_data_psip_data09-0.txt
+        else
+            echo "Default value is 'no', please change test number."
+        fi
+        ;;
+
+    3.1.4) echo "Submit Condor jobs on data09 ---- 2..." 
+	    cd run/jpsi2invi/job_text/data09
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	   
+		rm ../../rootfile_data09/jpsi2invi_data_psip_data09-*
+		boss.condor -g physics -n 314 jobOptions_jpsi2invi_data_psip_data09-%{ProcId}.txt
+	    ;;
+
+    3.1.5) echo "Check Condor jobs on data09..."
+	   ./python/chk_condorjobs.py run/jpsi2invi/rootfile_data09  314
+	   ;;
+    
+    3.1.6) echo "Generate selection Condor jobs on data09 ---- 1..."
+	   cd run/jpsi2invi/job_text/data09_event
+       find . -name "*.sh*" | xargs rm
+       cd ../../gen_script
+	   ./make_jobOption_file_data09_event.sh
+	   cd ../job_text/data09_event
+	   mv jobOptions_jpsi2invi_data_psip_data09_event-314.sh jobOptions_jpsi2invi_data_psip_data09_event-0.sh
+       chmod 755 jobOptions_jpsi2invi_data_psip_data09_event-*
+	   ;;
+
+    3.1.7) echo "Test for data09 event" 
+		cd run/jpsi2invi/job_text/data09_event
+		./jobOptions_jpsi2invi_data_psip_data09_event-0.sh
+        ;;
+
+    3.1.8) echo "Submit selection Condor jobs on data09 ---- 2..." 
+	    cd run/jpsi2invi/job_text/data09_event
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	  
+	    rm ../../event_data09/jpsi2invi_data_psip_data09_event-*	
+	    hep_sub -g physics -n 314 jobOptions_jpsi2invi_data_psip_data09_event-%{ProcId}.sh
+	   ;;
+
+    3.1.9) echo "Check Condor jobs on events data09..."
+	   ./python/chk_condorjobs.py run/jpsi2invi/event_data09  314
+	   ;;
+
+    3.1.10) echo  "Merge event root file on data09..."
+	   rm run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_1.root
+	   ./python/mrg_rootfiles.py  run/jpsi2invi/event_data09 run/jpsi2invi/hist_data09
+	   ;; 
+
+
+    3.3) echo "Running on data09 for jpsi2incl..."
+	 ;;
+
+    3.3.2) echo "Generate Submit Condor jobs on data09 for incl..." 
+	   mkdir -p run/jpsi2incl/job_text/data09
+	   cd run/jpsi2incl/gen_script
+	   ./make_jobOption_file_data09_jpsi2incl.sh
+	   cd ../job_text/data09
+	   mv jobOptions_jpsi2incl_data_psip_data09-314.txt jobOptions_jpsi2incl_data_psip_data09-0.txt
+	   ;;
+
+    3.3.3) echo "test for data09 for incl" 
+        echo "have you changed test number?(yes / no)
+        ./run/jpsi2incl/job_text/data09/jobOptions_jpsi2incl_data_psip_data09-0.txt"
+        read opt
+        if [ $opt == "yes" ]
+            then
+            echo "now in yes"  
+            cd run/jpsi2incl/job_text/data09
+            boss.exe jobOptions_jpsi2incl_data_psip_data09-0.txt
+        else
+            echo "Default value is 'no', please change test number."
+        fi
+        ;;
+
+    3.3.4) echo "Submit Condor jobs on data09 for incl ---- 2..." 
+	    cd run/jpsi2incl/job_text/data09
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	  
+	    rm ../../rootfile_data09/jpsi2incl_data_psip_data09-*	
+	    boss.condor -g physics -n 314 jobOptions_jpsi2incl_data_psip_data09-%{ProcId}.txt
+	    ;;
+
+    3.3.5) echo "Check Condor jobs on data09 for incl..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile_data09  314
+	   ;;
+    
+    3.3.6) echo "Generate Submit selection Condor jobs on data09 for incl ---- 1..."
+	   mkdir run/jpsi2incl/job_text/data09_event
+	   cd run/jpsi2incl/gen_script
+	   rm ../job_text/data09_event/jobOptions_jpsi2incl_data_psip_data09_event-*
+	   ./make_jobOption_file_data09_event.sh
+	   cd ../job_text/data09_event
+	   mv jobOptions_jpsi2incl_data_psip_data09_event-314.sh jobOptions_jpsi2incl_data_psip_data09_event-0.sh
+       chmod 755 jobOptions_jpsi2incl_data_psip_data09_event-*
+	   ;;
+
+    3.3.7) echo "Test for data09 event for incl" 
+		cd run/jpsi2incl/job_text/data09_event
+		./jobOptions_jpsi2incl_data_psip_data09_event-0.sh
+        ;;
+
+    3.3.8) echo "Submit selection Condor jobs on data09 for incl ---- 2..." 
+	    cd run/jpsi2incl/job_text/data09_event
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	   
+		rm ../../event_data09/jpsi2incl_data_psip_data09_event-*
+	    hep_sub -g physics -n 314 jobOptions_jpsi2incl_data_psip_data09_event-%{ProcId}.sh
+	    ;;
+
+    3.3.9) echo "Check Condor jobs on events data09 for incl..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/event_data09  314
+	   ;;
+
+    3.3.10) echo  "Merge event root file on data09 for incl..."
+	   mkdir run/jpsi2incl/hist_data09
+	   rm run/jpsi2incl/hist_data09/jpsi2incl_data_psip_data09_event_merged_1.root
+	   ./python/mrg_rootfiles.py  run/jpsi2incl/event_data09 run/jpsi2incl/hist_data09
+	   ;; 
+
+    3.4) echo "Running on data09 for jpsi2lplm..."
+	 ;;
+	
+     3.4.2) echo "Generate Condor jobs on data09 for lplm ---- 1 ..." 
+	   mkdir -p run/jpsi2lplm/job_text/data09
+	   cd run/jpsi2lplm/gen_script
+	   ./make_jobOption_file_data09_jpsi2lplm.sh
+	   cd ../job_text/data09
+	   mv jobOptions_jpsi2lplm_data_psip_data09-314.txt jobOptions_jpsi2lplm_data_psip_data09-0.txt
+	   ;;
+
+    3.4.3) echo "test for data09 for lplm" 
+        echo "have you changed test number?(yes / no)
+        ./run/jpsi2lplm/job_text/data09/jobOptions_jpsi2lplm_data_psip_data09-0.txt"
+        read opt
+        if [ $opt == "yes" ]
+            then
+            echo "now in yes"  
+            cd run/jpsi2lplm/job_text/data09
+            boss.exe jobOptions_jpsi2lplm_data_psip_data09-0.txt
+        else
+            echo "Default value is 'no', please change test number."
+        fi
+        ;;
+
+    3.4.4) echo "Submit Condor jobs on data09 for lplm ---- 2..." 
+	    cd run/jpsi2lplm/job_text/data09
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	   
+	    boss.condor -g physics -n 314 jobOptions_jpsi2lplm_data_psip_data09-%{ProcId}.txt
+	    ;;
+
+     3.4.5) echo "Check Condor jobs on data09 for lplm..."
+	   ./python/chk_condorjobs.py run/jpsi2lplm/rootfile_data09  314
+	   ;;
+    
+     3.4.6) echo "Submit selection Condor jobs on data09 for lplm..."
+	   mkdir run/jpsi2lplm/job_text/data09_event
+	   cd run/jpsi2lplm/gen_script
+       rm ../job_text/data09_event/jobOptions_jpsi2lplm_data_psip_data09_event-*
+	   ./make_jobOption_file_data09_event.sh
+	   cd ../job_text/data09_event
+	   mv jobOptions_jpsi2lplm_data_psip_data09_event-314.sh jobOptions_jpsi2lplm_data_psip_data09_event-0.sh
+       chmod 755 jobOptions_jpsi2lplm_data_psip_data09_event-*
+	   ;;
+
+ 	3.4.7) echo "Test for data09 event for lplm" 
+		cd run/jpsi2lplm/job_text/data09_event
+		./jobOptions_jpsi2lplm_data_psip_data09_event-0.sh
+		;;
+
+	3.4.8) echo "Submit selection Condor jobs on data09 for lplm ---- 2..." 
+		cd run/jpsi2lplm/job_text/data09_event
+		find . -name "*.out.*" | xargs rm
+		find . -name "*.err.*" | xargs rm	   
+	    rm ../../event_data09/jpsi2lplm_data_psip_data09_event-*
+		hep_sub -g physics -n 314 jobOptions_jpsi2lplm_data_psip_data09_event-%{ProcId}.sh
+	    ;;
+
+     3.4.9) echo "Check Condor jobs on events data09 for lplm..."
+	   ./python/chk_condorjobs.py run/jpsi2lplm/event_data09  314
+	   ;;
+
+     3.4.10) echo  "Merge event root file on data09 for lplm..."
+	   mkdir run/jpsi2lplm/hist_data09
+       rm run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_1.root
+	   ./python/mrg_rootfiles.py  run/jpsi2lplm/event_data09 run/jpsi2lplm/hist_data09
+	   ;; 
 
 
 esac
