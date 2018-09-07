@@ -1041,5 +1041,80 @@ case $option in
 	   ;; 
 
 
+    4.3) echo "Running on psip(2S) MC09 for jpsi2incl..."
+	 ;;
+
+    4.3.1) echo "Split psi(2S) MC09 with each group 20G ..."
+	   ./python/get_samples.py  /bes3fs/offline/data/664p01/psip/mc/09dst $HOME/bes/jpsi2invi/v0.1/run/samples/mc09/mc_664p01_psip_mc09.txt 20G
+	   # made 106 groups 
+	   ;;
+
+    4.3.2) echo "Generate Condor jobs on psip(2S) MC09 for incl..." 
+	   mkdir -p run/jpsi2incl/job_text/mc09
+	   cd run/jpsi2incl/gen_script
+	   ./make_jobOption_file_mc09_jpsi2incl.sh
+	   cd ../job_text/mc09
+	   mv jobOptions_jpsi2incl_psip_mc09-106.txt jobOptions_jpsi2incl_psip_mc09-0.txt
+	   ;;
+
+    4.3.3) echo "test for psip(2S) MC09 for incl" 
+        echo "have you changed test number?(yes / no)
+        ./run/jpsi2incl/job_text/mc09/jobOptions_jpsi2incl_psip_mc09-0.txt"
+        read opt
+        if [ $opt == "yes" ]
+            then
+            echo "now in yes"  
+            cd run/jpsi2incl/job_text/mc09
+            boss.exe jobOptions_jpsi2incl_psip_mc09-0.txt
+        else
+            echo "Default value is 'no', please change test number."
+        fi
+        ;;
+
+    4.3.4) echo "Submit Condor jobs on psip(2S) MC09 for incl ---- 2..." 
+	    cd run/jpsi2incl/job_text/mc09
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	  
+	   rm ../../rootfile_mc09/jpsi2incl_psip_mc09-*	
+	   boss.condor -g physics -n 106 jobOptions_jpsi2incl_psip_mc09-%{ProcId}.txt
+	   ;;
+
+    4.3.5) echo "Check Condor jobs on psip(2S) MC09 for incl..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/rootfile_mc09  106
+	   ;;
+    
+    4.3.6) echo "Generate selection Condor jobs on psip(2S) MC09 for incl..."
+	   mkdir run/jpsi2incl/job_text/mc09_event
+	   cd run/jpsi2incl/gen_script
+	   ./make_jobOption_file_mc09_event.sh
+	   cd ../job_text/mc09_event
+	   mv jobOptions_jpsi2incl_psip_mc09_event-106.sh jobOptions_jpsi2incl_psip_mc09_event-0.sh
+       chmod 755 jobOptions_jpsi2incl_psip_mc09_event-*
+	   ;;
+
+    4.3.7) echo "Test for psip(2S) MC09 event for incl" 
+		cd run/jpsi2incl/job_text/mc09_event
+		./jobOptions_jpsi2incl_psip_mc09_event-0.sh
+        ;;
+
+    4.3.8) echo "Submit selection Condor jobs on psip(2S) MC09 for incl ---- 2..." 
+	    cd run/jpsi2incl/job_text/mc09_event
+        find . -name "*.out.*" | xargs rm
+        find . -name "*.err.*" | xargs rm	   	   
+	   hep_sub -g physics -n 106 jobOptions_jpsi2incl_psip_mc09_event-%{ProcId}.sh
+	   ;;
+
+    4.3.9) echo "Check Condor jobs on events psip(2S) MC09 for incl..."
+	   ./python/chk_condorjobs.py run/jpsi2incl/event_mc09  106
+	   ;;
+
+    4.3.10) echo  "Merge event root file on psip(2S) MC09 for incl..."
+	   mkdir run/jpsi2incl/hist_mc09
+	   ./python/mrg_rootfiles.py  run/jpsi2incl/event_mc09 run/jpsi2incl/hist_mc09
+	   ;; 
+
+
+
+
 esac
 

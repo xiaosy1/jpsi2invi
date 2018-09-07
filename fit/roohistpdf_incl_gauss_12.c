@@ -43,7 +43,7 @@ void roohistpdf_incl_gauss_12()
   //  jpsi2invi_rootfile =    "../run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_fit.root" ;
   
    // 2012 data set
-   signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
+   signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_fit.root" ;
    jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_fit.root" ;
    jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_fit.root" ;
   
@@ -55,28 +55,7 @@ void roohistpdf_incl_gauss_12()
    Fitting_Method=2;
    
    // 3. Output files for the fitting result
-   std::string table, figname;
-   if( hist_id == 1 ){
-      if( Fitting_Method == 1 ){  
-         table = "fitres_incl_unbinned.txt" ; 
-         figname = "Jpsi2incl_fit_unbinned.eps" ;
-      }
-      else{ 
-         table = "fitres_incl_binned.txt" ; 
-         figname = "Jpsi2incl_fit_binned.eps" ;
-      }
-   }
-   if( hist_id == 2 ){
-      if( Fitting_Method == 1 ){  
-         table = "fitres_invisible_unbinned.txt" ; 
-         figname = "Jpsi2invible_fit_unbinned.eps" ;
-      }
-      else{ 
-         table = "fitres_invisible_binned.txt" ; 
-         figname = "Jpsi2invisible_fit_binned.eps" ;
-      }
-   }
-      
+   std::string table, figname;      
 
   // Extract PDF function
   if(hist_id==1 || hist_id==2){
@@ -95,15 +74,23 @@ void roohistpdf_incl_gauss_12()
     RooDataHist *data1 = new RooDataHist("data","data", x, histll); 
     
     // Smoothing 
-    int g_conv_flag = 1;   // g_conv_flag==1 --> Gaussian convolution to the signal PDF
+    int g_conv_flag = 0;   // g_conv_flag==1 --> Gaussian convolution to the signal PDF
     if( g_conv_flag == 0 )
     {
+
+       table = "incl_12_ee/incl_12_ee_fit_binned.txt" ; 
+       figname = "incl_12_ee/incl_12_ee_fit_binned.eps" ;
+
        RooHistPdf signalpdf("SignalPDF", "Signal PDF", x, *data1, 4);
     }
     // For gaussian convolution
     if( g_conv_flag == 1 )
     {
        // Smoothing 
+
+       table = "incl_12_gauss/incl_12_gauss_fit_binned.txt" ; 
+       figname = "incl_12_gauss/incl_12_gauss_fit_binned.eps" ;
+       
        RooHistPdf signalpdf1("SignalPDF", "Signal PDF", x, *data1, 4);
 
        RooRealVar mean("mean","mean of gaussian",3.097, 3.08, 3.11) ; 
