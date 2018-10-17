@@ -325,7 +325,7 @@ Jpsi2invi::Jpsi2invi(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("EnergyBarrelMin", m_energy_barrel_min=0.025); 
   declareProperty("EnergyEndcapMin", m_energy_endcap_min=0.050); 
   //declareProperty("EnergyEndcapMin", m_energy_endcap_min=50.0); 
-  declareProperty("PhotonIsoAngleMin", m_photon_iso_angle_min=10);
+  declareProperty("PhotonIsoAngleMin", m_photon_iso_angle_min=20.0);
   declareProperty("PionPolarAngleMax", m_pion_polar_angle_max=0.99);
   declareProperty("PionMomentumMax", m_pion_momentum_max=1.9); 
   declareProperty("ProbPionMin", m_prob_pion_min=0.001);

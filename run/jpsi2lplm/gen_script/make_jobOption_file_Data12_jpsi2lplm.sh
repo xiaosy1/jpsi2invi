@@ -25,6 +25,7 @@ do
     echo   "ApplicationMgr.EvtMax = -1;                                   " >> ${JobText_SaveDir}/${jobOptions}
     echo   "                                                              " >> ${JobText_SaveDir}/${jobOptions}
     echo   "Jpsi2lplm.IsMonteCarlo=\"false\";                             " >> ${JobText_SaveDir}/${jobOptions}
+    echo   "Jpsi2lplm.PhotonIsoAngleMin=20;                             " >> ${JobText_SaveDir}/${jobOptions}
     echo   "Jpsi2lplm.OutputFileName=\"/besfs/groups/nphy/users/xiaosy/bes/jpsi2invi/v0.1/run/jpsi2lplm/rootfile/$rootfile\"; " >> ${JobText_SaveDir}/${jobOptions}
     echo   "                                                              " >> ${JobText_SaveDir}/${jobOptions}
     echo   "                                                              " >> ${JobText_SaveDir}/${jobOptions}
