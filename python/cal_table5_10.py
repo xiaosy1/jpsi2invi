@@ -58,10 +58,11 @@ scale_eff = 0.9699 # to scale acceptance eff
 # eff_nn = 6.09
 # eff_pp = 2.54
 
-eff_mumu = 2.53
-eff_ee = 2.56
-eff_nn = 1.65
-eff_pp = 0.71
+n_sig = 1499390.0
+eff_mumu = 93472.0 /n_sig * 100
+eff_ee = 94673.0/n_sig * 100
+eff_nn = 61190.0*3.0/n_sig/2.0 * 100
+eff_pp = 26282.0*3.0/n_sig/2.0 * 100
 
 eff_2b_err = 0.02
 
