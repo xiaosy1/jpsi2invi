@@ -15,12 +15,14 @@ vi = 1.0
 cl = 1.0
 
 n_anything = 57901400.0
+# n_anything = 53770000.0
 n_anything_err = 8900.0
 #n_anything = 18658100.0
 #n_anything_err = 5000
 n_anything_09 = 18658100.0
 
 n_invisible = 397611.0
+# n_invisible = 368711.0
 n_invisible_err = 683.748
 n_invisible_09 = 137770.0
 
@@ -39,19 +41,31 @@ b_ee_err = 0.032
 b_nn_err = 0.016
 b_pp_err = 0.0029
 
-eff_mumu = 93770.0*vi/1502682.0/cl*100.0
-eff_ee = 94983.0*vi/1503130.0/cl*100.0
-eff_nn = 61413.0*vi/1001934.0/cl*100.0
-eff_pp = 26370.0*vi/997676.0/cl*100.0
+scale_eff = 0.9699 # to scale acceptance eff
+
+# eff_mumu = scale_eff * 93770.0*vi/1502682.0/cl*100.0
+# eff_ee = scale_eff * 94983.0*vi/1503130.0/cl*100.0
+# eff_nn = scale_eff * 61413.0*vi/1001934.0/cl*100.0
+# eff_pp = scale_eff * 26370.0*vi/997676.0/cl*100.0
+
 #eff_mumu = 6.24
 #eff_ee = 6.32
 #eff_nn = 6.13
 #eff_pp = 2.64
-#eff_mumu = 5.93
-#eff_ee = 5.93
-#eff_nn = 6.09
-#eff_pp = 2.54
+
+# eff_mumu = 5.93
+# eff_ee = 5.93
+# eff_nn = 6.09
+# eff_pp = 2.54
+
+n_sig = 1499390.0
+eff_mumu = 93472.0 /n_sig * 100
+eff_ee = 94673.0/n_sig * 100
+eff_nn = 61190.0*3.0/n_sig/2.0 * 100
+eff_pp = 26282.0*3.0/n_sig/2.0 * 100
+
 eff_2b_err = 0.02
+
 
 #eff_trigger = 99.4
 #eff_trigger_err = 0.1
@@ -115,11 +129,11 @@ print "jpsi->pp", "\t%.3f+-%.3f"%(b_pp, b_pp_err), "\t%.2f+-%.2f"%(eff_pp, eff_2
 n_total_2B = n_mumu + n_ee + n_nn + n_pp
 n_total_2B_err = math.sqrt((n_mumu + n_ee + n_nn + n_pp)**2 * (stat_err**2 + fit_err**2 + n_gam_err**2 + trig_err**2) + n_mumu**2 * ((b_mumu_err/b_mumu)**2 + (eff_2b_err/eff_mumu)**2 + mumu_shower_err**2) + n_ee**2 * ((b_ee_err/b_ee)**2 + (eff_2b_err/eff_ee)**2 + ee_shower_err**2) + n_nn**2 * ((b_nn_err/b_nn)**2 + (eff_2b_err/eff_nn)**2 + nn_shower_err**2) + n_pp**2 * ((b_pp_err/b_pp)**2 + (eff_2b_err/eff_pp)**2 + pp_shower_err**2) ) /100
 #n_total_2B_err = math.sqrt((134586)**2 * (stat_err**2 + fit_err*2 + n_gam_err**2 + trig_err**2) + 65558**2 * ((0.55)**2 + (0.33)**2 + mumu_shower_err**2) + 65668**2 * ((0.54)**2 + (0.33)**2 + ee_shower_err**2) + 2361**2 * ((7.66)**2 + (0.40)**2 + nn_shower_err**2) + 999**2 * ((1.37)**2 + (0.62)**2 + pp_shower_err**2) )
-print "\nn_total_2B/n_anything = %f" % (n_total_2B/n_anything), "\tn_total_2B_09/n_anything_09 = %f" % (n_total_2B_09/n_anything_09)
-print "\nn_total_2B \t= %.2f+-%.2f" % (n_total_2B, n_total_2B_err), "\tratio_12/09 \t= %.6f" % (n_total_2B/n_total_2B_09)
+# print "\nn_total_2B/n_anything = %f" % (n_total_2B/n_anything), "\tn_total_2B_09/n_anything_09 = %f" % (n_total_2B_09/n_anything_09)
+print "\nn_total_2B \t= %.2f+-%.2f" % (n_total_2B, n_total_2B_err) #, "\tratio_12/09 \t= %.6f" % (n_total_2B/n_total_2B_09)
 #print "n_total_peaking = %.2f" % (n_mumu + n_ee + n_nn + n_pp + n_other)
 N_invisible = n_invisible - n_total_2B - n_other * eff_trigger / 100
-print "N_invisible \t= %.2f" % N_invisible, "\t\tratio_12/09 \t= %f" % (N_invisible / N_invisible_09)
+print "N_invisible \t= %.2f" % N_invisible # , "\t\tratio_12/09 \t= %f" % (N_invisible / N_invisible_09)
 #a = 3.0
 #b = 5
 #print "test = %f" % math.sqrt(b/a)

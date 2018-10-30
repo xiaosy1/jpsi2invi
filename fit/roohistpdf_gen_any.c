@@ -26,7 +26,7 @@
 using namespace RooFit ;
 
 
-void roohistpdf_incl_gauss_09()
+void roohistpdf_gen_any()
 {
    // Setting :: 
    // 1. ROOT Files
@@ -38,12 +38,12 @@ void roohistpdf_incl_gauss_09()
 //	c->Divide(3);
 
     // 2009 data set
-   signal_pdf_rootfile =   "../run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_fit.root" ;
-   jpsi2incl_rootfile =    "../run/jpsi2incl/hist_data09/jpsi2incl_data_psip_data09_event_merged_fit.root" ;
+  //  signal_pdf_rootfile =   "run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_fit.root" ;
+   jpsi2incl_rootfile =    "../run/gen_mc/jpsi2any/job_text/hist/jpsi2incl_gen_mc_any_event_merged_fit.root" ;
    jpsi2invi_rootfile =    "../run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_fit.root" ;
   
    // 2012 data set
-  //  signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
+   signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
   //  jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
   //  jpsi2invi_rootfile =    "run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_fit.root" ;
   
@@ -56,7 +56,27 @@ void roohistpdf_incl_gauss_09()
    
    // 3. Output files for the fitting result
    std::string table, figname;
-   
+   if( hist_id == 1 ){
+      if( Fitting_Method == 1 ){  
+         table = "fitres_incl_unbinned.txt" ; 
+         figname = "Jpsi2incl_fit_unbinned.eps" ;
+      }
+      else{ 
+         table = "incl_gen/fitres_incl_binned.txt" ; 
+         figname = "incl_gen/Jpsi2incl_fit_binned.eps" ;
+      }
+   }
+   if( hist_id == 2 ){
+      if( Fitting_Method == 1 ){  
+         table = "fitres_invisible_unbinned.txt" ; 
+         figname = "Jpsi2invible_fit_unbinned.eps" ;
+      }
+      else{ 
+         table = "fitres_invisible_binned.txt" ; 
+         figname = "Jpsi2invisible_fit_binned.eps" ;
+      }
+   }
+      
 
   // Extract PDF function
   if(hist_id==1 || hist_id==2){
@@ -78,19 +98,12 @@ void roohistpdf_incl_gauss_09()
     int g_conv_flag = 0;   // g_conv_flag==1 --> Gaussian convolution to the signal PDF
     if( g_conv_flag == 0 )
     {
-       table = "incl_09_ee/incl_09_ee_fit_binned.txt" ; 
-       figname = "incl_09_ee/incl_09_ee_fit_binned.eps" ;
-
        RooHistPdf signalpdf("SignalPDF", "Signal PDF", x, *data1, 4);
     }
     // For gaussian convolution
     if( g_conv_flag == 1 )
     {
        // Smoothing 
-
-       table = "incl_09_gauss/incl_09_gauss_fit_binned.txt" ; 
-       figname = "incl_09_gauss/incl_09_gauss_fit_binned.eps" ;
-
        RooHistPdf signalpdf1("SignalPDF", "Signal PDF", x, *data1, 4);
 
        RooRealVar mean("mean","mean of gaussian",3.097, 3.08, 3.11) ; 
@@ -111,8 +124,8 @@ void roohistpdf_incl_gauss_09()
     }
 
     // 2nd order polynomial function 
-    RooRealVar c0("c0","coefficient #0", -0.16, -0.3, 0.1); 
-    RooRealVar c1("c1","coefficient #1", -0.08, -0.2, 0.1); 
+    RooRealVar c0("c0","coefficient #0", 0.1, -0.2, 0.1); 
+    RooRealVar c1("c1","coefficient #1", 0.1, -0.2, 0.1); 
     RooChebychev bkg("bkg","background p.d.f.", x, RooArgList(c0,c1)); 
     
     // 3rd order polynomial function
@@ -120,8 +133,8 @@ void roohistpdf_incl_gauss_09()
   //   RooChebychev bkg("bkg","background p.d.f.",x,RooArgList(c0,c1,c2)) ; 
     
     if(hist_id==1){  // For Jpsi2Incl
-      RooRealVar nsig("nsig","signal fraction",    17230000, 12000000.0,     22000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",42550000, 30000000.0,    54000000.0); 
+      RooRealVar nsig("nsig","signal fraction",    100000, 12000.0,     22000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",400000, 300000.0,    54000000.0); 
     }
     
     if(hist_id==2){ // For Jpsi2Invi
@@ -297,8 +310,8 @@ void roohistpdf_incl_gauss_09()
     //gPad->SetLogy();
 
     if(hist_id==1){ // For Jpsi2Incl
-      xframe->SetMaximum(40000000);
-      xframe->SetMinimum(100000);
+      xframe->SetMaximum(10000000);
+      xframe->SetMinimum(400);
     }
     
     if(hist_id==2){ //For Jpsi2Invi

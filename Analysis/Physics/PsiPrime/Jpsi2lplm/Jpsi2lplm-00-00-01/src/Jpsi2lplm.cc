@@ -398,7 +398,7 @@ Jpsi2lplm::Jpsi2lplm(const std::string& name, ISvcLocator* pSvcLocator) :
   declareProperty("EnergyBarrelMin", m_energy_barrel_min=0.025); 
   declareProperty("EnergyEndcapMin", m_energy_endcap_min=0.050); 
   //declareProperty("EnergyEndcapMin", m_energy_endcap_min=50.0); 
-  declareProperty("PhotonIsoAngleMin", m_photon_iso_angle_min=10);
+  declareProperty("PhotonIsoAngleMin", m_photon_iso_angle_min=20);
   declareProperty("LeptonMomentumMax", m_lepton_momentum_min=0.6); 
   declareProperty("LeptonMomentumMin", m_lepton_momentum_max=2.5); 
   declareProperty("PionPolarAngleMax", m_pion_polar_angle_max=0.99);
