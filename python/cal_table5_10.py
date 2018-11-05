@@ -14,19 +14,23 @@ import math
 vi = 1.0
 cl = 1.0
 
-n_anything = 57901400.0
+# n_anything = 57901400.0
+n_anything = 18658100.0
 # n_anything = 53770000.0
 n_anything_err = 8900.0
 #n_anything = 18658100.0
 #n_anything_err = 5000
 n_anything_09 = 18658100.0
 
-n_invisible = 397611.0
+# n_invisible = 397611.0
+# n_invisible = 359628.0
+n_invisible = 124589.0
 # n_invisible = 368711.0
 n_invisible_err = 683.748
 n_invisible_09 = 137770.0
 
-n_other = 13779.0 * vi
+# n_other = 13779.0 * vi
+n_other = 3877.0
 n_other_09 = 3877.0
 
 n_total_2B_09 = 134586.0
@@ -58,19 +62,27 @@ scale_eff = 0.9699 # to scale acceptance eff
 # eff_nn = 6.09
 # eff_pp = 2.54
 
-n_sig = 1499390.0
-eff_mumu = 93472.0 /n_sig * 100
-eff_ee = 94673.0/n_sig * 100
-eff_nn = 61190.0*3.0/n_sig/2.0 * 100
-eff_pp = 26282.0*3.0/n_sig/2.0 * 100
+# 2012 data set
+# n_sig = 1499390.0
+# eff_mumu =  90016.0     /n_sig * 100
+# eff_ee =    90822.0     /n_sig * 100
+# eff_nn =    61219.0     *3.0/n_sig/2.0 * 100
+# eff_pp =    23491.0     *3.0/n_sig/2.0 * 100
+
+# 2009 data set
+n_sig = 1584410.0
+eff_mumu =  87528.0     /n_sig * 100
+eff_ee =    87257.0     /n_sig * 100
+eff_nn =    62263.0     *3.0/n_sig/2.0 * 100
+eff_pp =    23328.0     *3.0/n_sig/2.0 * 100
 
 eff_2b_err = 0.02
 
 
-#eff_trigger = 99.4
-#eff_trigger_err = 0.1
-eff_trigger = 99.8
-eff_trigger_err = 0.04
+eff_trigger = 99.4
+eff_trigger_err = 0.1
+# eff_trigger = 99.8
+# eff_trigger_err = 0.04
 
 n_mumu_09 = 65558.0
 n_ee_09 = 65668.0

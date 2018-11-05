@@ -184,8 +184,8 @@ def fill_histograms_all_combination(t):
         cut_mjpsi_sig = (abs(t.vtx_mrecpipi[loop] - JPSI_MASS)<0.015)
 
         if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
-            # cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):            
-            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_rough):            
+            cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):            
+            # cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_rough):            
             h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
             h_mrecpipi_fit.Fill(t.vtx_mrecpipi[loop])
             h_ncharged.Fill(t.ncharged)
