@@ -45,7 +45,8 @@ void roohistpdf_invi_gauss_12()
    // 2012 data set
    signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_fit.root" ;
    jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_fit.root" ;
-   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_fit.root" ;
+  //  jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_fit.root" ;
+   jpsi2invi_rootfile =    "../run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_ncharged.root" ;
   
    // 2. Select Fiiting Set
    int hist_id;  // hist_id = 1 (J/psi->inclusive), 2 (J/psi->invisible)
@@ -112,22 +113,18 @@ void roohistpdf_invi_gauss_12()
     }
 
     // 2nd order polynomial function 
-    RooRealVar c0("c0","coefficient #0", 0.25, -0.05, 0.35); 
-    RooRealVar c1("c1","coefficient #1", -0.09, -0.2, 0.1); 
+    RooRealVar c0("c0","coefficient #0", 0.26, -0.1, 0.4); 
+    RooRealVar c1("c1","coefficient #1", 0.06, -0.1, 0.2); 
     RooChebychev bkg("bkg","background p.d.f.", x, RooArgList(c0,c1)); 
     
     // 3rd order polynomial function
   //  RooRealVar c2("c2","coefficient #2",0.0005,-0.1,0.1) ; 
   //   RooChebychev bkg("bkg","background p.d.f.",x,RooArgList(c0,c1,c2)) ; 
     
-    if(hist_id==1){  // For Jpsi2Incl
-      RooRealVar nsig("nsig","signal fraction",    53769000, 35000000.0,     78000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",130575000, 10000000.0,    170000000.0); 
-    }
     
     if(hist_id==2){ // For Jpsi2Invi
-      RooRealVar nsig("nsig","signal fraction",368782, 250000, 400000.0); 
-      RooRealVar nbkg("nbkg","background fraction",230578, 200000, 500000.0); 
+      RooRealVar nsig("nsig","signal fraction",359622, 250000, 400000.0); 
+      RooRealVar nbkg("nbkg","background fraction",178281, 100000, 300000.0); 
     }
       
     RooAddPdf model("model", "model", RooArgList(signalpdf,bkg), RooArgList(nsig, nbkg));
