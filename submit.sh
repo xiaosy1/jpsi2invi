@@ -1186,19 +1186,19 @@ case $option in
 
     3.5.8) echo "Submit selection Condor jobs on generated MC 09 sample ---- 2..." 
 	    cd run/gen_mc/jpsi2mumu_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_mumu_09/invi/jpsi2invi_gen_mc_mumu_09_event-*
 	    hep_sub -g physics -n 10 jobOptions_jpsi2invi_gen_mc_mumu_09_event-%{ProcId}.sh
         cd ../../../jpsi2ee_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_ee_09/invi/jpsi2invi_gen_mc_ee_09_event-*
 	    hep_sub -g physics -n 10 jobOptions_jpsi2invi_gen_mc_ee_09_event-%{ProcId}.sh
         cd ../../../jpsi2nn_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_nn_09/invi/jpsi2invi_gen_mc_nn_09_event-1.root
 	    hep_sub -g physics -n 4 jobOptions_jpsi2invi_gen_mc_nn_09_event-%{ProcId}.sh
         cd ../../../jpsi2pp_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_pp_09/invi/jpsi2invi_gen_mc_pp_09_event-*
 	    hep_sub -g physics -n 7 jobOptions_jpsi2invi_gen_mc_pp_09_event-%{ProcId}.sh
         cd ../../../jpsi2nunu_09/job_text/jobs
@@ -1238,19 +1238,19 @@ case $option in
 
     3.6.8) echo "Submit selection Condor jobs on generated MC 09 sample ---- 2..." 
 	    cd run/gen_mc/jpsi2mumu_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_mumu_09/incl/jpsi2incl_gen_mc_mumu_09_event-*
 	    hep_sub -g physics -n 10 jobOptions_jpsi2incl_gen_mc_mumu_09_event-%{ProcId}.sh
         cd ../../../jpsi2ee_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_ee_09/incl/jpsi2incl_gen_mc_ee_09_event-*
 	    hep_sub -g physics -n 10 jobOptions_jpsi2incl_gen_mc_ee_09_event-%{ProcId}.sh
         cd ../../../jpsi2nn_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_nn_09/incl/jpsi2incl_gen_mc_nn_09_event-1.root
 	    hep_sub -g physics -n 4 jobOptions_jpsi2incl_gen_mc_nn_09_event-%{ProcId}.sh
         cd ../../../jpsi2pp_09/job_text/jobs
-        # find . -name "*.sh.*" | xargs rm
+        find . -name "*.sh.*" | xargs rm
         rm ../event_pp_09/incl/jpsi2incl_gen_mc_pp_09_event-*
 	    hep_sub -g physics -n 7 jobOptions_jpsi2incl_gen_mc_pp_09_event-%{ProcId}.sh
 	   ;;
