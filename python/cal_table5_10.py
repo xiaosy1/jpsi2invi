@@ -71,10 +71,10 @@ scale_eff = 0.9699 # to scale acceptance eff
 
 # 2009 data set
 n_sig = 1584410.0
-eff_mumu =  87528.0     /n_sig * 100
-eff_ee =    87257.0     /n_sig * 100
-eff_nn =    62263.0     *3.0/n_sig/2.0 * 100
-eff_pp =    23328.0     *3.0/n_sig/2.0 * 100
+eff_mumu =  96762.0     /n_sig * 100
+eff_ee =    96681.0     /n_sig * 100
+eff_nn =    73353.0     *3.0/n_sig/2.0 * 100
+eff_pp =    27594.0     *3.0/n_sig/2.0 * 100
 
 eff_2b_err = 0.02
 

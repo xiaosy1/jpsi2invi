@@ -36,7 +36,7 @@ def main():
     log = src
     logdir = src.split('/')[-1]
     
-    if logdir in ['event_mc09', 'rootfile_mc09', 'event_data09', 'rootfile_data09', 'rootfile_mumu', 'rootfile_ee', 'rootfile_nn', 'rootfile_pp', 'rootfile_any_09', 'rootfile_nunu_09', 'rootfile_mumu_09', 'rootfile_ee_09', 'rootfile_nn_09', 'rootfile_pp_09',  'event_any_09', 'event_nunu_09', 'event_mumu_09', 'event_ee_09', 'event_nn_09', 'event_pp_09',  'event_data3650', 'rootfile_data3650', 'rootfile_mc12', 'event_mc12', 'event', 'Data12_event', 'rootfile','Data12', 'data', 'mc_psip12', 'con3650', 'data09', 'mc_psip09']:
+    if logdir in ['event_mc09', 'incl', 'invi', 'rootfile_mc09', 'event_data09', 'rootfile_data09', 'rootfile_mumu', 'rootfile_ee', 'rootfile_nn', 'rootfile_pp', 'rootfile_any_09', 'rootfile_nunu_09', 'rootfile_mumu_09', 'rootfile_ee_09', 'rootfile_nn_09', 'rootfile_pp_09',  'event_any_09', 'event_nunu_09', 'event_mumu_09', 'event_ee_09', 'event_nn_09', 'event_pp_09',  'event_data3650', 'rootfile_data3650', 'rootfile_mc12', 'event_mc12', 'event', 'Data12_event', 'rootfile','Data12', 'data', 'mc_psip12', 'con3650', 'data09', 'mc_psip09']:
         logfiletype = 'BossLogFile'
     elif logdir == 'events':
         logfiletype = 'EventsLogFile'

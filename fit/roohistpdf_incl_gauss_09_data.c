@@ -26,7 +26,7 @@
 using namespace RooFit ;
 
 
-void roohistpdf_incl_gauss_09()
+void roohistpdf_incl_gauss_09_data()
 {
    // Setting :: 
    // 1. ROOT Files
@@ -39,8 +39,8 @@ void roohistpdf_incl_gauss_09()
 
     // 2009 data set
    signal_pdf_rootfile =   "../run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_fit.root" ;
-  //  jpsi2incl_rootfile =    "../run/jpsi2incl/hist_data09/jpsi2incl_data_psip_data09_event_merged_fit.root" ;
-   jpsi2incl_rootfile =    "../run/gen_mc/jpsi2any_09/job_text/hist/jpsi2incl_gen_mc_any_09_event_merged_1.root" ;
+   jpsi2incl_rootfile =    "../run/jpsi2incl/hist_data09/jpsi2incl_data_psip_data09_event_merged_fit.root" ;
+  //  jpsi2incl_rootfile =    "../run/gen_mc/jpsi2any_09/job_text/hist/jpsi2incl_gen_mc_any_09_event_merged_ncharged.root" ;
    jpsi2invi_rootfile =    "../run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_fit.root" ;
   
    // 2012 data set
@@ -112,8 +112,8 @@ void roohistpdf_incl_gauss_09()
     }
 
     // 2nd order polynomial function 
-    RooRealVar c0("c0","coefficient #0", -0.17, -0.25, 0.05); 
-    RooRealVar c1("c1","coefficient #1", -0.005, -0.15, 0.05); 
+    RooRealVar c0("c0","coefficient #0", -0.16, -0.3, 0.1); 
+    RooRealVar c1("c1","coefficient #1", -0.08, -0.2, 0.1); 
     RooChebychev bkg("bkg","background p.d.f.", x, RooArgList(c0,c1)); 
     
     // 3rd order polynomial function
@@ -121,8 +121,8 @@ void roohistpdf_incl_gauss_09()
   //   RooChebychev bkg("bkg","background p.d.f.",x,RooArgList(c0,c1,c2)) ; 
     
     if(hist_id==1){  // For Jpsi2Incl
-      RooRealVar nsig("nsig","signal fraction",    1584000, 800000.0,     2400000.0); 
-      RooRealVar nbkg("nbkg","background fraction",1698000, 800000.0,    2400000.0); 
+      RooRealVar nsig("nsig","signal fraction",    17230000, 12000000.0,     22000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",42550000, 30000000.0,    54000000.0); 
     }
     
       
