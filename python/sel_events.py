@@ -40,12 +40,16 @@ h_pip_p = ROOT.TH1D('h_pip_p', 'pip_p', 100, 0.0, 0.5)
 h_pim_p = ROOT.TH1D('h_pim_p', 'pim_p', 100, 0.0, 0.5) 
 h_pip_costhe = ROOT.TH1D('h_pip_costhe', 'pip_costhe', 100, -1.0, 1.0)
 h_pim_costhe = ROOT.TH1D('h_pim_costhe', 'pim_costhe', 100, -1.0, 1.0)
+h_mc_costhe_pip = ROOT.TH1D('h_mc_costhe_pip', 'mc_costhe_pip', 100, -1.0, 1.0)
+h_mc_costhe_pim = ROOT.TH1D('h_mc_costhe_pim', 'mc_costhe_pim', 100, -1.0, 1.0)
 h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 200, -1.0, 1.0)
 #h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 100, 0.0, 1.0)
 h_cos2pisys = ROOT.TH1D('h_cos2pisys', 'cos2pisys', 100, -1.0, 1.0)
 h_ngam = ROOT.TH1D('h_ngam', 'ngam', 100, 0, 20)
 
 ROOT.gROOT.ProcessLine(
+
+
 "struct MyTreeStruct{\
    Double_t vtx_mrecpipi;\
 };"	);
@@ -172,6 +176,9 @@ def fill_histograms(t):
         cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
         h_ngam.Fill(t.ngam)
 
+    h_mc_costhe_pim.Fill(t.mc_costhe_pim)
+    h_mc_costhe_pip.Fill(t.mc_costhe_pip)
+
     
 def write_histograms():
     h_evtflw.Write()
@@ -182,6 +189,8 @@ def write_histograms():
     h_pim_p.Write()
     h_pip_costhe.Write()
     h_pim_costhe.Write()
+    h_mc_costhe_pip.Write()
+    h_mc_costhe_pim.Write()
     h_cospipi.Write()
     h_cos2pisys.Write()
     h_ngam.Write()
