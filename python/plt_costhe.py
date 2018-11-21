@@ -31,18 +31,19 @@ costhe_12 = TH1D('costhe_12', '', 100, -1.0, 1.0)
 
 root_09 = TChain('tree')
 root_12 = TChain('tree')
-# mumu
+
 if logdir in [['mumu_pip'], ['mumu_pim']]:
     root_09.Add('run/gen_mc/jpsi2mumu_09/job_text/hist/gen_mc_mumu_09_truth_merged_1.root')
-    root_12.Add('run/gen_mc/jpsi2ee_09/job_text/hist/gen_mc_ee_09_truth_merged_1.root')
-# ee
+    root_12.Add('run/gen_mc/jpsi2mumu/job_text/hist/gen_mc_mumu_truth_merged_1.root')
 elif logdir in [['ee_pip'], ['ee_pim']]:
     root_09.Add('run/gen_mc/jpsi2ee_09/job_text/hist/gen_mc_ee_09_truth_merged_1.root')
-# nn
-# elif 'nn' in logdir:
-# # pp
+    root_12.Add('run/gen_mc/jpsi2ee/job_text/hist/gen_mc_ee_truth_merged_1.root')
+elif logdir in [['nn_pip'], ['nn_pim']]:
+    root_09.Add('run/gen_mc/jpsi2nn_09/job_text/hist/gen_mc_nn_09_truth_merged_1.root')
+    root_12.Add('')
 elif logdir in [['pp_pip'], ['pp_pim']]:
     root_09.Add('run/gen_mc/jpsi2pp_09/job_text/hist/gen_mc_pp_09_truth_merged_1.root')
+    root_12.Add('run/gen_mc/jpsi2pp/job_text/hist/gen_mc_pp_truth_merged_1.root')
 else:
     print 'input error'
 
@@ -54,6 +55,8 @@ elif logdir in [['mumu_pim'], ['ee_pim'], ['nn_pim'], ['pp_pim']]:
     root_12.Project('costhe_12', 'mc_costhe_pim')
 
 costhe_09.SetLineColor(ROOT.kRed)
+costhe_09.SetFillColor(ROOT.kRed)
+costhe_09.SetFillStyle(3005)
 costhe_09.SetLineWidth(2)
 costhe_12.SetLineColor(ROOT.kBlue)
 costhe_12.SetLineWidth(2)
@@ -69,7 +72,11 @@ elif logdir in [['mumu_pim'], ['ee_pim'], ['nn_pim'], ['pp_pim']]:
 
 costhe_09.GetYaxis().SetTitle()
 costhe_09.GetYaxis().SetTitleOffset(1.5)
-costhe_09.GetYaxis().SetRangeUser(20000, 33000)
+
+if logdir in [['mumu_pip'], ['ee_pip'], ['mumu_pim'], ['ee_pim']]:
+    costhe_09.GetYaxis().SetRangeUser(20000, 33000)
+elif logdir in [['nn_pip'], ['pp_pip'], ['nn_pim'], ['pp_pim']]:
+    costhe_09.GetYaxis().SetRangeUser(10000, 23000)
 
 legend = TLegend(0.28, 0.28, 0.72, 0.48)
 
@@ -93,6 +100,3 @@ legend.Draw()
 figfile = 'python/plots/%s.pdf' %'_'.join(logdir)
 
 c1.SaveAs(figfile)
-
-
-
