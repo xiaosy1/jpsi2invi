@@ -35,7 +35,7 @@ PID_JPSI=443
 
 h_evtflw = ROOT.TH1F('hevtflw', 'eventflow', 10, 0, 10) 
 h_evtflw.GetXaxis().SetBinLabel(1, 'raw')
-h_evtflw.GetXaxis().SetBinLabel(2, 'N_{#gamma}=1')
+h_evtflw.GetXaxis().SetBinLabel(2, 'N_{#gamma}=0')
 h_evtflw.GetXaxis().SetBinLabel(3, '|cos#theta|<0.8')
 h_evtflw.GetXaxis().SetBinLabel(4, '|p|<0.45') 
 h_evtflw.GetXaxis().SetBinLabel(5, 'cos#theta_{#pi^{+}#pi^{-}}<0.95') 
@@ -273,9 +273,9 @@ def write_histograms():
 def select_jpsi_to_inclusive(t):
     h_evtflw.Fill(0) 
 
-    # if not (t.ngam == 1):
-    #     return False
-    # h_evtflw.Fill(1) 
+    if not (t.ngam == 0):
+        return False
+    h_evtflw.Fill(1) 
     
     if not ( abs(math.cos(t.trkp_theta)) < 0.8 and abs(math.cos(t.trkm_theta)) < 0.8):
         return False
