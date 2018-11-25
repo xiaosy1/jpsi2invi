@@ -35,12 +35,12 @@ PID_JPSI=443
 
 h_evtflw = ROOT.TH1F('hevtflw', 'eventflow', 10, 0, 10) 
 h_evtflw.GetXaxis().SetBinLabel(1, 'raw')
-h_evtflw.GetXaxis().SetBinLabel(2, 'N_{#gamma}=0')
-h_evtflw.GetXaxis().SetBinLabel(3, '|cos#theta|<0.8')
-h_evtflw.GetXaxis().SetBinLabel(4, '|p|<0.45') 
-h_evtflw.GetXaxis().SetBinLabel(5, 'cos#theta_{#pi^{+}#pi^{-}}<0.95') 
-h_evtflw.GetXaxis().SetBinLabel(6, 'cos#theta_{#pi#pi sys}<0.9') 
-h_evtflw.GetXaxis().SetBinLabel(7, '3<M_{#pi#pi}^{rec}<3.2') 
+# h_evtflw.GetXaxis().SetBinLabel(2, 'N_{#gamma}=0')
+h_evtflw.GetXaxis().SetBinLabel(2, '|cos#theta|<0.8')
+h_evtflw.GetXaxis().SetBinLabel(3, '|p|<0.45') 
+h_evtflw.GetXaxis().SetBinLabel(4, 'cos#theta_{#pi^{+}#pi^{-}}<0.95') 
+h_evtflw.GetXaxis().SetBinLabel(5, 'cos#theta_{#pi#pi sys}<0.9') 
+h_evtflw.GetXaxis().SetBinLabel(6, '3<M_{#pi#pi}^{rec}<3.2') 
 
 h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 100, 3.03, 3.17)
 h_mrecpipi_fit = ROOT.TH1D('h_mrecpipi_fit', 'mrecpipi_fit', 1400, 3.03, 3.17)
@@ -55,7 +55,7 @@ h_pim_costhe = ROOT.TH1D('h_pim_costhe', 'pim_costhe', 100, -1.0, 1.0)
 h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 200, -1.0, 1.0)
 h_cos2pisys = ROOT.TH1D('h_cos2pisys', 'cos2pisys', 100, -1.0, 1.0)
 h_ncharged = ROOT.TH1D('h_ncharged', 'ncharged', 100, 0, 20)
-# h_ngam = ROOT.TH1D('h_ngam', 'ngam', 100, 0, 20)
+h_ngam = ROOT.TH1D('h_ngam', 'ngam', 100, 0, 20)
 
 ROOT.gROOT.ProcessLine(
 "struct MyTreeStruct{\
@@ -133,7 +133,7 @@ def main():
         else:                                      # Normal 
             fill_histograms_all_combination(t)
 
-        # select_jpsi_to_inclusive(t)
+        select_jpsi_to_inclusive(t)
  
     fout = ROOT.TFile(outfile, "RECREATE")
  #   t_out.Write()
@@ -273,29 +273,38 @@ def write_histograms():
 def select_jpsi_to_inclusive(t):
     h_evtflw.Fill(0) 
 
-    if not (t.ngam == 0):
-        return False
-    h_evtflw.Fill(1) 
-    
-    if not ( abs(math.cos(t.trkp_theta)) < 0.8 and abs(math.cos(t.trkm_theta)) < 0.8):
-        return False
-    h_evtflw.Fill(2) 
+    # if not (t.ngam == 0):
+    #     return False
+    # h_evtflw.Fill(1) 
 
-    if not (abs(t.trkp_p) < 0.45 and abs(t.trkm_p) < 0.45):
-        return False 
-    h_evtflw.Fill(3) 
+    len_vector = len(t.trkp_theta)
+    count = 1
+    while (count < len_vector):
 
-    if not (t.vtx_cospipi < 0.95):
-        return False
-    h_evtflw.Fill(4)
+    # nentry = t.npipi
+    # for count in range(nentry):
 
-    if not (t.vtx_cos2pisys < 0.9):
-        return False
-    h_evtflw.Fill(5)
+        if not ( abs(math.cos(t.trkp_theta.at(count))) < 0.8 and abs(math.cos(t.trkm_theta.at(count))) < 0.8):
+            return False
+        h_evtflw.Fill(1) 
 
-    if not (t.vtx_mrecpipi > 3.0 and t.vtx_mrecpipi < 3.2):
-        return False
-    h_evtflw.Fill(6)
+        if not (abs(t.trkp_p.at(count)) < 0.45 and abs(t.trkm_p.at(count)) < 0.45):
+            return False 
+        h_evtflw.Fill(2) 
+
+        if not (t.vtx_cospipi.at(count) < 0.95):
+            return False
+        h_evtflw.Fill(3)
+
+        if not (t.vtx_cos2pisys.at(count) < 0.9):
+            return False
+        h_evtflw.Fill(4)
+
+        if not (t.vtx_mrecpipi.at(count) > 3.0 and t.vtx_mrecpipi.at(count) < 3.2):
+            return False
+        h_evtflw.Fill(5)
+
+        count = count + 1
     
     return True
     

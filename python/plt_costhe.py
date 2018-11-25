@@ -40,7 +40,7 @@ elif logdir in [['ee_pip'], ['ee_pim']]:
     root_12.Add('run/gen_mc/jpsi2ee/job_text/hist/gen_mc_ee_truth_merged_1.root')
 elif logdir in [['nn_pip'], ['nn_pim']]:
     root_09.Add('run/gen_mc/jpsi2nn_09/job_text/hist/gen_mc_nn_09_truth_merged_1.root')
-    root_12.Add('')
+    root_12.Add('run/gen_mc/jpsi2nn/job_text/hist/gen_mc_nn_truth_merged_1.root')
 elif logdir in [['pp_pip'], ['pp_pim']]:
     root_09.Add('run/gen_mc/jpsi2pp_09/job_text/hist/gen_mc_pp_09_truth_merged_1.root')
     root_12.Add('run/gen_mc/jpsi2pp/job_text/hist/gen_mc_pp_truth_merged_1.root')

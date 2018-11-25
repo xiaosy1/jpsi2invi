@@ -8,6 +8,43 @@ __copyright__ = "Copyright (c) XIAO Suyu"
 __created__ = "[2018-02-01 Thu 17:21]"
 
 import math
+import sys
+
+logdir = sys.argv[1:]
+print logdir
+
+if logdir in [['09']]:
+    n_anything = 18658100.0
+    n_anything_err = 5000
+    n_invisible = 124589.0
+    n_other = 3877.0
+    n_pk_mumu = 87528.0
+    n_pk_ee = 87257.0
+    n_pk_nn = 62263.0
+    n_pk_pp = 23328.0
+    n_pk_any = 1584450.0
+    eff_trigger = 99.4
+    eff_trigger_err = 0.1
+
+elif logdir in [['12']]:
+    n_anything = 57901400.0
+    n_anything_err = 8900.0
+    n_invisible = 359628.0
+    n_other = 13779.0
+    n_pk_mumu = 90016.0
+    n_pk_ee = 90822.0
+    n_pk_nn = 61219.0
+    n_pk_pp = 23491.0
+    n_pk_any = 1527550.0
+    eff_trigger = 99.8
+    eff_trigger_err = 0.04
+
+
+eff_mumu = n_pk_mumu / n_pk_any * 100.0
+eff_ee = n_pk_ee / n_pk_any* 100.0
+eff_nn = n_pk_nn / n_pk_any *1.5* 100.0
+eff_pp = n_pk_pp / n_pk_any *1.5* 100.0
+
 
 #vi = 0.77
 #cl = 1.040
@@ -30,7 +67,7 @@ n_invisible_err = 683.748
 n_invisible_09 = 137770.0
 
 # n_other = 13779.0 * vi
-n_other = 3877.0
+
 n_other_09 = 3877.0
 
 n_total_2B_09 = 134586.0
@@ -45,7 +82,7 @@ b_ee_err = 0.032
 b_nn_err = 0.016
 b_pp_err = 0.0029
 
-scale_eff = 0.9699 # to scale acceptance eff
+# scale_eff = 0.9699 # to scale acceptance eff
 
 # eff_mumu = scale_eff * 93770.0*vi/1502682.0/cl*100.0
 # eff_ee = scale_eff * 94983.0*vi/1503130.0/cl*100.0
@@ -70,19 +107,15 @@ scale_eff = 0.9699 # to scale acceptance eff
 # eff_pp =    23491.0     *3.0/n_sig/2.0 * 100
 
 # 2009 data set
-n_sig = 1584410.0
-eff_mumu =  96762.0     /n_sig * 100
-eff_ee =    96681.0     /n_sig * 100
-eff_nn =    73353.0     *3.0/n_sig/2.0 * 100
-eff_pp =    27594.0     *3.0/n_sig/2.0 * 100
+# n_sig = 1584410.0
+# eff_mumu =  96762.0     /n_sig * 100
+# eff_ee =    96681.0     /n_sig * 100
+# eff_nn =    73353.0     *3.0/n_sig/2.0 * 100
+# eff_pp =    27594.0     *3.0/n_sig/2.0 * 100
 
 eff_2b_err = 0.02
 
 
-eff_trigger = 99.4
-eff_trigger_err = 0.1
-# eff_trigger = 99.8
-# eff_trigger_err = 0.04
 
 n_mumu_09 = 65558.0
 n_ee_09 = 65668.0

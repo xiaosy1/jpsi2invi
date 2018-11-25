@@ -54,7 +54,7 @@ def main():
     check_outfile_path(outfile)
 
     fin = ROOT.TFile(infile)
-    h_evtflw = fin.Get('hevtflw')
+    h_evtflw = fin.Get('hcutflw')
     # entries = t.GetEntriesFast()
 
     # pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=entries).start()

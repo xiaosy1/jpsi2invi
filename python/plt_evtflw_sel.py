@@ -27,194 +27,216 @@ mbc.SetBottomMargin(0.15)
 logdir = sys.argv[1:]
 print logdir
 
-if logdir in [['ee_pim_costhe'], ['mumu_pim_costhe'], ['nn_pim_costhe'], ['pp_pim_costhe']]:
+if logdir in [['nunu_pim_costhe'], ['ee_pim_costhe'], ['mumu_pim_costhe'], ['nn_pim_costhe'], ['pp_pim_costhe']]:
     histo = 'h_pim_costhe'
-elif logdir in [['ee_pip_costhe'], ['mumu_pip_costhe'], ['nn_pip_costhe'], ['pp_pip_costhe']]:
+elif logdir in [['nunu_pip_costhe'], ['ee_pip_costhe'], ['mumu_pip_costhe'], ['nn_pip_costhe'], ['pp_pip_costhe']]:
     histo = 'h_pip_costhe'
-elif logdir in [['ee_mc_costhe_pip'], ['mumu_mc_costhe_pip'], ['nn_mc_costhe_pip'], ['pp_mc_costhe_pip']]:
-    histo = 'h_mc_costhe_pip'
-elif logdir in [['ee_mc_costhe_pim'], ['mumu_mc_costhe_pim'], ['nn_mc_costhe_pim'], ['pp_mc_costhe_pim']]:
-    histo = 'h_mc_costhe_pim'
+elif logdir in [['any_pre']]:
+    histo = 'hcutflw'
+# elif logdir in [['ee_mc_costhe_pip'], ['mumu_mc_costhe_pip'], ['nn_mc_costhe_pip'], ['pp_mc_costhe_pip']]:
+#     histo = 'h_mc_costhe_pip'
+# elif logdir in [['ee_mc_costhe_pim'], ['mumu_mc_costhe_pim'], ['nn_mc_costhe_pim'], ['pp_mc_costhe_pim']]:
+#     histo = 'h_mc_costhe_pim'
 else:
     histo = 'hevtflw'
+
+if 'any_pre' in logdir:
+    f0 = TFile("run/gen_mc/jpsi2any_09/job_text/hist/jpsi2incl_gen_mc_any_09_event_merged_evtflw.root")
+    f1 = TFile("run/gen_mc/jpsi2any/job_text/hist/jpsi2incl_gen_mc_any_event_merged_evtflw.root")
+
+if 'any_sel' in logdir:
+    f0 = TFile("run/gen_mc/jpsi2any_09/job_text/hist/jpsi2incl_gen_mc_any_09_event_merged_fit.root")
+    f1 = TFile("run/gen_mc/jpsi2any/job_text/hist/jpsi2incl_gen_mc_any_event_merged_fit.root")
 
 if 'pp_01' in logdir:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_01.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_01.root")
 
-if 'nn_01' in logdir:
+elif 'nn_01' in logdir:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_01.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_01.root")
 
-if 'ee_01' in logdir:
+elif 'ee_01' in logdir:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_01.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_01.root")
 
-if 'mumu_01' in logdir:
+elif 'mumu_01' in logdir:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_01.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_01.root")
 
-if 'pp_02' in logdir:
+elif 'pp_02' in logdir:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_02.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_02.root")
 
-if 'nn_02' in logdir:
+elif 'nn_02' in logdir:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_02.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_02.root")
 
-if 'ee_02' in logdir:
+elif 'ee_02' in logdir:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_02.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_02.root")
 
-if 'mumu_02' in logdir:
+elif 'mumu_02' in logdir:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_02.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_02.root")
 
-if 'pp_03' in logdir:
+elif 'pp_03' in logdir:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_03.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_03.root")
 
-if 'nn_03' in logdir:
+elif 'nn_03' in logdir:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_03.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_03.root")
 
-if 'ee_03' in logdir:
+elif 'ee_03' in logdir:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_03.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_03.root")
 
-if 'mumu_03' in logdir:
+elif 'mumu_03' in logdir:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_03.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_03.root")
 
-if 'pp_04' in logdir:
+elif 'pp_04' in logdir:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_04.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_04.root")
 
-if 'nn_04' in logdir:
+elif 'nn_04' in logdir:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_04.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_04.root")
 
-if 'ee_04' in logdir:
+elif 'ee_04' in logdir:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_04.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_04.root")
 
-if 'mumu_04' in logdir:
+elif 'mumu_04' in logdir:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_04.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_04.root")
 
-if 'pp_05' in logdir:
+elif 'pp_05' in logdir:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_05.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_05.root")
 
-if 'nn_05' in logdir:
+elif 'nn_05' in logdir:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_05.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_05.root")
 
-if 'ee_05' in logdir:
+elif 'ee_05' in logdir:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_05.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_05.root")
 
-if 'mumu_05' in logdir:
+elif 'mumu_05' in logdir:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_05.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_05.root")
 
-if 'pp_06' in logdir:
+elif 'pp_06' in logdir:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_06.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_06.root")
 
-if 'nn_06' in logdir:
+elif 'nn_06' in logdir:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_06.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_06.root")
 
-if 'ee_06' in logdir:
+elif 'ee_06' in logdir:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_06.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_06.root")
 
-if 'mumu_06' in logdir:
+elif 'mumu_06' in logdir:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_06.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_06.root")
 
-if 'pp_07' in logdir:
+elif 'pp_07' in logdir:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_07.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_07.root")
 
-if 'nn_07' in logdir:
+elif 'nn_07' in logdir:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_07.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_07.root")
 
-if 'ee_07' in logdir:
+elif 'ee_07' in logdir:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_07.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_07.root")
 
-if 'mumu_07' in logdir:
+elif 'mumu_07' in logdir:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_07.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_07.root")
 
-if logdir in [['pp'], ['pp_pim_costhe'], ['pp_pip_costhe'], ['pp_mc_costhe_pip'], ['pp_mc_costhe_pim']]:
+elif logdir in [['pp'], ['pp_pim_costhe'], ['pp_pip_costhe'], ['pp_mc_costhe_pip'], ['pp_mc_costhe_pim']]:
     f0 = TFile("run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2invi_gen_mc_pp_09_event_merged_08.root")
     f1 = TFile("run/gen_mc/jpsi2pp/job_text/hist/jpsi2invi_gen_mc_pp_event_merged_08.root")
 
-if logdir in [['nn'], ['nn_pim_costhe'], ['nn_pip_costhe'], ['nn_mc_costhe_pip'], ['nn_mc_costhe_pim']]:
+elif logdir in [['nn'], ['nn_pim_costhe'], ['nn_pip_costhe'], ['nn_mc_costhe_pip'], ['nn_mc_costhe_pim']]:
     f0 = TFile("run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2invi_gen_mc_nn_09_event_merged_08.root")
     f1 = TFile("run/gen_mc/jpsi2nn/job_text/hist/jpsi2invi_gen_mc_nn_event_merged_08.root")
 
-if logdir in [['ee'], ['ee_pim_costhe'], ['ee_pip_costhe'], ['ee_mc_costhe_pip'], ['ee_mc_costhe_pim']]:
+elif logdir in [['ee'], ['ee_pim_costhe'], ['ee_pip_costhe'], ['ee_mc_costhe_pip'], ['ee_mc_costhe_pim']]:
     f0 = TFile("run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2invi_gen_mc_ee_09_event_merged_08.root")
     f1 = TFile("run/gen_mc/jpsi2ee/job_text/hist/jpsi2invi_gen_mc_ee_event_merged_08.root")
 
-if logdir in [['mumu'], ['mumu_pim_costhe'], ['mumu_pip_costhe'], ['mumu_mc_costhe_pip'], ['mumu_mc_costhe_pim']]:
+elif logdir in [['mumu'], ['mumu_pim_costhe'], ['mumu_pip_costhe'], ['mumu_mc_costhe_pip'], ['mumu_mc_costhe_pim']]:
     f0 = TFile("run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_08.root")
     f1 = TFile("run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_08.root")
 
-if 'nunu_pre' in logdir:
-    f0 = TFile("run/gen_mc/jpsi2nunu_09/job_text/hist/evtflw/jpsi2invi_gen_mc_nunu_09_event_merged_1.root")
-    f1 = TFile("run/gen_mc/jpsi2nunu/job_text/evtflw_nunu/jpsi2invi_gen_mc_nunu_event-1.root")
+elif 'mumu_pre' in logdir:
+    f0 = TFile('run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2invi_gen_mc_mumu_09_event_merged_evtflw.root')
+    f1 = TFile('run/gen_mc/jpsi2mumu/job_text/hist/jpsi2invi_gen_mc_mumu_event_merged_evtflw.root')
 
-if 'nunu_sel' in logdir:
+elif logdir in [['nunu_pre']]:
+    f0 = TFile("run/gen_mc/jpsi2nunu_09/job_text/hist/evtflw/jpsi2invi_gen_mc_nunu_09_event_merged_ncharged.root")
+    f1 = TFile("run/gen_mc/jpsi2nunu/job_text/evtflw_nunu/jpsi2invi_gen_mc_nunu_event-ncharged.root")
+ 
+elif logdir in [['nunu_pre_fit']]:
+    f0 = TFile('run/gen_mc/jpsi2nunu_09/job_text/hist/evtflw/jpsi2invi_gen_mc_nunu_09_event_merged_fit.root')
+    f1 = TFile('run/gen_mc/jpsi2nunu/job_text/evtflw_nunu/jpsi2invi_gen_mc_nunu_event-fit.root')
+
+elif logdir in [['nunu_sel_fit']]:
+    f0 = TFile('run/gen_mc/jpsi2nunu_09/job_text/hist/jpsi2invi_gen_mc_nunu_09_event_merged_fit.root')
+    f1 = TFile('run/gen_mc/jpsi2nunu/job_text/event_nunu/hist/jpsi2invi_gen_mc_nunu_event-fit.root')
+
+elif logdir in [['nunu_sel'], ['nunu_pim_costhe'], ['nunu_pip_costhe']]:
     f0 = TFile("run/gen_mc/jpsi2nunu_09/job_text/hist/jpsi2invi_gen_mc_nunu_09_event_merged_ncharged.root")
     f1 = TFile("run/gen_mc/jpsi2nunu/job_text/event_nunu/hist/jpsi2invi_gen_mc_nunu_event-ncharged.root")
 
-if 'data_pre' in logdir:
+elif 'data_pre' in logdir:
     mbc.SetLogy()
     f0 = TFile("run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_evtflw.root")
     f1 = TFile("run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_evtflw.root")
 
-if 'data_sel' in logdir:
+elif 'data_sel' in logdir:
     mbc.SetLogy()
     f0 = TFile("run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_ncharged.root")
     f1 = TFile("run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_ncharged.root")
 
-if 'mc_pre' in logdir:
+elif 'mc_pre' in logdir:
     mbc.SetLogy() 
     f0 = TFile("run/jpsi2invi/hist_mc09/jpsi2invi_psip_mc09_event_merged_evtflw.root")
     f1 = TFile("run/jpsi2invi/hist_mc12/jpsi2invi_psip_mc12_event_merged_evtflw.root")
 
-if 'mc_sel' in logdir:
+elif 'mc_sel' in logdir:
     mbc.SetLogy() 
     f0 = TFile("run/jpsi2invi/hist_mc09/jpsi2invi_psip_mc09_event_merged_ncharged.root")
     f1 = TFile("run/jpsi2invi/hist_mc12/jpsi2invi_psip_mc12_event_merged_ncharged.root")
 
-if '09_pre' in logdir:
+elif '09_pre' in logdir:
     mbc.SetLogy() 
     f0 = TFile("run/jpsi2invi/hist_mc09/jpsi2invi_psip_mc09_event_merged_evtflw.root")
     f1 = TFile("run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_evtflw.root")
 
-if '09_sel' in logdir:
+elif '09_sel' in logdir:
     mbc.SetLogy() 
     f0 = TFile("run/jpsi2invi/hist_mc09/jpsi2invi_psip_mc09_event_merged_ncharged.root")
     f1 = TFile("run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_ncharged.root")
 
-if '12_pre' in logdir:
+elif '12_pre' in logdir:
     mbc.SetLogy() 
     f0 = TFile("run/jpsi2invi/hist_mc12/jpsi2invi_psip_mc12_event_merged_evtflw.root")
     f1 = TFile("run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_evtflw.root")
 
-if '12_sel' in logdir:
+elif '12_sel' in logdir:
     mbc.SetLogy() 
     f0 = TFile("run/jpsi2invi/hist_mc12/jpsi2invi_psip_mc12_event_merged_ncharged.root")
     f1 = TFile("run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_ncharged.root")
 
-# if 'any' in logdir:
+# elif 'any' in logdir:
 #     mbc.SetLogy() 
 #     f0 = TFile("run/gen_mc/jpsi2any_09/job_text/hist/jpsi2incl_gen_mc_any_09_event_merged_ncharged.root")
 #     f1 = TFile("run/gen_mc/jpsi2any/job_text/hist/jpsi2incl_gen_mc_any_event_merged_fit.root")
@@ -222,9 +244,12 @@ if '12_sel' in logdir:
 h0_E = f0.Get(histo)
 h1_E = f1.Get(histo)
 
+if logdir in [['any_pre']]:
+    # h0_E.GetYaxis().SetRangeUser(2200000, 30000000)
+    h0_E.GetYaxis().SetRangeUser(0, 35000000)
+
 if logdir in [['data_sel'], ['data_pre']]:
     h0_E.Scale(341.0/107.0) # 09 and 12 data
-    # h0_E.GetYaxis().SetRangeUser(1, 30000000)
 
 elif logdir in [['mc_sel'], ['mc_pre']]:
     h0_E.Scale(400.0/107.0) # 09 and 12 mc
@@ -246,13 +271,13 @@ h1_E.Draw("same")
 h0_E.GetYaxis().SetName("")
 h0_E.GetYaxis().SetTitleOffset(1.5)
 
-if logdir in [['ee_mc_costhe_pim'], ['mumu_mc_costhe_pim'], ['nn_mc_costhe_pim'], ['pp_mc_costhe_pim'], ['ee_mc_costhe_pip'], ['mumu_mc_costhe_pip'], ['nn_mc_costhe_pip'], ['pp_mc_costhe_pip'], ['ee_pip_costhe'], ['mumu_pip_costhe'], ['nn_pip_costhe'], ['pp_pip_costhe'], ['ee_pim_costhe'], ['mumu_pim_costhe'], ['nn_pim_costhe'], ['pp_pim_costhe']]:
+if logdir in [['nunu_pim_costhe'], ['nunu_pip_costhe'], ['ee_mc_costhe_pim'], ['mumu_mc_costhe_pim'], ['nn_mc_costhe_pim'], ['pp_mc_costhe_pim'], ['ee_mc_costhe_pip'], ['mumu_mc_costhe_pip'], ['nn_mc_costhe_pip'], ['pp_mc_costhe_pip'], ['ee_pip_costhe'], ['mumu_pip_costhe'], ['nn_pip_costhe'], ['pp_pip_costhe'], ['ee_pim_costhe'], ['mumu_pim_costhe'], ['nn_pim_costhe'], ['pp_pim_costhe']]:
     legend = TLegend(0.28, 0.29, 0.68, 0.38)
 
 else:
     legend = TLegend(0.28, 0.79, 0.68, 0.88)
 
-if logdir in [['mumu_mc_costhe_pim'], ['mumu_mc_costhe_pip'], ['mumu_01'], ['mumu_02'], ['mumu_pip_costhe'], ['mumu_pim_costhe'], ['mumu_03'], ['mumu_04'], ['mumu_05'], ['mumu_06'], ['mumu'], ['mumu_07']]:
+if logdir in [['mumu_pre'], ['mumu_mc_costhe_pim'], ['mumu_mc_costhe_pip'], ['mumu_01'], ['mumu_02'], ['mumu_pip_costhe'], ['mumu_pim_costhe'], ['mumu_03'], ['mumu_04'], ['mumu_05'], ['mumu_06'], ['mumu'], ['mumu_07']]:
     legend.AddEntry(h0_E,'2009 Jpsi->mumu MC sample') 
     legend.AddEntry(h1_E,'2012 Jpsi->mumu MC sample')
 
@@ -268,14 +293,15 @@ elif logdir in [['pp_mc_costhe_pim'], ['pp_mc_costhe_pip'], ['pp_01'], ['pp_02']
     legend.AddEntry(h0_E,'2009 Jpsi->pp MC sample') 
     legend.AddEntry(h1_E,'2012 Jpsi->pp MC sample')
 
-elif logdir in [['nunu_pre'], ['nunu_sel']]:
+elif logdir in [['nunu_pim_costhe'], ['nunu_pip_costhe'], ['nunu_pre_fit'], ['nunu_pre'], ['nunu_sel'], ['nunu_sel_fit']]:
     legend.AddEntry(h0_E,'2009 Jpsi->nunu MC sample') 
     legend.AddEntry(h1_E,'2012 Jpsi->nunu MC sample')
 
 elif logdir in [['data_pre'], ['data_sel']]:
     legend.AddEntry(h0_E,'2009 data set')
     legend.AddEntry(h1_E,'2012 data set')
-elif logdir in [['mc_pre'], ['mc_sel']]:
+
+elif logdir in [['mc_pre'], ['mc_sel'], ['any_pre'], ['any_sel']]:
     legend.AddEntry(h0_E,'2009 Jpsi->incl MC sample')
     legend.AddEntry(h1_E,'2012 Jpsi->incl MC sample')
 

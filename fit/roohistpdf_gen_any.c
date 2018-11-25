@@ -37,13 +37,18 @@ void roohistpdf_gen_any()
 //	TCanvas* c = new TCanvas("","",900,300);
 //	c->Divide(3);
 
-    // 2009 data set
-  //  signal_pdf_rootfile =   "run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_fit.root" ;
+   
+   // 2012
+   signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
    jpsi2incl_rootfile =    "../run/gen_mc/jpsi2any/job_text/hist/jpsi2incl_gen_mc_any_event_merged_fit.root" ;
+   
+    // 2009 data set
+  //  signal_pdf_rootfile =   "../run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_fit.root" ;
+  //  jpsi2incl_rootfile =    "../run/gen_mc/jpsi2any_09/job_text/hist/jpsi2incl_gen_mc_any_09_event_merged_fit.root" ;
+   
    jpsi2invi_rootfile =    "../run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_fit.root" ;
   
    // 2012 data set
-   signal_pdf_rootfile =   "../run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_1.root" ;
   //  jpsi2incl_rootfile =    "../run/jpsi2incl/hist/jpsi2incl_data_psip_data12_event_merged_incl.root" ;
   //  jpsi2invi_rootfile =    "run/jpsi2invi/hist/jpsi2invi_data_psip_data12_event_merged_fit.root" ;
   
