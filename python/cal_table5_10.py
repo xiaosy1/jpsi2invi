@@ -13,20 +13,7 @@ import sys
 logdir = sys.argv[1:]
 print logdir
 
-if logdir in [['09']]:
-    n_anything = 18658100.0
-    n_anything_err = 5000
-    n_invisible = 124589.0
-    n_other = 3877.0
-    n_pk_mumu = 87528.0
-    n_pk_ee = 87257.0
-    n_pk_nn = 62263.0
-    n_pk_pp = 23328.0
-    n_pk_any = 1584450.0
-    eff_trigger = 99.4
-    eff_trigger_err = 0.1
-
-elif logdir in [['12']]:
+if logdir in [['12']]:
     n_anything = 57901400.0
     n_anything_err = 8900.0
     n_invisible = 359628.0
@@ -39,6 +26,18 @@ elif logdir in [['12']]:
     eff_trigger = 99.8
     eff_trigger_err = 0.04
 
+elif logdir in [['09']]:
+    n_anything = 18658100.0
+    n_anything_err = 5000
+    n_invisible = 124589.0
+    n_other = 3877.0
+    n_pk_mumu = 87528.0
+    n_pk_ee = 87257.0
+    n_pk_nn = 62263.0
+    n_pk_pp = 23328.0
+    n_pk_any = 1584450.0
+    eff_trigger = 99.4
+    eff_trigger_err = 0.1
 
 eff_mumu = n_pk_mumu / n_pk_any * 100.0
 eff_ee = n_pk_ee / n_pk_any* 100.0
@@ -52,16 +51,16 @@ vi = 1.0
 cl = 1.0
 
 # n_anything = 57901400.0
-n_anything = 18658100.0
+# n_anything = 18658100.0
 # n_anything = 53770000.0
-n_anything_err = 8900.0
+# n_anything_err = 8900.0
 #n_anything = 18658100.0
 #n_anything_err = 5000
 n_anything_09 = 18658100.0
 
 # n_invisible = 397611.0
 # n_invisible = 359628.0
-n_invisible = 124589.0
+# n_invisible = 124589.0
 # n_invisible = 368711.0
 n_invisible_err = 683.748
 n_invisible_09 = 137770.0
@@ -94,10 +93,10 @@ b_pp_err = 0.0029
 #eff_nn = 6.13
 #eff_pp = 2.64
 
-# eff_mumu = 5.93
-# eff_ee = 5.93
-# eff_nn = 6.09
-# eff_pp = 2.54
+# eff_mumu = 5.52
+# eff_ee = 5.51
+# eff_nn = 5.89
+# eff_pp = 2.21
 
 # 2012 data set
 # n_sig = 1499390.0
