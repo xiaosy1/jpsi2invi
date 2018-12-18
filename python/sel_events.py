@@ -14,6 +14,8 @@ import ROOT
 from progressbar import Bar, Percentage, ProgressBar
 from time import time 
 from tools import duration, check_outfile_path
+from array import array
+
 
 #TEST=True 
 TEST=False
@@ -36,6 +38,14 @@ h_evtflw.GetXaxis().SetBinLabel(8, '3<M_{#pi#pi}^{rec}<3.2')
 h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 100, 3.03, 3.17)
 h_mrecpipi_fit = ROOT.TH1D('h_mrecpipi_fit', 'mrecpipi_fit', 1400, 3.03, 3.17)
 h_mpipi = ROOT.TH1D('h_mpipi', 'mpipi', 100, 0.2, 0.7) 
+h_pid_pip = ROOT.TH1D('h_pid_pip', 'pid_pip', 100, 0.0, 1.0)
+h_pid_pim = ROOT.TH1D('h_pid_pim', 'pid_pim', 100, 0.0, 1.0)
+h_pid_kp = ROOT.TH1D('h_pid_kp', 'pid_kp', 100, 0.0, 1.0)
+h_pid_km = ROOT.TH1D('h_pid_km', 'pid_km', 100, 0.0, 1.0)
+h_pid_pip_no = ROOT.TH1D('h_pid_pip_no', 'pid_pip_no', 100, 0.0, 1.0)
+h_pid_pim_no = ROOT.TH1D('h_pid_pim_no', 'pid_pim_no', 100, 0.0, 1.0)
+h_pid_kp_no = ROOT.TH1D('h_pid_kp_no', 'pid_kp_no', 100, 0.0, 1.0)
+h_pid_km_no = ROOT.TH1D('h_pid_km_no', 'pid_km_no', 100, 0.0, 1.0)
 h_pip_p = ROOT.TH1D('h_pip_p', 'pip_p', 100, 0.0, 0.5) 
 h_pim_p = ROOT.TH1D('h_pim_p', 'pim_p', 100, 0.0, 0.5) 
 h_pip_costhe = ROOT.TH1D('h_pip_costhe', 'pip_costhe', 100, -1.0, 1.0)
@@ -46,6 +56,15 @@ h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 200, -1.0, 1.0)
 #h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 100, 0.0, 1.0)
 h_cos2pisys = ROOT.TH1D('h_cos2pisys', 'cos2pisys', 100, -1.0, 1.0)
 h_ngam = ROOT.TH1D('h_ngam', 'ngam', 100, 0, 20)
+
+
+n_run = array('i',[0])
+n_event = array('i',[0])
+n_indexmc = array('i',[0])
+n_pdgid = array('i',100*[-99])
+n_motheridx = array('i',100*[-99])
+
+
 
 ROOT.gROOT.ProcessLine(
 
@@ -89,13 +108,21 @@ def main():
     t = fin.Get('tree')
     entries = t.GetEntriesFast()
 
+    fout = ROOT.TFile(outfile, "RECREATE")
+    t_out = ROOT.TTree('signal', 'signal')
+    t_out.Branch('run', n_run, 'run/I')
+    t_out.Branch('event', n_event, 'event/I')
+    t_out.Branch('indexmc', n_indexmc, 'indexmc/I')
+    t_out.Branch('pdgid', n_pdgid, 'pdgid[100]/I')
+    t_out.Branch('motheridx', n_motheridx, 'motheridx[100]/I')
+
+    mystruct = ROOT.MyTreeStruct()
+    t_out.Branch('vtx_mrecpipi', mystruct, 'vtx_mrecpipi/D')
+
     pbar = ProgressBar(widgets=[Percentage(), Bar()], maxval=entries).start()
     time_start = time()
 
-    fout = ROOT.TFile(outfile, "RECREATE")
-    t_out = ROOT.TTree('signal', 'signal')
-    mystruct = ROOT.MyTreeStruct()
-    t_out.Branch('vtx_mrecpipi', mystruct, 'vtx_mrecpipi/D')
+    # mystruct = ROOT.MyTreeStruct()
 
     for jentry in xrange(entries):
         pbar.update(jentry+1)
@@ -112,7 +139,7 @@ def main():
         if nb<=0:
             continue
 
-        fill_histograms(t)
+        fill_histograms(t, t_out)
         
         if select_jpsi_to_invisible(t): 
             h_mrecpipi.Fill(t.vtx_mrecpipi)
@@ -120,7 +147,7 @@ def main():
             mystruct.vtx_mrecpipi = t.vtx_mrecpipi
             t_out.Fill()
  
- #   fout = ROOT.TFile(outfile, "RECREATE")
+    # fout = ROOT.TFile(outfile, "RECREATE")
     t_out.Write()
     write_histograms() 
     fout.Close()
@@ -130,7 +157,7 @@ def main():
     sys.stdout.write(' \nDone in %s. \n' % dur) 
 
 
-def fill_histograms(t):
+def fill_histograms(t, t_out):
     cut_ngam = (t.ngam == 0)
     cut_trkp_costhe = (abs(math.cos(t.trkp_theta)) < 0.8)
     cut_trkm_costhe = (abs(math.cos(t.trkm_theta)) < 0.8)
@@ -140,51 +167,87 @@ def fill_histograms(t):
     cut_cos2pisys = (abs(t.vtx_cos2pisys) < 0.9)
     cut_pi_PID = (t.prob_pip > t.prob_kp and t.prob_pip > 0.001 and
                   t.prob_pim > t.prob_km and t.prob_pim > 0.001)
+    cut_pip_PID = (t.prob_pip > t.prob_kp and t.prob_pip > 0.001)
+    cut_pim_PID = (t.prob_pim > t.prob_km and t.prob_pim > 0.001)
     cut_mjpsi_win = (t.vtx_mrecpipi > 3.0 and t.vtx_mrecpipi < 3.2)
     cut_mjpsi_sig = (abs(t.vtx_mrecpipi - JPSI_MASS)<0.015)
 
     if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
-        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_mpipi.Fill(t.vtx_mpipi)
+        if (t.run<0):
+            n_run[0] = t.run
+            # print n_run[0]
+            n_event[0] = t.event
+            n_indexmc[0] = t.indexmc
+            for ii in range(t.indexmc):
+                if (t.m_pdgid[ii] != -22): 
+                    n_pdgid[ii] = t.m_pdgid[ii]
+                    n_motheridx[ii] = t.m_motheridx[ii]
+            # t_out.Fill()
+
+    if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
+        cut_cospipi and cut_cos2pisys and                 cut_mjpsi_win):
+        h_pid_pip_no.Fill(t.prob_pip)
+        h_pid_pim_no.Fill(t.prob_pim)
+        h_pid_kp_no.Fill(t.prob_kp)
+        h_pid_km_no.Fill(t.prob_km)
+
+    if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
+        cut_cospipi and cut_cos2pisys and cut_pim_PID and cut_mjpsi_win):
+        h_pid_pip.Fill(t.prob_pip)
+        h_pid_kp.Fill(t.prob_kp)
+
+    if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
+        cut_cospipi and cut_cos2pisys and cut_pip_PID and cut_mjpsi_win):
+        h_pid_pim.Fill(t.prob_pim)
+        h_pid_km.Fill(t.prob_km)
 
     if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe                and cut_trkm_p and
-        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_pip_p.Fill(t.trkp_p)
 
     if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p                and
-        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_pim_p.Fill(t.trkm_p)
 
     if (cut_ngam and                     cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
-        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_pip_costhe.Fill(math.cos(t.trkp_theta))
 
     if (cut_ngam and cut_trkp_costhe                     and cut_trkp_p and cut_trkm_p and
-        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_pim_costhe.Fill(math.cos(t.trkm_theta))
 
         
     if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
-                        cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+                        cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_cospipi.Fill(t.vtx_cospipi)
 
     if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
-        cut_cospipi                   and cut_pi_PID and cut_mjpsi_sig):
+        cut_cospipi                   and cut_pi_PID and cut_mjpsi_win):
         h_cos2pisys.Fill(t.vtx_cos2pisys)
 
     if (             cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
-        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_sig):
+        cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_ngam.Fill(t.ngam)
 
-    h_mc_costhe_pim.Fill(t.mc_costhe_pim)
-    h_mc_costhe_pip.Fill(t.mc_costhe_pip)
-
+    # h_mc_costhe_pim.Fill(t.mc_costhe_pim)
+    # h_mc_costhe_pip.Fill(t.mc_costhe_pip)
     
 def write_histograms():
     h_evtflw.Write()
     h_mrecpipi.Write()
     h_mrecpipi_fit.Write()
     h_mpipi.Write()
+    h_pid_pip.Write()
+    h_pid_kp.Write()
+    h_pid_pim.Write()
+    h_pid_km.Write()
+    h_pid_pip_no.Write()
+    h_pid_kp_no.Write()
+    h_pid_pim_no.Write()
+    h_pid_km_no.Write()
     h_pip_p.Write()
     h_pim_p.Write()
     h_pip_costhe.Write()

@@ -32,25 +32,25 @@ costhe_12 = TH1D('costhe_12', '', 100, -1.0, 1.0)
 root_09 = TChain('tree')
 root_12 = TChain('tree')
 
-if logdir in [['mumu_pip'], ['mumu_pim']]:
+if logdir in [['mumu_pip_truth'], ['mumu_pim_truth']]:
     root_09.Add('run/gen_mc/jpsi2mumu_09/job_text/hist/gen_mc_mumu_09_truth_merged_1.root')
     root_12.Add('run/gen_mc/jpsi2mumu/job_text/hist/gen_mc_mumu_truth_merged_1.root')
-elif logdir in [['ee_pip'], ['ee_pim']]:
+elif logdir in [['ee_pip_truth'], ['ee_pim_truth']]:
     root_09.Add('run/gen_mc/jpsi2ee_09/job_text/hist/gen_mc_ee_09_truth_merged_1.root')
     root_12.Add('run/gen_mc/jpsi2ee/job_text/hist/gen_mc_ee_truth_merged_1.root')
-elif logdir in [['nn_pip'], ['nn_pim']]:
+elif logdir in [['nn_pip_truth'], ['nn_pim_truth']]:
     root_09.Add('run/gen_mc/jpsi2nn_09/job_text/hist/gen_mc_nn_09_truth_merged_1.root')
-    root_12.Add('')
-elif logdir in [['pp_pip'], ['pp_pim']]:
+    root_12.Add('run/gen_mc/jpsi2nn/job_text/hist/gen_mc_nn_truth_merged_1.root')
+elif logdir in [['pp_pip_truth'], ['pp_pim_truth']]:
     root_09.Add('run/gen_mc/jpsi2pp_09/job_text/hist/gen_mc_pp_09_truth_merged_1.root')
     root_12.Add('run/gen_mc/jpsi2pp/job_text/hist/gen_mc_pp_truth_merged_1.root')
 else:
     print 'input error'
 
-if logdir in [['mumu_pip'], ['ee_pip'], ['nn_pip'], ['pp_pip']]:
+if logdir in [['mumu_pip_truth'], ['ee_pip_truth'], ['nn_pip_truth'], ['pp_pip_truth']]:
     root_09.Project('costhe_09', 'mc_costhe_pip')
     root_12.Project('costhe_12', 'mc_costhe_pip')
-elif logdir in [['mumu_pim'], ['ee_pim'], ['nn_pim'], ['pp_pim']]:
+elif logdir in [['mumu_pim_truth'], ['ee_pim_truth'], ['nn_pim_truth'], ['pp_pim_truth']]:
     root_09.Project('costhe_09', 'mc_costhe_pim')
     root_12.Project('costhe_12', 'mc_costhe_pim')
 
@@ -65,31 +65,31 @@ costhe_12.SetLineWidth(2)
 costhe_09.Draw()
 costhe_12.Draw('same')
 
-if logdir in [['mumu_pip'], ['ee_pip'], ['nn_pip'], ['pp_pip']]:
+if logdir in [['mumu_pip_truth'], ['ee_pip_truth'], ['nn_pip_truth'], ['pp_pip_truth']]:
     costhe_09.GetXaxis().SetTitle('costhe_pip')
-elif logdir in [['mumu_pim'], ['ee_pim'], ['nn_pim'], ['pp_pim']]:
+elif logdir in [['mumu_pim_truth'], ['ee_pim_truth'], ['nn_pim_truth'], ['pp_pim_truth']]:
     costhe_09.GetXaxis().SetTitle('costhe_pim')
 
 costhe_09.GetYaxis().SetTitle()
 costhe_09.GetYaxis().SetTitleOffset(1.5)
 
-if logdir in [['mumu_pip'], ['ee_pip'], ['mumu_pim'], ['ee_pim']]:
+if logdir in [['mumu_pip_truth'], ['ee_pip_truth'], ['mumu_pim_truth'], ['ee_pim_truth']]:
     costhe_09.GetYaxis().SetRangeUser(20000, 33000)
-elif logdir in [['nn_pip'], ['pp_pip'], ['nn_pim'], ['pp_pim']]:
+elif logdir in [['nn_pip_truth'], ['pp_pip_truth'], ['nn_pim_truth'], ['pp_pim_truth']]:
     costhe_09.GetYaxis().SetRangeUser(10000, 23000)
 
 legend = TLegend(0.28, 0.28, 0.72, 0.48)
 
-if logdir in [['mumu_pip'], ['mumu_pim']]:
+if logdir in [['mumu_pip_truth'], ['mumu_pim_truth']]:
     legend.AddEntry('costhe_09', "2009 J/psi->mumu MC sample")
     legend.AddEntry('costhe_12', "2012 J/psi->mumu MC sample")
-elif logdir in [['ee_pip'], ['ee_pim']]:
+elif logdir in [['ee_pip_truth'], ['ee_pim_truth']]:
     legend.AddEntry('costhe_09', "2009 J/psi->ee MC sample")
     legend.AddEntry('costhe_12', "2012 J/psi->ee MC sample")
-elif logdir in [['nn_pip'], ['nn_pim']]:
+elif logdir in [['nn_pip_truth'], ['nn_pim_truth']]:
     legend.AddEntry('costhe_09', "2009 J/psi->nn MC sample")
     legend.AddEntry('costhe_12', "2012 J/psi->nn MC sample")
-elif logdir in [['pp_pip'], ['pp_pim']]:
+elif logdir in [['pp_pip_truth'], ['pp_pim_truth']]:
     legend.AddEntry('costhe_09', "2009 J/psi->pp MC sample")
     legend.AddEntry('costhe_12', "2012 J/psi->pp MC sample")
 

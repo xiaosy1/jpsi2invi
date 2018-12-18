@@ -625,6 +625,7 @@ void Jpsi2invi::saveGenInfo() {
       //int mcidx = ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
       int pdgid = (*iter_mc_topo)->particleProperty();
       int trkidx = (*iter_mc_topo)->trackIndex() - rootIndex;
+      if(pdgid == -22) continue;
       m_pdgid[m_numParticle] = pdgid;
       m_trkidx[m_numParticle] = trkidx;
       m_motheridx[m_numParticle] = mcidx;

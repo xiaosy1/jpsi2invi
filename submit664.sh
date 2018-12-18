@@ -793,6 +793,10 @@ case $option in
         find . -name "*.txt.*" | xargs rm	   
         rm ../rootfile_pp/gen_mc_pp_jpsi2invi-*
 	    boss.condor -g physics -n 2 jobOptions_jpsi2invi_gen_mc_pp-%{ProcId}.txt
+        cd ../../../jpsi2nunu/job_text/jobs/
+        find . -name "*.txt.*" | xargs rm	
+        rm ../rootfile_nunu/gen_mc_nunu_jpsi2invi-1.root
+        boss.condor -g physics jobOptions_jpsi2invi_gen_mc_nunu-1.txt
 	   ;;
 
     1.5.5) echo "Check Condor jobs on generated MC sample..."

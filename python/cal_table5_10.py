@@ -8,6 +8,53 @@ __copyright__ = "Copyright (c) XIAO Suyu"
 __created__ = "[2018-02-01 Thu 17:21]"
 
 import math
+import sys
+
+logdir = sys.argv[1:]
+print logdir
+
+if logdir in [['12']]:
+    n_anything = 57901400.0
+    n_anything_err = 8900.0
+    n_invisible = 359628.0
+    n_other_origin = 13779.0
+    n_pk_mumu = 90016.0
+    n_pk_ee = 90822.0
+    n_pk_nn = 61219.0
+    n_pk_pp = 23491.0
+    n_pk_any = 1527550.0
+    eff_trigger = 99.8
+    eff_trigger_err = 0.04
+    # scale_factor = 0.966586
+    # scale_factor = 0.96225
+    scale_factor = 1.0
+
+elif logdir in [['09']]:
+    n_anything = 18658100.0
+    n_anything_err = 5000
+    n_invisible = 124589.0
+    n_other_origin = 3877.0
+    n_pk_mumu = 87528.0
+    n_pk_ee = 87257.0
+    n_pk_nn = 62263.0
+    n_pk_pp = 23328.0
+    n_pk_any = 1584450.0
+    eff_trigger = 99.4
+    eff_trigger_err = 0.1
+    scale_factor = 0.957291
+    # scale_factor = 1.0
+
+else:
+    print 'input error'
+
+
+n_other = n_other_origin * scale_factor
+
+eff_mumu = n_pk_mumu / n_pk_any * 100.0 * scale_factor
+eff_ee = n_pk_ee / n_pk_any* 100.0 * scale_factor 
+eff_nn = n_pk_nn / n_pk_any *1.5* 100.0 * scale_factor 
+eff_pp = n_pk_pp / n_pk_any *1.5* 100.0 * scale_factor 
+
 
 #vi = 0.77
 #cl = 1.040
@@ -15,22 +62,22 @@ vi = 1.0
 cl = 1.0
 
 # n_anything = 57901400.0
-n_anything = 18658100.0
+# n_anything = 18658100.0
 # n_anything = 53770000.0
-n_anything_err = 8900.0
+# n_anything_err = 8900.0
 #n_anything = 18658100.0
 #n_anything_err = 5000
 n_anything_09 = 18658100.0
 
 # n_invisible = 397611.0
 # n_invisible = 359628.0
-n_invisible = 124589.0
+# n_invisible = 124589.0
 # n_invisible = 368711.0
 n_invisible_err = 683.748
 n_invisible_09 = 137770.0
 
 # n_other = 13779.0 * vi
-n_other = 3877.0
+
 n_other_09 = 3877.0
 
 n_total_2B_09 = 134586.0
@@ -45,7 +92,7 @@ b_ee_err = 0.032
 b_nn_err = 0.016
 b_pp_err = 0.0029
 
-scale_eff = 0.9699 # to scale acceptance eff
+# scale_eff = 0.9699 # to scale acceptance eff
 
 # eff_mumu = scale_eff * 93770.0*vi/1502682.0/cl*100.0
 # eff_ee = scale_eff * 94983.0*vi/1503130.0/cl*100.0
@@ -57,10 +104,10 @@ scale_eff = 0.9699 # to scale acceptance eff
 #eff_nn = 6.13
 #eff_pp = 2.64
 
-# eff_mumu = 5.93
-# eff_ee = 5.93
-# eff_nn = 6.09
-# eff_pp = 2.54
+# eff_mumu = 5.52
+# eff_ee = 5.51
+# eff_nn = 5.89
+# eff_pp = 2.21
 
 # 2012 data set
 # n_sig = 1499390.0
@@ -70,42 +117,40 @@ scale_eff = 0.9699 # to scale acceptance eff
 # eff_pp =    23491.0     *3.0/n_sig/2.0 * 100
 
 # 2009 data set
-n_sig = 1584410.0
-eff_mumu =  96762.0     /n_sig * 100
-eff_ee =    96681.0     /n_sig * 100
-eff_nn =    73353.0     *3.0/n_sig/2.0 * 100
-eff_pp =    27594.0     *3.0/n_sig/2.0 * 100
+# n_sig = 1584410.0
+# eff_mumu =  96762.0     /n_sig * 100
+# eff_ee =    96681.0     /n_sig * 100
+# eff_nn =    73353.0     *3.0/n_sig/2.0 * 100
+# eff_pp =    27594.0     *3.0/n_sig/2.0 * 100
 
 eff_2b_err = 0.02
 
 
-eff_trigger = 99.4
-eff_trigger_err = 0.1
-# eff_trigger = 99.8
-# eff_trigger_err = 0.04
 
 n_mumu_09 = 65558.0
 n_ee_09 = 65668.0
 n_nn_09 = 2361.0
 n_pp_09 = 999.0
 
-#stat_err = 0.03
-#fit_err = 0.44
-#n_gam_err = 1.90
-#trig_err = 0.12
-#mumu_shower_err = 0.5
-#ee_shower_err = 0.6
-#nn_shower_err = 41.5
-#pp_shower_err = 1.3
+if logdir in [['09']]:
+    stat_err = 0.03
+    fit_err = 0.44
+    n_gam_err = 1.90
+    trig_err = 0.12
+    mumu_shower_err = 0.5
+    ee_shower_err = 0.6
+    nn_shower_err = 41.5
+    pp_shower_err = 1.3
 
-stat_err = 0.02
-fit_err = 0.46
-n_gam_err = 1.90
-trig_err = 0.04
-mumu_shower_err = 0.5
-ee_shower_err = 0.6
-nn_shower_err = 54.8
-pp_shower_err = 1.3
+elif logdir in [['12']]:
+    stat_err = 0.02
+    fit_err = 0.46
+    n_gam_err = 1.90
+    trig_err = 0.04
+    mumu_shower_err = 0.5
+    ee_shower_err = 0.6
+    nn_shower_err = 54.8
+    pp_shower_err = 1.3
 
 print "\nPsip_data_12/09 \t= \t%.4f" % (341.0/106.0)
 
