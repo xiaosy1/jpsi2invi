@@ -625,6 +625,7 @@ void Jpsi2invi::saveGenInfo() {
       //int mcidx = ((*iter_mc_topo)->mother()).trackIndex() - rootIndex;
       int pdgid = (*iter_mc_topo)->particleProperty();
       int trkidx = (*iter_mc_topo)->trackIndex() - rootIndex;
+      if(pdgid == -22) continue;
       m_pdgid[m_numParticle] = pdgid;
       m_trkidx[m_numParticle] = trkidx;
       m_motheridx[m_numParticle] = mcidx;
@@ -776,7 +777,7 @@ int Jpsi2invi::selectChargedTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
     // Polar angle cut
     if(fabs(cos(mdcTrk->theta())) > m_cha_costheta_cut) continue;
 
-//    if (! ( (evtRecEvent)->totalCharged()==2 ) ) continue;
+    if (! ( (evtRecEvent)->totalCharged()==2 ) ) continue;
     iGood.push_back((*itTrk)->trackId());
     if(mdcTrk->charge()>0) iPGood.push_back((*itTrk)->trackId());
     if(mdcTrk->charge()<0) iMGood.push_back((*itTrk)->trackId());
