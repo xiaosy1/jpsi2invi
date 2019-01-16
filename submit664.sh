@@ -1432,6 +1432,57 @@ case $option in
 	   ;; 
 
 
+    4.6.4) echo "Submit Condor jobs on generated MC sample for incl ---- 2..." 
+	    cd run/gen_mc/jpsi2mumu_09/job_text/jobs
+        find . -name "*.txt.*" | xargs rm	   
+        rm ../rootfile_mumu_09/gen_mc_mumu_09_jpsi2incl-*
+	    boss.condor -g physics -n 10 jobOptions_jpsi2incl_gen_mc_mumu_09-%{ProcId}.txt
+        cd ../../../jpsi2ee_09/job_text/jobs
+        find . -name "*.txt.*" | xargs rm	   
+        rm ../rootfile_ee_09/gen_mc_ee_09_jpsi2incl-*
+	    boss.condor -g physics -n 10 jobOptions_jpsi2incl_gen_mc_ee_09-%{ProcId}.txt
+        cd ../../../jpsi2nn_09/job_text/jobs
+        find . -name "*.txt.*" | xargs rm	   
+        rm ../rootfile_nn_09/gen_mc_nn_09_jpsi2incl-1.root
+	    boss.condor -g physics -n 4 jobOptions_jpsi2incl_gen_mc_nn_09-%{ProcId}.txt
+        cd ../../../jpsi2pp_09/job_text/jobs
+        find . -name "*.txt.*" | xargs rm	   
+        rm ../rootfile_pp_09/gen_mc_pp_09_jpsi2incl-*
+	    boss.condor -g physics -n 7 jobOptions_jpsi2incl_gen_mc_pp_09-%{ProcId}.txt
+	   ;;
+
+    4.6.8) echo "Submit selection Condor jobs on generated MC sample for incl ---- 2..." 
+	    cd run/gen_mc/jpsi2mumu_09/job_text/jobs
+        find . -name "*.sh.*" | xargs rm
+        rm ../event_mumu_09/incl/jpsi2incl_gen_mc_mumu_09_event-*
+	    hep_sub -g physics -n 10 jobOptions_jpsi2incl_gen_mc_mumu_09_event-%{ProcId}.sh
+        cd ../../../jpsi2ee_09/job_text/jobs
+        find . -name "*.sh.*" | xargs rm
+        rm ../event_ee_09/incl/jpsi2incl_gen_mc_ee_09_event-*
+	    hep_sub -g physics -n 10 jobOptions_jpsi2incl_gen_mc_ee_09_event-%{ProcId}.sh
+        cd ../../../jpsi2nn_09/job_text/jobs
+        find . -name "*.sh.*" | xargs rm
+        rm ../event_nn_09/incl/jpsi2incl_gen_mc_nn_09_event-1.root
+	    hep_sub -g physics -n 4 jobOptions_jpsi2incl_gen_mc_nn_09_event-%{ProcId}.sh
+        cd ../../../jpsi2pp_09/job_text/jobs
+        find . -name "*.sh.*" | xargs rm
+        rm ../event_pp_09/incl/jpsi2incl_gen_mc_pp_09_event-*
+	    hep_sub -g physics -n 7 jobOptions_jpsi2incl_gen_mc_pp_09_event-%{ProcId}.sh
+	   ;;
+
+    4.6.10) echo  "Merge event root file on generated MC sample for incl..."
+       rm run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2incl_gen_mc_mumu_09_event_merged_1.root
+       rm run/gen_mc/jpsi2ee_09/job_text/hist/jpsi2incl_gen_mc_ee_09_event_merged_1.root
+       rm run/gen_mc/jpsi2nn_09/job_text/hist/jpsi2incl_gen_mc_nn_09_event_merged_1.root
+       rm run/gen_mc/jpsi2pp_09/job_text/hist/jpsi2incl_gen_mc_pp_09_event_merged_1.root
+	   ./python/mrg_rootfiles.py  run/gen_mc/jpsi2mumu_09/job_text/event_mumu_09/incl run/gen_mc/jpsi2mumu_09/job_text/hist
+	   ./python/mrg_rootfiles.py  run/gen_mc/jpsi2ee_09/job_text/event_ee_09/incl run/gen_mc/jpsi2ee_09/job_text/hist
+	   ./python/mrg_rootfiles.py  run/gen_mc/jpsi2nn_09/job_text/event_nn_09/incl run/gen_mc/jpsi2nn_09/job_text/hist
+	   ./python/mrg_rootfiles.py  run/gen_mc/jpsi2pp_09/job_text/event_pp_09/incl run/gen_mc/jpsi2pp_09/job_text/hist
+	   ;;
+
+
+
     5.0.1) echo "Simulation -- Generate Jpsi->anything MC samples"
         cd run/gen_mc/jpsi2any
         rm job_text/sim/*

@@ -38,8 +38,8 @@ void roohistpdf_incl_gauss_09_data()
 //	c->Divide(3);
 
     // 2009 data set
-   signal_pdf_rootfile =   "../run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_fit.root" ;
-   jpsi2incl_rootfile =    "../run/jpsi2incl/hist_data09/jpsi2incl_data_psip_data09_event_merged_fit.root" ;
+   signal_pdf_rootfile =   "../run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_notof.root" ;
+   jpsi2incl_rootfile =    "../run/jpsi2incl/hist_data09/jpsi2incl_data_psip_data09_event_merged_notof.root" ;
   //  jpsi2incl_rootfile =    "../run/gen_mc/jpsi2any_09/job_text/hist/jpsi2incl_gen_mc_any_09_event_merged_ncharged.root" ;
    jpsi2invi_rootfile =    "../run/jpsi2invi/hist_data09/jpsi2invi_data_psip_data09_event_merged_fit.root" ;
   
@@ -121,8 +121,8 @@ void roohistpdf_incl_gauss_09_data()
   //   RooChebychev bkg("bkg","background p.d.f.",x,RooArgList(c0,c1,c2)) ; 
     
     if(hist_id==1){  // For Jpsi2Incl
-      RooRealVar nsig("nsig","signal fraction",    17230000, 12000000.0,     22000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",42550000, 30000000.0,    54000000.0); 
+      RooRealVar nsig("nsig","signal fraction",    17230000, 12.0,     22000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",42550000, 30.0,    54000000.0); 
     }
     
       

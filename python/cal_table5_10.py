@@ -16,8 +16,9 @@ print logdir
 if logdir in [['12']]:
     n_anything = 57901400.0
     n_anything_err = 8900.0
-    n_invisible = 359628.0
-    n_other_origin = 13779.0
+    # n_invisible = 359628.0
+    n_invisible = 364738.0
+    n_other_origin = 14321.0 * 341.1 / 400.0
     n_pk_mumu = 90016.0
     n_pk_ee = 90822.0
     n_pk_nn = 61219.0
@@ -25,15 +26,20 @@ if logdir in [['12']]:
     n_pk_any = 1527550.0
     eff_trigger = 99.8
     eff_trigger_err = 0.04
-    # scale_factor = 0.966586
+    # ee scale
+    scale_factor = 0.966586
+    
+	# 09 scale 
     # scale_factor = 0.96225
-    scale_factor = 1.0
+    
+    # scale_factor = 1.0
 
 elif logdir in [['09']]:
     n_anything = 18658100.0
     n_anything_err = 5000
-    n_invisible = 124589.0
-    n_other_origin = 3877.0
+    # n_invisible = 124589.0
+    n_invisible = 126796.0
+    n_other_origin = 3498.0
     n_pk_mumu = 87528.0
     n_pk_ee = 87257.0
     n_pk_nn = 62263.0
@@ -41,7 +47,9 @@ elif logdir in [['09']]:
     n_pk_any = 1584450.0
     eff_trigger = 99.4
     eff_trigger_err = 0.1
+    # ee scale
     scale_factor = 0.957291
+    
     # scale_factor = 1.0
 
 else:

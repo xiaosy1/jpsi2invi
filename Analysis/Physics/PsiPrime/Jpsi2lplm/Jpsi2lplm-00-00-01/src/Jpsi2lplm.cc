@@ -746,14 +746,14 @@ bool Jpsi2lplm::buildJpsiToLpLm() {
   if ( (m_npiptrk != 1) || (m_npimtrk != 1) || (m_nlptrk != 1) || (m_nlmtrk != 1) ) return false;
   h_evtflw->Fill(1); // N_PionP=1, N_PionM=1, N_LeptonP=1, N_LeptonM=1
 
+  if (m_ngam >= 20) return false;
+  h_evtflw->Fill(2); // N_{#gamma} < 20 
+    
   if(selectPionPlusPionMinus(evtRecTrkCol, iPiPGood, iPiMGood) != 1) return false; 
   
   if(selectLeptonPlusLeptonMinus(evtRecTrkCol, iLepPGood, iLepMGood) != 1) return false; 
 
   selectNeutralTracks(evtRecEvent, evtRecTrkCol);
-  if (m_ngam >= 20) return false;
-  h_evtflw->Fill(2); // N_{#gamma} < 20 
-    
   return true; 
 }
 
@@ -1055,7 +1055,8 @@ void Jpsi2lplm::calcTrackPID(EvtRecTrackIterator itTrk_p,
   pidp->setChiMinCut(4);
   pidp->setRecTrack(*itTrk_p);
   // use PID sub-system
-  pidp->usePidSys(pidp->useDedx() | pidp->useTof1() | pidp->useTof2());
+  // pidp->usePidSys(pidp->useDedx() | pidp->useTof1() | pidp->useTof2());
+  pidp->usePidSys(pidp->useDedx());
   pidp->identify(pidp->onlyPionKaonProton());
   pidp->calculate();
   if(pidp->IsPidInfoValid()) {
