@@ -121,8 +121,8 @@ void roohistpdf_incl_gauss_09_data()
   //   RooChebychev bkg("bkg","background p.d.f.",x,RooArgList(c0,c1,c2)) ; 
     
     if(hist_id==1){  // For Jpsi2Incl
-      RooRealVar nsig("nsig","signal fraction",    17230000, 12.0,     22000000.0); 
-      RooRealVar nbkg("nbkg","background fraction",42550000, 30.0,    54000000.0); 
+      RooRealVar nsig("nsig","signal fraction",    17230000, 12000000.0,     22000000.0); 
+      RooRealVar nbkg("nbkg","background fraction",42550000, 30000000.0,    54000000.0); 
     }
     
       
