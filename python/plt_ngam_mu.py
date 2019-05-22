@@ -30,26 +30,27 @@ print logdir
 histo = 'h_ngam_mu'
 
 if logdir in [['09']]:
-    f_data = TFile('run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_ngam_mu.root')
-    f_inMC = TFile('run/jpsi2lplm/hist_mc09/jpsi2lplm_psip_mc09_event_merged_ngam_mu.root')
-    f_mu = TFile('run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2lplm_gen_mc_mumu_09_event_merged_ngam_mu.root')
+    f_data = TFile('run/jpsi2lplm/hist_data09/jpsi2lplm_data_psip_data09_event_merged_ngam_mu.root')            # 752895
+    f_inMC = TFile('run/jpsi2lplm/hist_mc09/jpsi2lplm_psip_mc09_event_merged_ngam_mu.root')                     # 739060
+    f_mu = TFile('run/gen_mc/jpsi2mumu_09/job_text/hist/jpsi2lplm_gen_mc_mumu_09_event_merged_ngam_mu.root')    # 1015332
 
 elif logdir in [['12']]:
-    f_data = TFile('run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_ngam_mu.root')
-    f_inMC = TFile('run/jpsi2lplm/hist_mc12/jpsi2lplm_psip_mc12_event_merged_ngam_mu.root')
-    f_mu = TFile('run/gen_mc/jpsi2mumu/job_text/hist/jpsi2lplm_gen_mc_mumu_event_merged_ngam_mu.root')
+    f_data = TFile('run/jpsi2lplm/hist/jpsi2lplm_data_psip_data12_event_merged_ngam_mu.root')                   # 2339327
+    f_inMC = TFile('run/jpsi2lplm/hist_mc12/jpsi2lplm_psip_mc12_event_merged_ngam_mu.root')                     # 2718392
+    f_mu = TFile('run/gen_mc/jpsi2mumu/job_text/hist/jpsi2lplm_gen_mc_mumu_event_merged_ngam_mu.root')          # 977972
 
 h_data = f_data.Get(histo)
 h_inMC = f_inMC.Get(histo)
 h_mu = f_mu.Get(histo)
 
 if logdir in [['09']]:
-    # h_inMC.Scale(1.0)
     h_mu.Scale(752895.0/1015332.0)
+    h_inMC.Scale(752895.0/739060.0)
     h_data.GetYaxis().SetRangeUser(0, 700000)
 elif logdir in [['12']]:
     h_mu.Scale(2339327.0/977972.0)
-    h_data.GetYaxis().SetRangeUser(0, 2500000)
+    h_inMC.Scale(2339327.0/2718392.0)
+    h_data.GetYaxis().SetRangeUser(0, 2200000)
 
 h_data.SetTitle("")
 h_data.SetLineColor(ROOT.kBlack)

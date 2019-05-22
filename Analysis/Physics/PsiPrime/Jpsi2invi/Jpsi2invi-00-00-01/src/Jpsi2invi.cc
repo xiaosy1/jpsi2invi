@@ -873,8 +873,8 @@ void Jpsi2invi::calcTrackPID(EvtRecTrackIterator itTrk_p,
   pidp->setChiMinCut(4);
   pidp->setRecTrack(*itTrk_p);
   // use PID sub-system
-  // pidp->usePidSys(pidp->useDedx() | pidp->useTof1() | pidp->useTof2());
-  pidp->usePidSys(pidp->useDedx());
+  pidp->usePidSys(pidp->useDedx() | pidp->useTof1() | pidp->useTof2());
+  // pidp->usePidSys(pidp->useDedx());
   pidp->identify(pidp->onlyPionKaonProton());
   pidp->calculate();
   if(pidp->IsPidInfoValid()) {

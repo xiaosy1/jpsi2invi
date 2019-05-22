@@ -17,7 +17,7 @@ from time import time
 from tools import duration, check_outfile_path
 from array import array
 
-#TEST=True 
+# TEST=True 
 TEST=False
 
 # Global constants 
@@ -50,6 +50,10 @@ h_mrecpipi_narrow = ROOT.TH1D('h_mrecpipi_narrow', 'mrecpipi_narrow', 100, 3.03,
 h_mpipi = ROOT.TH1D('h_mpipi', 'mpipi', 100, 0.2, 0.7) 
 h_pip_p = ROOT.TH1D('h_pip_p', 'pip_p', 100, 0.0, 0.5) 
 h_pim_p = ROOT.TH1D('h_pim_p', 'pim_p', 100, 0.0, 0.5) 
+h_pip_m = ROOT.TH1D('h_pip_m', 'pip_m', 100, 0.0, 0.5) 
+h_pim_m = ROOT.TH1D('h_pim_m', 'pim_m', 100, 0.0, 0.5) 
+h_pip_phi = ROOT.TH1D('h_pip_phi', 'pip_phi', 100, -3.3, 3.3)
+h_pim_phi = ROOT.TH1D('h_pim_phi', 'pim_phi', 100, -3.3, 3.3)
 h_pip_costhe = ROOT.TH1D('h_pip_costhe', 'pip_costhe', 100, -1.0, 1.0)
 h_pim_costhe = ROOT.TH1D('h_pim_costhe', 'pim_costhe', 100, -1.0, 1.0)
 h_cospipi = ROOT.TH1D('h_cospipi', 'cospipi', 200, -1.0, 1.0)
@@ -132,6 +136,20 @@ def main():
         nb = t.GetEntry(jentry)
         if nb<=0:
             continue
+        
+       #  if t.run > 25600:
+       #      continue
+        # if (t.run > 26200 or t.run < 25600 ):
+        #     continue
+      #   if (t.run > 26600 or t.run < 26200 ):
+      #       continue
+      #   if (t.run > 26900 or t.run < 26600 ):
+      #       continue
+        # if t.run < 26900:
+        #     continue
+        # if t.run < 10000:
+        if t.run > 10000:
+            continue
 
         #print type(vtx_mrecpipi)
         #print dir(ROOT.vector.__doc__)
@@ -198,27 +216,34 @@ def fill_histograms_all_combination(t, t_out):
                       t.pim_prob_pim[loop] > t.pim_prob_km[loop] and t.pim_prob_pim[loop] > 0.001)
         cut_mjpsi_win = (t.vtx_mrecpipi[loop] > 3.0 and t.vtx_mrecpipi[loop] < 3.2)
         cut_mjpsi_sig = (abs(t.vtx_mrecpipi[loop] - JPSI_MASS)<0.015)
+        cut_pip_m = (t.vtx_pip_e[loop] < 0.3)
+        cut_pim_m = (t.vtx_pim_e[loop] < 0.3)
 
         if (cut_ngam and cut_pip_costhe and cut_pim_costhe and cut_pip_p and cut_pim_p and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
             h_mpipi.Fill(t.vtx_mpipi[loop])
+            h_pip_phi.Fill(t.trkp_phi[loop])
+            h_pim_phi.Fill(t.trkm_phi[loop])
+            h_pip_m.Fill(t.vtx_pip_e[loop])
+            h_pim_m.Fill(t.vtx_pim_e[loop])
 
             h_mrecpipi.Fill(t.vtx_mrecpipi[loop])
             h_mrecpipi_fit.Fill(t.vtx_mrecpipi[loop])
             h_ncharged.Fill(t.ncharged)
             vtx_mrecpipi.push_back(t.vtx_mrecpipi.at(loop))
+            # print t.vtx_pip_e[loop]
 
             if (nsurvived==0 and (3.03 < t.vtx_mrecpipi[loop] and t.vtx_mrecpipi[loop] < 3.17)): 
                 nsurvived = 1
                 h_mrecpipi_narrow.Fill(t.vtx_mrecpipi[loop])
             
-            if (t.run<0):
                 n_run[0] = t.run
                 n_event[0] = t.event
-                n_indexmc[0] = t.indexmc
-                for ii in range(t.indexmc):
-                    n_pdgid[ii] = t.m_pdgid[ii]
-                    n_motheridx[ii] = t.m_motheridx[ii]
+                if (t.run<0):
+                    n_indexmc[0] = t.indexmc
+                    for ii in range(t.indexmc):
+                        n_pdgid[ii] = t.m_pdgid[ii]
+                        n_motheridx[ii] = t.m_motheridx[ii]
 
         if (cut_ngam and cut_pip_costhe and cut_pim_costhe                and cut_pim_p and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
@@ -262,8 +287,12 @@ def write_histograms():
     h_mpipi.Write()
     h_pip_p.Write()
     h_pim_p.Write()
+    h_pip_m.Write()
+    h_pim_m.Write()
     h_pip_costhe.Write()
     h_pim_costhe.Write()
+    h_pip_phi.Write()
+    h_pim_phi.Write()
     h_cospipi.Write()
     h_cos2pisys.Write()
     h_ncharged.Write()

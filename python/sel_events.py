@@ -48,6 +48,10 @@ h_pid_kp_no = ROOT.TH1D('h_pid_kp_no', 'pid_kp_no', 100, 0.0, 1.0)
 h_pid_km_no = ROOT.TH1D('h_pid_km_no', 'pid_km_no', 100, 0.0, 1.0)
 h_pip_p = ROOT.TH1D('h_pip_p', 'pip_p', 100, 0.0, 0.5) 
 h_pim_p = ROOT.TH1D('h_pim_p', 'pim_p', 100, 0.0, 0.5) 
+h_pip_m = ROOT.TH1D('h_pip_m', 'pip_m', 100, 0.0, 0.5) 
+h_pim_m = ROOT.TH1D('h_pim_m', 'pim_m', 100, 0.0, 0.5) 
+h_pip_phi = ROOT.TH1D('h_pip_phi', 'pip_phi', 100, -3.3, 3.3)
+h_pim_phi = ROOT.TH1D('h_pim_phi', 'pim_phi', 100, -3.3, 3.3)
 h_pip_costhe = ROOT.TH1D('h_pip_costhe', 'pip_costhe', 100, -1.0, 1.0)
 h_pim_costhe = ROOT.TH1D('h_pim_costhe', 'pim_costhe', 100, -1.0, 1.0)
 h_mc_costhe_pip = ROOT.TH1D('h_mc_costhe_pip', 'mc_costhe_pip', 100, -1.0, 1.0)
@@ -156,6 +160,21 @@ def main():
         if nb<=0:
             continue
 
+        # if t.run > 25600:
+        #     continue
+        # if (t.run > 26200 or t.run < 25600 ):
+        #     continue
+      #   if (t.run > 26600 or t.run < 26200 ):
+      #       continue
+      #   if (t.run > 26900 or t.run < 26600 ):
+      #       continue
+       #  if t.run < 26900:
+       #      continue
+
+        # if t.run < 10000:
+        if t.run > 10000:
+            continue
+        
         fill_histograms(t, t_out, t_out_2)
         
         if select_jpsi_to_invisible(t): 
@@ -192,10 +211,15 @@ def fill_histograms(t, t_out, t_out_2):
     if (cut_ngam and cut_trkp_costhe and cut_trkm_costhe and cut_trkp_p and cut_trkm_p and
         cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win):
         h_mpipi.Fill(t.vtx_mpipi)
+        h_pip_m.Fill(t.vtx_pip_e)
+        h_pim_m.Fill(t.vtx_pim_e)
+        h_pip_phi.Fill(t.vtx_pip_phi)
+        h_pim_phi.Fill(t.vtx_pim_phi)
+
+        n_run[0] = t.run
+		# print n_run[0]
+        n_event[0] = t.event
         if (t.run<0):
-            n_run[0] = t.run
-            # print n_run[0]
-            n_event[0] = t.event
             n_indexmc[0] = t.indexmc
             for ii in range(t.indexmc):
                 if (t.m_pdgid[ii] != -22): 
@@ -269,6 +293,10 @@ def write_histograms():
     h_pid_km_no.Write()
     h_pip_p.Write()
     h_pim_p.Write()
+    h_pip_m.Write()
+    h_pim_m.Write()
+    h_pip_phi.Write()
+    h_pim_phi.Write()
     h_pip_costhe.Write()
     h_pim_costhe.Write()
     h_mc_costhe_pip.Write()
