@@ -135,6 +135,7 @@ def main():
             if ( t.kmfit_g1g2dang < t.kmfit_g1g3dang and t.kmfit_g1g2dang < t.kmfit_g2g3dang ):
                 flag = 1
                 cut_mgg = (t.kmfit_m_g1g2 > 0.51 and t.kmfit_m_g1g2 < 0.57)
+                print t.kmfit_m_g1g2
                 cut_mpipieta = (t.kmfit_m_pipig1g2 > 1.0)
 
             if ( t.kmfit_g1g3dang < t.kmfit_g1g2dang and t.kmfit_g1g3dang < t.kmfit_g2g3dang ):

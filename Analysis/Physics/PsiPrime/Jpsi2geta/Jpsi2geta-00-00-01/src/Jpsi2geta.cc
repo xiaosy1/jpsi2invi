@@ -884,13 +884,14 @@ int Jpsi2geta::selectChargedTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
 
     // Polar angle cut
     if(fabs(cos(mdcTrk->theta())) > m_cha_costheta_cut) continue;
-
+    
+    if (! ( (evtRecEvent)->totalCharged()==2 ) ) continue;
     iGood.push_back((*itTrk)->trackId());
     if(mdcTrk->charge()>0) iPGood.push_back((*itTrk)->trackId());
     if(mdcTrk->charge()<0) iMGood.push_back((*itTrk)->trackId());
 
   } // end charged tracks
-
+ 
   m_ncharged = iGood.size();
   m_nptrk = iPGood.size();
   m_nmtrk = iMGood.size(); 
