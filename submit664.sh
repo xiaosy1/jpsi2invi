@@ -547,7 +547,7 @@ case $option in
 	   mv jobOptions_jpsi2geta_data_psip_data12_event-633.sh jobOptions_jpsi2geta_data_psip_data12_event-0.sh
        chmod 755 jobOptions_jpsi2geta_data_psip_data12_event-*
 	   ;;
-
+ 
     0.8.7) echo "Test for data event for geta" 
 		cd run/jpsi2geta/job_text/Data12_event
 		./jobOptions_jpsi2geta_data_psip_data12_event-0.sh
