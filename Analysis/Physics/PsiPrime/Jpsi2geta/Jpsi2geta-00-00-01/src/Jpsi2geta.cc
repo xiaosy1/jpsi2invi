@@ -890,7 +890,7 @@ int Jpsi2geta::selectChargedTracks(SmartDataPtr<EvtRecEvent> evtRecEvent,
     if(fabs(cos(mdcTrk->theta())) > m_cha_costheta_cut) continue;
     
     // if (! ( (evtRecEvent)->totalCharged()==2 ) ) continue;
-    if (! ( (evtRecEvent)->totalCharged()==1 ) ) continue;
+    if (! ( (evtRecEvent)->totalCharged()==1 || (evtRecEvent)->totalCharged()==2 ) ) continue;
     iGood.push_back((*itTrk)->trackId());
     if(mdcTrk->charge()>0) iPGood.push_back((*itTrk)->trackId());
     if(mdcTrk->charge()<0) iMGood.push_back((*itTrk)->trackId());
