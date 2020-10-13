@@ -699,7 +699,7 @@ bool Jpsi2geta::buildJpsiToGammaEta() {
   if (m_ncharged < 1) return false;
   h_evtflw->Fill(1); // N_{Good} = 2 
 
-  if( selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood)!=1 ) return false;  
+  if( selectPionPlusPionMinus(evtRecTrkCol, iPGood, iMGood)==0 ) return false;  
 
   std::vector<int> iGam;
   selectNeutralTracks(evtRecEvent, evtRecTrkCol, iGam);
@@ -1418,4 +1418,4 @@ void Jpsi2geta::getTrigInfo(){
 
    m_trig_timewindow = trigData->getTimeWindow();
    m_trig_timetype = trigData->getTimingType();
-}
+

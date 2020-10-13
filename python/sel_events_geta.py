@@ -35,10 +35,11 @@ h_evtflw.GetXaxis().SetBinLabel(6, 'cos#theta_{#pi^{+}#pi^{-}}<0.95')
 h_evtflw.GetXaxis().SetBinLabel(7, 'cos#theta_{#pi#pi sys}<0.9') 
 h_evtflw.GetXaxis().SetBinLabel(8, '3<M_{#pi#pi}^{rec}<3.2') 
 h_evtflw.GetXaxis().SetBinLabel(9, 'Egam from jpsi > 1.0') 
+h_evtflw.GetXaxis().SetBinLabel(10, 'Mpipi in (0.2, 1.0)') 
 
 
 h_mrecpipi_zc = ROOT.TH1D('h_mrecpipi_zc', 'mrecpipi_zc', 100, 3.0, 3.2)
-h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 140, 0.0, 3.2)
+h_mrecpipi = ROOT.TH1D('h_mrecpipi', 'mrecpipi', 140, 2.0, 4.0)
 h_mpipi = ROOT.TH1D('h_mpipi', 'mpipi', 100, 0.0, 4.0)                              # 0.2 - 0.7 
 h_pi_p = ROOT.TH1D('h_pi_p', 'pi_p', 100, 0.0, 1.0)                                 # 0.0 - 0.5
 h_pi_invi_p = ROOT.TH1D('h_pi_invi_p', 'pi_invi_p', 100, 0.0, 1.0)                  # 0.0 - 0.5
@@ -50,6 +51,7 @@ h_ngam = ROOT.TH1D('h_ngam', 'ngam', 20, 0, 20)
 h_gcostheta = ROOT.TH1D('h_gcostheta', 'gcostheta', 2000, -1.0, 1.0)
 
 h_mgg = ROOT.TH1D('h_mgg', 'mgg', 100, 0.0, 0.7)                                    # 0.4 - 0.7
+h_mpipieta = ROOT.TH1D('h_mpipieta', 'h_mpipieta', 100, 0.0, 0.2)                                    # 0.4 - 0.7
 #h_mpipigg = ROOT.TH1D('h_mpipigg', 'mpipigg', 100, 0.4, 2.7)
 h_ch_count = ROOT.TH1D('h_ch_count', 'ch_count', 22, 0, 22)
 
@@ -94,6 +96,7 @@ cut_cos2pisys =0
 cut_pi_PID =0 
 cut_mjpsi_win =0 
 cut_mpipieta =0
+cut_mpipi =0
 
 def usage():
     sys.stdout.write('''
@@ -306,56 +309,65 @@ def fill_histograms(t):
         global cut_pi_PID   
         global cut_mjpsi_win   
         global cut_mpipieta  
+        global cut_mpipi  
 
         # cut_mgg = 1
-        cut_mgg = ( eta_p4_raw.M() > 0.51 and eta_p4_raw.M() < 0.57 )
+        cut_mgg = ( eta_p4_raw.M() > 0.45 and eta_p4_raw.M() < 0.6 )
         cut_trk_costhe = (abs(pi_p4_raw.CosTheta()) < 0.8)
-        cut_trkinvi_costhe = (abs(pi_invi_p4_raw.CosTheta()) < 0.8)
         cut_trk_p =  (abs(pi_p4_raw.P()) < 0.45)
-        cut_trkinvi_p = (abs(pi_invi_p4_raw.P()) < 0.45)
-        cut_cospipi =  (cospipi<0.95)
-        cut_cos2pisys = (cos2pisys<0.9)
+        cut_trkinvi_costhe = 1
+        cut_trkinvi_p = 1
+        cut_cospipi = 1
+        cut_cos2pisys = 1
+        # cut_trkinvi_costhe = (abs(pi_invi_p4_raw.CosTheta()) < 0.8)
+        # cut_trkinvi_p = (abs(pi_invi_p4_raw.P()) < 0.45)
+        # cut_cospipi =  (cospipi<0.95)
+        # cut_cos2pisys = (cos2pisys<0.9)
         cut_pi_PID = (prob_pi> t.prob_kp and prob_pi> t.prob_km and prob_pi> 0.001)
-        # cut_mjpsi_win = 1
-        cut_mjpsi_win = (jpsi_p4_raw.M()>3.0 and jpsi_p4_raw.M()<3.2)
-        # cut_mpipieta = 1
-        cut_mpipieta = (gam3_p4_raw.M()>1.0)
+        cut_mpipi = (pipi_p4_raw.M()>0.2 and pipi_p4_raw.M()<1.0 )
+        # cut_mpipi = 1
+        cut_mjpsi_win = 1
+        # cut_mjpsi_win = (jpsi_p4_raw.M()>3.0 and jpsi_p4_raw.M()<3.2)
+        cut_mpipieta = 1
+        # cut_mpipieta = (gam3_p4_raw.M()>1.0)
 
-        if (            cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and 
+        if ( cut_mgg and  cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and cut_mpipi and 
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win and cut_mpipieta):
             h_mpipi.Fill(pipi_p4_raw.M())
             h_mgg.Fill(eta_p4_raw.M())
+            h_mpipieta.Fill(gam3_p4_raw.M())
+            h_mrecpipi.Fill(jpsi_p4_raw.M())
 
-        if (cut_mgg and                    cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and 
+        if (cut_mgg and                    cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and cut_mpipi and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win and cut_mpipieta):
             h_pi_costhe.Fill(pi_p4_raw.CosTheta())
 
-        if (cut_mgg and cut_trk_costhe and                         cut_trk_p and cut_trkinvi_p and 
+        if (cut_mgg and cut_trk_costhe and                         cut_trk_p and cut_trkinvi_p and cut_mpipi and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win and cut_mpipieta):
             h_pi_invi_costhe.Fill(pi_invi_p4_raw.CosTheta())
 
-        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and               cut_trkinvi_p and 
+        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and               cut_trkinvi_p and cut_mpipi and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win and cut_mpipieta):
             h_pi_p.Fill(pi_p4_raw.P())
 
-        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and    
+        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and    cut_mpipi and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win and cut_mpipieta):
             h_pi_invi_p.Fill(pi_invi_p4_raw.P())
 
-        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and 
+        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and cut_mpipi and
                             cut_cos2pisys and cut_pi_PID and cut_mjpsi_win and cut_mpipieta):
             h_cospipi.Fill(cospipi)
 
-        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and 
+        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and cut_mpipi and
             cut_cospipi and                   cut_pi_PID and cut_mjpsi_win and cut_mpipieta):
             h_cos2pisys.Fill(cos2pisys)
 
-        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and 
-            cut_cospipi and cut_cos2pisys and cut_pi_PID and                   cut_mpipieta):
+#         if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and 
+#             cut_cospipi and cut_cos2pisys and cut_pi_PID and                   cut_mpipieta):
             # print jpsi_p4_raw.M()
-            h_mrecpipi.Fill(jpsi_p4_raw.M())
+#             h_mrecpipi.Fill(jpsi_p4_raw.M())
 
-        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and 
+        if (cut_mgg and cut_trk_costhe and cut_trkinvi_costhe and cut_trk_p and cut_trkinvi_p and cut_mpipi and
             cut_cospipi and cut_cos2pisys and cut_pi_PID and cut_mjpsi_win and cut_mpipieta and (t.run>0) ):
             global fill_trig
             fill_trig = 1 
@@ -375,6 +387,7 @@ def write_histograms():
     h_gcostheta.Write()
 
     h_mgg.Write()
+    h_mpipieta.Write()
     h_ch_count.Write()
 
 def select_jpsi_to_gammaEta(t):
@@ -413,6 +426,10 @@ def select_jpsi_to_gammaEta(t):
     if not (cut_mpipieta):
         return False
     h_evtflw.Fill(8)
+
+    if not (cut_mpipi):
+        return False
+    h_evtflw.Fill(9)
 
     return True
     
